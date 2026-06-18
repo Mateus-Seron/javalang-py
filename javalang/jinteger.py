@@ -35,7 +35,7 @@ class JInteger:
     @staticmethod
     def divideUnsigned(dividend: int, divisor: int) -> int:
         return (dividend & _UINT_MASK) // (divisor & _UINT_MASK)
-    
+
     @staticmethod
     def remainderUnsigned(dividend: int, divisor: int) -> int:
         return (dividend & _UINT_MASK) % (divisor & _UINT_MASK)
