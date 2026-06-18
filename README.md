@@ -33,6 +33,11 @@ pip install -e ".[dev]"
 ## Executando os testes
 
 ```bash
+pip install -e ".[dev]"    # instala pytest + ruff
+ruff check . --fix
+ruff format .
+ruff check .
+ruff format --check .
 pytest
 ```
 
@@ -83,10 +88,10 @@ javalang-py/
 | Papel | Responsável |
 |-------|-------------|
 | Mantenedor | Mateus Miranda Seron |
-| Gerente de Configuração | ? |
-| Engenheiro de Qualidade | ? |
-| Desenvolvedor | ? |
-| Relator | ? |
+| Gerente de Configuração | Enzo Euvine Cunha Neves |
+| Engenheiro de Qualidade | Mariana Paulino da Silva |
+| Desenvolvedor | João Vitor Costa Braga |
+| Relator | Lucas Gabriel de Almeida Souza |
 
 ---
 
