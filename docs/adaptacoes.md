@@ -25,6 +25,7 @@ Toda vez que a equipe decide:
 | 1 | Nomenclatura de classes com prefixo `J` em vez de sufixo `Java` | [ADR-0001](adr/0001-nomenclatura-classes.md) | — | — |
 | 2 | Uso de GitHub Flow (branch curto → PR → merge em `main`) | [ADR-0002](adr/0002-modelo-ramificacao.md) | — | — |
 | 3 | Locale configurável via variável de ambiente `JAVALANG_LOCALE` | [ADR-0003](adr/0003-tratamento-locale.md) | — | — |
+| 4 | Normalização de resultados bit a bit para 32 bits em `JInteger` (`_to_int32`) | [ADR-0004](adr/0004-representacao-int32.md) | 2026-06-18 | — |
 
 ---
 
