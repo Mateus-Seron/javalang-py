@@ -3,7 +3,6 @@ _UINT_MASK = 0xFFFFFFFF
 
 
 class JInteger:
-
     # ====== Métodos de Arimética Estática ======
 
     @staticmethod

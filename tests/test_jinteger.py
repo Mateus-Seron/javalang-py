@@ -4,6 +4,7 @@ from javalang.jinteger import JInteger
 # Métodos de Arimética Estática: testes para os métodos
 # ── sum ────────────────────────────────────────────────
 
+
 class TestSum:
     def test_sum_positive(self):
         assert JInteger.sum(3, 4) == 7
@@ -20,7 +21,9 @@ class TestSum:
     def test_sum_with_zero(self):
         assert JInteger.sum(42, 0) == 42
 
+
 # ── max ────────────────────────────────────────────────
+
 
 class TestMax:
     def test_max_first_greater(self):
@@ -38,7 +41,9 @@ class TestMax:
     def test_max_mixed_sign(self):
         assert JInteger.max(-1, 1) == 1
 
+
 # ── min ────────────────────────────────────────────────
+
 
 class TestMin:
     def test_min_first_smaller(self):
@@ -56,7 +61,9 @@ class TestMin:
     def test_min_mixed_sign(self):
         assert JInteger.min(-1, 1) == -1
 
+
 # ── compare ────────────────────────────────────────────────
+
 
 class TestCompare:
     def test_compare_equal(self):
@@ -74,7 +81,9 @@ class TestCompare:
     def test_compare_negative_and_positive(self):
         assert JInteger.compare(-1, 1) < 0
 
+
 # ── compareUnsigned ────────────────────────────────────────────────
+
 
 class TestCompareUnsigned:
     def test_compareUnsigned_equal(self):
@@ -94,7 +103,9 @@ class TestCompareUnsigned:
         # -1 (0xFFFFFFFF) > -2 (0xFFFFFFFE) como unsigned
         assert JInteger.compareUnsigned(-1, -2) > 0
 
+
 # ── divideUnsigned ────────────────────────────────────────────────
+
 
 class TestDivideUnsigned:
     def test_divideUnsigned_simple(self):
@@ -113,7 +124,9 @@ class TestDivideUnsigned:
     def test_divideUnsigned_divisor_one(self):
         assert JInteger.divideUnsigned(100, 1) == 100
 
+
 # ── remainderUnsigned ────────────────────────────────────────────────
+
 
 class TestRemainderUnsigned:
     def test_remainderUnsigned_simple(self):
