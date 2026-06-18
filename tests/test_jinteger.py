@@ -67,6 +67,52 @@ class TestLowestOneBit:
         assert JInteger.lowestOneBit(JInteger.MIN_VALUE) == JInteger.MIN_VALUE
 
 
+# ── numberOfLeadingZeros ─────────────────────────────────────────────────────
+
+
+class TestNumberOfLeadingZeros:
+    def test_zero(self):
+        assert JInteger.numberOfLeadingZeros(0) == 32
+
+    def test_um(self, valores_bit):
+        assert JInteger.numberOfLeadingZeros(valores_bit["um"]) == 31
+
+    def test_negativo(self, valores_bit):
+        assert JInteger.numberOfLeadingZeros(valores_bit["negativo"]) == 0
+
+    def test_oito(self):
+        assert JInteger.numberOfLeadingZeros(8) == 28  # 0b1000
+
+    def test_max_value(self, valores_bit):
+        assert JInteger.numberOfLeadingZeros(valores_bit["max"]) == 1
+
+    def test_min_value(self):
+        assert JInteger.numberOfLeadingZeros(JInteger.MIN_VALUE) == 0
+
+
+# ── numberOfTrailingZeros ────────────────────────────────────────────────────
+
+
+class TestNumberOfTrailingZeros:
+    def test_zero(self):
+        assert JInteger.numberOfTrailingZeros(0) == 32
+
+    def test_um(self, valores_bit):
+        assert JInteger.numberOfTrailingZeros(valores_bit["um"]) == 0
+
+    def test_oito(self):
+        assert JInteger.numberOfTrailingZeros(8) == 3  # 0b1000
+
+    def test_doze(self, valores_bit):
+        assert JInteger.numberOfTrailingZeros(valores_bit["doze"]) == 2  # 0b1100
+
+    def test_negativo_menos_um(self, valores_bit):
+        assert JInteger.numberOfTrailingZeros(valores_bit["negativo"]) == 0  # 0xFFFFFFFF
+
+    def test_min_value(self):
+        assert JInteger.numberOfTrailingZeros(JInteger.MIN_VALUE) == 31  # 0x80000000
+
+
 # ── sum ──────────────────────────────────────────────────────────────────────
 
 

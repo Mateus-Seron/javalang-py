@@ -63,6 +63,52 @@ class JInteger:
         """Integer.lowestOneBit(int i) — retorna apenas o bit 1 mais à direita."""
         return _to_int32(i & (-i))
 
+    @staticmethod
+    def numberOfLeadingZeros(i: int) -> int:
+        """Integer.numberOfLeadingZeros(int i) — zeros antes do primeiro bit 1."""
+        if i == 0:
+            return 32
+        v = i & _MASK32
+        n = 0
+        if v <= 0x0000FFFF:
+            n += 16
+            v <<= 16
+        if v <= 0x00FFFFFF:
+            n += 8
+            v <<= 8
+        if v <= 0x0FFFFFFF:
+            n += 4
+            v <<= 4
+        if v <= 0x3FFFFFFF:
+            n += 2
+            v <<= 2
+        if v <= 0x7FFFFFFF:
+            n += 1
+        return n
+
+    @staticmethod
+    def numberOfTrailingZeros(i: int) -> int:
+        """Integer.numberOfTrailingZeros(int i) — zeros após o último bit 1."""
+        if i == 0:
+            return 32
+        v = i & _MASK32
+        n = 0
+        if v & 0x0000FFFF == 0:
+            n += 16
+            v >>= 16
+        if v & 0x000000FF == 0:
+            n += 8
+            v >>= 8
+        if v & 0x0000000F == 0:
+            n += 4
+            v >>= 4
+        if v & 0x00000003 == 0:
+            n += 2
+            v >>= 2
+        if v & 0x00000001 == 0:
+            n += 1
+        return n
+
     # ── Aritmética estática ────────────────────────────────────────────────
 
     @staticmethod
