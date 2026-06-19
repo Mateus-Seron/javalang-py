@@ -2,6 +2,7 @@ from __future__ import annotations
 
 _MASK32 = 0xFFFFFFFF
 
+
 def _to_int32(value: int) -> int:
     # Python usa inteiros de precisão arbitrária, sem limite de bits.
     # Java representa int com exatamente 32 bits em complemento de dois,
@@ -61,22 +62,16 @@ class JInteger:
         body = s
         if body[0] in ("+", "-"):
             if len(body) == 1:
-                raise ValueError(
-                    f'NumberFormatException: For input string: "{s}"'
-                )
+                raise ValueError(f'NumberFormatException: For input string: "{s}"')
             body = body[1:]
 
         if not JInteger._valid_digit_chars(body, radix):
-            raise ValueError(
-                f'NumberFormatException: For input string: "{s}"'
-            )
+            raise ValueError(f'NumberFormatException: For input string: "{s}"')
 
         result = int(s, radix)
 
         if not (JInteger.MIN_VALUE <= result <= JInteger.MAX_VALUE):
-            raise ValueError(
-                f'NumberFormatException: For input string: "{s}"'
-            )
+            raise ValueError(f'NumberFormatException: For input string: "{s}"')
 
         return result
 
@@ -92,33 +87,27 @@ class JInteger:
 
         if s[0] == "-":
             raise ValueError(
-                f'NumberFormatException: Illegal leading minus sign '
-                f'on unsigned string "{s}"'
+                f'NumberFormatException: Illegal leading minus sign on unsigned string "{s}"'
             )
 
         body = s
         if body[0] == "+":
             if len(body) == 1:
-                raise ValueError(
-                    f'NumberFormatException: For input string: "{s}"'
-                )
+                raise ValueError(f'NumberFormatException: For input string: "{s}"')
             body = body[1:]
 
         if not JInteger._valid_digit_chars(body, radix):
-            raise ValueError(
-                f'NumberFormatException: For input string: "{s}"'
-            )
+            raise ValueError(f'NumberFormatException: For input string: "{s}"')
 
         result = int(body, radix)
 
         if result > JInteger.MAX_UNSIGNED_VALUE:
             raise ValueError(
-                f'NumberFormatException: String value "{s}" '
-                f'exceeds range of unsigned int'
+                f'NumberFormatException: String value "{s}" exceeds range of unsigned int'
             )
 
         return result
-    
+
     # ── Operações bit a bit ────────────────────────────────────────────────
 
     @staticmethod
