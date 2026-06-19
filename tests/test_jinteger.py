@@ -113,6 +113,26 @@ class TestNumberOfTrailingZeros:
         assert JInteger.numberOfTrailingZeros(JInteger.MIN_VALUE) == 31  # 0x80000000
 
 
+# ── signum ───────────────────────────────────────────────────────────────────
+
+
+class TestSignum:
+    def test_zero(self):
+        assert JInteger.signum(0) == 0
+
+    def test_positivo(self, valores_bit):
+        assert JInteger.signum(valores_bit["dez"]) == 1
+
+    def test_negativo(self, valores_bit):
+        assert JInteger.signum(valores_bit["negativo"]) == -1
+
+    def test_min_value(self):
+        assert JInteger.signum(JInteger.MIN_VALUE) == -1
+
+    def test_max_value(self, valores_bit):
+        assert JInteger.signum(valores_bit["max"]) == 1
+
+
 # ── sum ──────────────────────────────────────────────────────────────────────
 
 
