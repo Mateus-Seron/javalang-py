@@ -109,6 +109,36 @@ class JInteger:
             n += 1
         return n
 
+    @staticmethod
+    def reverseBytes(i: int) -> int:
+        """Integer.reverseBytes(int i) — inverte a ordem dos 4 bytes."""
+        v = i & _MASK32
+        result = (
+            ((v >> 24) & 0xFF)
+            | ((v >> 16) & 0xFF) << 8
+            | ((v >> 8) & 0xFF) << 16
+            | (v & 0xFF) << 24
+        )
+        return _to_int32(result)
+
+    @staticmethod
+    def rotateLeft(i: int, distance: int) -> int:
+        """Integer.rotateLeft(int i, int distance) — rotação à esquerda em 32 bits."""
+        v = i & _MASK32
+        distance &= 0x1F
+        if distance == 0:
+            return _to_int32(v)
+        return _to_int32((v << distance) | (v >> (32 - distance)))
+
+    @staticmethod
+    def rotateRight(i: int, distance: int) -> int:
+        """Integer.rotateRight(int i, int distance) — rotação à direita em 32 bits."""
+        v = i & _MASK32
+        distance &= 0x1F
+        if distance == 0:
+            return _to_int32(v)
+        return _to_int32((v >> distance) | (v << (32 - distance)))
+
     # ── Aritmética estática ────────────────────────────────────────────────
 
     @staticmethod
