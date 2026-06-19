@@ -1,30 +1,6 @@
 from __future__ import annotations
 
 _MASK32 = 0xFFFFFFFF
-MIN_RADIX = 2
-MAX_RADIX = 36
-MIN_VALUE: int = -(2**31)
-MAX_VALUE: int = 2**31 - 1
-SIZE: int = 32
-BYTES: int = 4
-MAX_UNSIGNED_VALUE: int = 2**32 - 1
-
-_DIGITS = "0123456789abcdefghijklmnopqrstuvwxyz"
-_valueOf_cache: dict = {i: i for i in range(-128, 128)}
-
-
-def _check_radix(radix: int) -> None:
-    if not (MIN_RADIX <= radix <= MAX_RADIX):
-        raise ValueError(
-            f"NumberFormatException: radix {radix} out of range "
-            f"[{MIN_RADIX}, {MAX_RADIX}]"
-        )
-
-
-def _valid_digit_chars(s: str, radix: int) -> bool:
-    valid = set(_DIGITS[:radix])
-    return all(ch in valid for ch in s.lower())
-
 
 def _to_int32(value: int) -> int:
     # Python usa inteiros de precisão arbitrária, sem limite de bits.
@@ -47,58 +23,95 @@ def _to_int32(value: int) -> int:
 
 
 class JInteger:
+    MIN_RADIX = 2
+    MAX_RADIX = 36
+    MIN_VALUE: int = -(2**31)
+    MAX_VALUE: int = 2**31 - 1
+    SIZE: int = 32
+    BYTES: int = 4
+    MAX_UNSIGNED_VALUE: int = 2**32 - 1
+
+    _DIGITS = "0123456789abcdefghijklmnopqrstuvwxyz"
+    _valueOf_cache: dict = {i: i for i in range(-128, 128)}
+
+    @staticmethod
+    def _check_radix(radix: int) -> None:
+        if not (JInteger.MIN_RADIX <= radix <= JInteger.MAX_RADIX):
+            raise ValueError(
+                f"NumberFormatException: radix {radix} out of range "
+                f"[{JInteger.MIN_RADIX}, {JInteger.MAX_RADIX}]"
+            )
+
+    @staticmethod
+    def _valid_digit_chars(s: str, radix: int) -> bool:
+        valid = set(JInteger._DIGITS[:radix])
+        return all(ch in valid for ch in s.lower())
 
     # ── Parsing ────────────────────────────────────────────────────────────
-    def parseInt(s, radix: int = 10) -> int:
+    @staticmethod
+    def parseInt(s: str, radix: int = 10) -> int:
         if s is None:
             raise ValueError("NumberFormatException: null")
+
         if len(s) == 0:
             raise ValueError('NumberFormatException: For input string: ""')
 
-        _check_radix(radix)
+        JInteger._check_radix(radix)
 
         body = s
         if body[0] in ("+", "-"):
             if len(body) == 1:
-                raise ValueError(f'NumberFormatException: For input string: "{s}"')
+                raise ValueError(
+                    f'NumberFormatException: For input string: "{s}"'
+                )
             body = body[1:]
 
-        if not _valid_digit_chars(body, radix):
-            raise ValueError(f'NumberFormatException: For input string: "{s}"')
+        if not JInteger._valid_digit_chars(body, radix):
+            raise ValueError(
+                f'NumberFormatException: For input string: "{s}"'
+            )
 
-        result = int(s, radix)  # int() do Python suporta radix 2-36 e sinal leading
+        result = int(s, radix)
 
-        if not (MIN_VALUE <= result <= MAX_VALUE):
-            raise ValueError(f'NumberFormatException: For input string: "{s}"')
+        if not (JInteger.MIN_VALUE <= result <= JInteger.MAX_VALUE):
+            raise ValueError(
+                f'NumberFormatException: For input string: "{s}"'
+            )
 
         return result
 
-    def parseUnsignedInt(s, radix: int = 10) -> int:
+    @staticmethod
+    def parseUnsignedInt(s: str, radix: int = 10) -> int:
         if s is None:
-            raise ValueError('NumberFormatException: null')
+            raise ValueError("NumberFormatException: null")
+
         if len(s) == 0:
             raise ValueError('NumberFormatException: For input string: ""')
 
-        _check_radix(radix)
+        JInteger._check_radix(radix)
 
-        if s[0] == '-':
+        if s[0] == "-":
             raise ValueError(
                 f'NumberFormatException: Illegal leading minus sign '
                 f'on unsigned string "{s}"'
             )
 
         body = s
-        if body[0] == '+':
+        if body[0] == "+":
             if len(body) == 1:
-                raise ValueError(f'NumberFormatException: For input string: "{s}"')
+                raise ValueError(
+                    f'NumberFormatException: For input string: "{s}"'
+                )
             body = body[1:]
 
-        if not _valid_digit_chars(body, radix):
-            raise ValueError(f'NumberFormatException: For input string: "{s}"')
+        if not JInteger._valid_digit_chars(body, radix):
+            raise ValueError(
+                f'NumberFormatException: For input string: "{s}"'
+            )
 
         result = int(body, radix)
 
-        if result > MAX_UNSIGNED_VALUE:
+        if result > JInteger.MAX_UNSIGNED_VALUE:
             raise ValueError(
                 f'NumberFormatException: String value "{s}" '
                 f'exceeds range of unsigned int'
