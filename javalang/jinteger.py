@@ -139,6 +139,15 @@ class JInteger:
             return _to_int32(v)
         return _to_int32((v >> distance) | (v << (32 - distance)))
 
+    @staticmethod
+    def signum(i: int) -> int:
+        """Integer.signum(int i) — retorna -1, 0 ou 1 conforme o sinal de i."""
+        if i > 0:
+            return 1
+        if i < 0:
+            return -1
+        return 0
+
     # ── Aritmética estática ────────────────────────────────────────────────
 
     @staticmethod
