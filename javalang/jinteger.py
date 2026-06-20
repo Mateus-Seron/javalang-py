@@ -273,3 +273,17 @@ class JInteger:
     
     def equals(self, other) -> bool:
         return self is other
+        
+    def doubleValue(self) -> float:
+        return float(self)
+
+    def hashCode(self) -> int:
+        return hash(self)
+
+    def compareTo(self, i: int) -> int:
+        if self > i:
+            return 1
+        elif self < i:
+            return -1
+        else:
+            return 0
