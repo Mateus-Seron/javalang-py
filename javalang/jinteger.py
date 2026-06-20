@@ -261,3 +261,15 @@ class JInteger:
     def remainderUnsigned(dividend: int, divisor: int) -> int:
         """Integer.remainderUnsigned(int dividend, int divisor)"""
         return (dividend & _MASK32) % (divisor & _MASK32)
+
+
+ # ── Construtores e Conversão ────────────────────────────────────────────────
+
+    def floatValue(self) -> float:
+        return float(self)
+    
+    def toString(self) -> str:
+        return str(self)
+    
+    def equals(self, other) -> bool:
+        return self is other
