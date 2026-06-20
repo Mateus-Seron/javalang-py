@@ -459,14 +459,14 @@ class TestToString:
 
 
 class TestEquals:
-    def test_equals_number_true(2, 2):
+    def test_equals_number_true(self):
         assert JInteger.equals(2, 2) is True
 
-    def test_equals_float_true("igual", "igual"):
+    def test_equals_float_true(self):
         assert JInteger.equals("igual", "igual") is True
 
-    def test_equals_number_false(2, 3):
+    def test_equals_number_false(self):
         assert JInteger.equals(2, 3) is False
 
-    def test_equals_float_false("igual", "diferente"):
+    def test_equals_float_false(self):
         assert JInteger.equals("igual", "igual") is False

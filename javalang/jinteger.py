@@ -271,7 +271,7 @@ class JInteger:
         return str(self)
 
     def equals(self, other) -> bool:
-        return self is other
+        return self == other
 
     def doubleValue(self) -> float:
         return float(self)
