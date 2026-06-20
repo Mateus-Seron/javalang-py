@@ -2,6 +2,25 @@
 
 from javalang.jinteger import JInteger
 
+# ── CONSTANTES ─────────────────────────────────────────────────────────────
+
+
+class TestConstantes:
+    def test_min(self):
+        assert JInteger.MIN_VALUE == -2147483648
+
+    def test_max(self):
+        assert JInteger.MAX_VALUE == 2147483647
+
+    def test_size(self):
+        assert JInteger.SIZE == 32
+
+    def test_bytes(self, valores_bit):
+        assert JInteger.BYTES == 4
+
+    def test_type(self):
+        assert JInteger.TYPE is int
+
 # ── bitCount ───────────────────────────────────────────────────────────────
 
 
