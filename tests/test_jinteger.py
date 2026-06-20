@@ -1,5 +1,7 @@
 """Testes para JInteger."""
 
+import pytest
+
 from javalang.jinteger import JInteger
 
 # ── CONSTANTES ─────────────────────────────────────────────────────────────
@@ -20,6 +22,156 @@ class TestConstantes:
 
     def test_type(self):
         assert JInteger.TYPE is int
+
+        
+# ── Parsing ────────────────────────────────────────────────────────────────
+
+
+class TestParseInt:
+    def test_parseInt_zero(self):
+        assert JInteger.parseInt("0") == 0
+
+    def test_parseInt_positive_decimal(self):
+        assert JInteger.parseInt("473") == 473
+
+    def test_parseInt_plus_prefix(self):
+        assert JInteger.parseInt("+42") == 42
+
+    def test_parseInt_negative_zero(self):
+        assert JInteger.parseInt("-0") == 0
+
+    def test_parseInt_max_value(self):
+        assert JInteger.parseInt("2147483647") == 2_147_483_647
+
+    def test_parseInt_min_value(self):
+        assert JInteger.parseInt("-2147483648") == -2_147_483_648
+
+    def test_parseInt_overflow_raises(self):
+        with pytest.raises(ValueError):
+            JInteger.parseInt("2147483648")
+
+    def test_parseInt_null_raises(self):
+        with pytest.raises(ValueError):
+            JInteger.parseInt(None)  # type: ignore
+
+    def test_parseInt_empty_raises(self):
+        with pytest.raises(ValueError):
+            JInteger.parseInt("")
+
+    def test_parseInt_only_minus_raises(self):
+        with pytest.raises(ValueError):
+            JInteger.parseInt("-")
+
+    def test_parseInt_only_plus_raises(self):
+        with pytest.raises(ValueError):
+            JInteger.parseInt("+")
+
+    def test_parseInt_invalid_chars_raises(self):
+        with pytest.raises(ValueError):
+            JInteger.parseInt("Kona", 10)
+
+
+# ── parseInt com radix ─────────────────────────────────
+
+
+class TestParseIntWithRadix:
+    def test_parseInt_radix_10(self):
+        assert JInteger.parseInt("473", 10) == 473
+
+    def test_parseInt_hex(self):
+        assert JInteger.parseInt("-FF", 16) == -255
+
+    def test_parseInt_binary(self):
+        assert JInteger.parseInt("1100110", 2) == 102
+
+    def test_parseInt_radix_27_kona(self):
+        assert JInteger.parseInt("Kona", 27) == 411_787
+
+    def test_parseInt_radix_8_invalid_digit_raises(self):
+        with pytest.raises(ValueError):
+            JInteger.parseInt("99", 8)
+
+    def test_parseInt_radix_below_min_raises(self):
+        with pytest.raises(ValueError):
+            JInteger.parseInt("10", 1)
+
+    def test_parseInt_radix_above_max_raises(self):
+        with pytest.raises(ValueError):
+            JInteger.parseInt("10", 37)
+
+    def test_parseInt_hex_max(self):
+        assert JInteger.parseInt("7FFFFFFF", 16) == JInteger.MAX_VALUE
+
+    def test_parseInt_hex_min(self):
+        assert JInteger.parseInt("-80000000", 16) == JInteger.MIN_VALUE
+
+
+# ── parseUnsignedInt ───────────────────────────────────
+
+
+class TestParseUnsignedInt:
+    def test_parseUnsignedInt_zero(self):
+        assert JInteger.parseUnsignedInt("0") == 0
+
+    def test_parseUnsignedInt_positive(self):
+        assert JInteger.parseUnsignedInt("42") == 42
+
+    def test_parseUnsignedInt_plus_prefix(self):
+        assert JInteger.parseUnsignedInt("+100") == 100
+
+    def test_parseUnsignedInt_max_unsigned(self):
+        assert JInteger.parseUnsignedInt("4294967295") == JInteger.MAX_UNSIGNED_VALUE
+
+    def test_parseUnsignedInt_beyond_signed_max(self):
+        # valores entre 2^31 e 2^32-1 são válidos para unsigned
+        assert JInteger.parseUnsignedInt("2147483648") == 2_147_483_648
+
+    def test_parseUnsignedInt_exceeds_max_raises(self):
+        with pytest.raises(ValueError):
+            JInteger.parseUnsignedInt("4294967296")
+
+    def test_parseUnsignedInt_minus_raises(self):
+        with pytest.raises(ValueError):
+            JInteger.parseUnsignedInt("-1")
+
+    def test_parseUnsignedInt_empty_raises(self):
+        with pytest.raises(ValueError):
+            JInteger.parseUnsignedInt("")
+
+    def test_parseUnsignedInt_null_raises(self):
+        with pytest.raises(ValueError):
+            JInteger.parseUnsignedInt(None)  # type: ignore[arg-type]
+
+    def test_parseUnsignedInt_invalid_char_raises(self):
+        with pytest.raises(ValueError):
+            JInteger.parseUnsignedInt("XYZ")
+
+
+# ── parseUnsignedInt com radix ─────────────────────────
+
+
+class TestParseUnsignedIntWithRadix:
+    def test_parseUnsignedInt_hex(self):
+        assert JInteger.parseUnsignedInt("FF", 16) == 255
+
+    def test_parseUnsignedInt_binary(self):
+        assert JInteger.parseUnsignedInt("11111111", 2) == 255
+
+    def test_parseUnsignedInt_max_unsigned_hex(self):
+        assert JInteger.parseUnsignedInt("FFFFFFFF", 16) == JInteger.MAX_UNSIGNED_VALUE
+
+    def test_parseUnsignedInt_radix_below_min_raises(self):
+        with pytest.raises(ValueError):
+            JInteger.parseUnsignedInt("10", 1)
+
+    def test_parseUnsignedInt_radix_above_max_raises(self):
+        with pytest.raises(ValueError):
+            JInteger.parseUnsignedInt("10", 37)
+
+    def test_parseUnsignedInt_invalid_digit_for_radix_raises(self):
+        with pytest.raises(ValueError):
+            JInteger.parseUnsignedInt("99", 8)
+
 
 # ── bitCount ───────────────────────────────────────────────────────────────
 
@@ -130,6 +282,26 @@ class TestNumberOfTrailingZeros:
 
     def test_min_value(self):
         assert JInteger.numberOfTrailingZeros(JInteger.MIN_VALUE) == 31  # 0x80000000
+
+
+# ── signum ───────────────────────────────────────────────────────────────────
+
+
+class TestSignum:
+    def test_zero(self):
+        assert JInteger.signum(0) == 0
+
+    def test_positivo(self, valores_bit):
+        assert JInteger.signum(valores_bit["dez"]) == 1
+
+    def test_negativo(self, valores_bit):
+        assert JInteger.signum(valores_bit["negativo"]) == -1
+
+    def test_min_value(self):
+        assert JInteger.signum(JInteger.MIN_VALUE) == -1
+
+    def test_max_value(self, valores_bit):
+        assert JInteger.signum(valores_bit["max"]) == 1
 
 
 # ── sum ──────────────────────────────────────────────────────────────────────
