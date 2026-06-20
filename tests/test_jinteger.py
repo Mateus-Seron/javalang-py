@@ -23,7 +23,7 @@ class TestConstantes:
     def test_type(self):
         assert JInteger.TYPE is int
 
-        
+
 # ── Parsing ────────────────────────────────────────────────────────────────
 
 
