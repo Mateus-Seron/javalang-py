@@ -425,3 +425,48 @@ class TestRemainderUnsigned:
 
     def test_remainderUnsigned_divisor_one(self):
         assert JInteger.remainderUnsigned(99, 1) == 0
+
+
+# ── floatValue ────────────────────────────────────────────────────────
+
+
+class TestFloatValue:
+    def test_floatValue_positive(self):
+        assert JInterger.floatValue(2) == 2.0
+
+    def test_floatValue_negative(self):
+        assert JInterger.floatValue(-2) == -2.0
+
+    def test_floatValue_zero(self):
+        assert JInterger.floatValue(0) == 0.0
+
+
+# ── toString ────────────────────────────────────────────────────────
+
+
+class TestToString:
+    def test_toString_positive_number(self):
+        assert JInteger.toString(2) == "2"
+    
+    def test_toString_negative_number(self):
+        assert JInteger.toString(-2) == "-2"
+
+    def test_toString_float_number(self):
+        assert JInteger.toString(2.5) == "2.5"
+
+
+# ── equals ────────────────────────────────────────────────────────
+
+
+class TestEquals:
+    def test_equals_number_true(2, 2):
+        assert JInteger.equals(2, 2) is True
+
+    def test_equals_float_true("igual", "igual"):
+        assert JInteger.equals("igual", "igual") is True
+
+    def test_equals_number_false(2, 3):
+        assert JInteger.equals(2, 3) is False
+
+    def test_equals_float_false("igual", "diferente"):
+        assert JInteger.equals("igual", "igual") is False
