@@ -632,6 +632,3 @@ class TestRemainderUnsigned:
 
     def test_remainderUnsigned_divisor_one(self):
         assert JInteger.remainderUnsigned(99, 1) == 0
-
-
-
