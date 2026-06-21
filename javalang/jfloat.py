@@ -9,6 +9,15 @@ def _float_to_int_bits(value: float) -> int:
     return struct.unpack(">i", struct.pack(">f", value))[0]
 
 
+def _float_to_canonical_int_bits(value: float) -> int:
+    """Equivalente a Float.floatToIntBits(float) — NaN e zeros canônicos."""
+    if value != value:
+        return 0x7FC00000
+    if value == 0.0:
+        return 0
+    return struct.unpack(">i", struct.pack(">f", value))[0]
+
+
 def _float_to_raw_bits(value: float) -> int:
     """Bits IEEE 754 brutos (32 bits unsigned) para operações bitwise."""
     return struct.unpack(">I", struct.pack(">f", value))[0]
@@ -35,9 +44,27 @@ def _float_to_string(value: float) -> str:
     return str(value)
 
 
+def _float_to_string_static(f: float) -> str:
+    """Equivalente a Float.toString(float)."""
+    if math.isnan(f):
+        return "NaN"
+    if math.isinf(f):
+        return "Infinity" if f > 0 else "-Infinity"
+    if f == 0.0:
+        return "-0.0" if math.copysign(1.0, f) < 0 else "0.0"
+    return str(float(f))
+
+
+class _ToString:
+    """Unifica Float.toString() (instância) e Float.toString(float) (estático)."""
+
+    def __get__(self, obj, owner):
+        if obj is None:
+            return owner._toString_static
+        return lambda: _float_to_string(obj._value)
+
+
 class JFloat:
-    def __init__(self, value):
-        self._value = float(value)
 
     # ── Operações de Verificação IEEE 754  ──────────────────────────────────────────────
 
@@ -103,9 +130,14 @@ class JFloat:
         self._value = _to_float32(value)
 
     @staticmethod
-    def valueOf(value: float) -> JFloat:
-        """Float.valueOf(float f)."""
-        return JFloat(value)
+    def valueOf(f_or_s):
+        """Float.valueOf(float) e Float.valueOf(String)."""
+        if isinstance(f_or_s, str):
+            try:
+                return JFloat(float(f_or_s.strip()))
+            except ValueError:
+                raise ValueError("NumberFormatException")
+        return JFloat(float(f_or_s))
 
     def floatValue(self) -> float:
         """Float.floatValue()."""
@@ -115,9 +147,24 @@ class JFloat:
         """Float.doubleValue()."""
         return float(self._value)
 
-    def toString(self) -> str:
-        """Float.toString() — representação decimal do valor encapsulado."""
-        return _float_to_string(self._value)
+    _toString_static = staticmethod(_float_to_string_static)
+    toString = _ToString()
+
+    def hashCode(self) -> int:
+        """Float.hashCode()."""
+        return _float_to_canonical_int_bits(self._value)
+
+    def equals(self, other) -> bool:
+        """Float.equals(Object obj)."""
+        if not isinstance(other, JFloat):
+            return False
+        self_bits = _float_to_canonical_int_bits(self._value)
+        other_bits = _float_to_canonical_int_bits(other._value)
+        return self_bits == other_bits
+
+    def compareTo(self, other: JFloat) -> int:
+        """Float.compareTo(Float anotherFloat)."""
+        return JFloat.compare(self._value, other._value)
     # ── Pacote de Operações de Parsing e Formatação ──────────────────────────────────────────────
 
     @staticmethod
@@ -129,30 +176,6 @@ class JFloat:
             return float(s.strip())
         except ValueError:
             raise ValueError("NumberFormatException")
-
-    @staticmethod
-    def valueOf(f_or_s):
-        if isinstance(f_or_s, str):
-            try:
-                return JFloat(float(f_or_s.strip()))
-            except ValueError:
-                raise ValueError("NumberFormatException")
-
-        return JFloat(float(f_or_s))
-
-    @staticmethod
-    def toString(f: float) -> str:
-
-        if math.isnan(f):
-            return "NaN"
-
-        if math.isinf(f):
-            return "Infinity" if f > 0 else "-Infinity"
-
-        if f == 0.0:
-            return "-0.0" if math.copysign(1.0, f) < 0 else "0.0"
-
-        return str(float(f))
 
     @staticmethod
     def toHexString(f: float) -> str:
