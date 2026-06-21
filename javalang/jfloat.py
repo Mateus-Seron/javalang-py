@@ -187,9 +187,7 @@ class JFloat:
     def equals(self, other) -> bool:
         if not isinstance(other, JFloat):
             return False
-        return _float_to_canonical_int_bits(self.value) == _float_to_canonical_int_bits(
-            other.value
-        )
+        return _float_to_canonical_int_bits(self.value) == _float_to_canonical_int_bits(other.value)
 
     def compareTo(self, other: JFloat) -> int:
         return JFloat.compare(self.value, other.value)
