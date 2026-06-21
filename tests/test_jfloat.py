@@ -6,6 +6,74 @@ import pytest
 
 from javalang.jfloat import JFloat
 
+# ── Constantes ───────────────────────────────────────────────
+
+
+class TestNaNConstant:
+    def test_nan_constant(self):
+        assert math.isnan(JFloat.NaN)
+
+
+class TestMaxExponent:
+    def test_max_exponent_value(self):
+        assert JFloat.MAX_EXPONENT == 127
+
+
+class TestMinExponent:
+    def test_min_exponent_value(self):
+        assert JFloat.MIN_EXPONENT == -126
+
+
+class TestSize:
+    def test_size_value(self):
+        assert JFloat.SIZE == 32
+
+
+class TestBytes:
+    def test_bytes_value(self):
+        assert JFloat.BYTES == 4
+
+
+# ── Operações de Verificação IEEE 754 ─────────────────────────────────────────
+
+
+class TestIsNaN:
+    def test_is_nan_instance(self):
+        value = JFloat(float("nan"))
+        assert value.isNaN() is True
+
+    def test_is_nan_static(self):
+        assert JFloat(float("nan")).isNaN() is True
+
+    def test_is_nan_false(self):
+        assert JFloat(10.5).isNaN() is False
+
+
+class TestIsInfinite:
+    def test_is_infinite_instance(self):
+        value = JFloat(float("inf"))
+        assert value.isInfinite() is True
+
+    def test_is_infinite_static(self):
+        value = JFloat(float("-inf"))
+        assert value.isInfinite() is True
+
+    def test_is_infinite_false(self):
+        value = JFloat(100.0)
+        assert value.isInfinite() is False
+
+
+class TestIsFinite:
+    def test_is_finite_true(self):
+        assert JFloat.isFinite(42.0) is True
+
+    def test_is_finite_infinity(self):
+        assert JFloat.isFinite(float("inf")) is False
+
+    def test_is_finite_nan(self):
+        assert JFloat.isFinite(float("nan")) is False
+
+
 # ── Operações de Comparação de Float ─────────────────────────────────────────
 
 
@@ -177,3 +245,66 @@ class TestLongValue:
 
     def test_longvalue_retorna_int(self):
         assert isinstance(JFloat(5.5).longValue(), int)
+# ── Pacote de Operações de Parsing e Formatação ─────────────────────────────────────────
+
+
+class TestParseFloat:
+    def test_parse_float_valid(self):
+        assert JFloat.parseFloat("3.14") == 3.14
+
+    def test_parse_float_whitespace(self):
+        assert JFloat.parseFloat("  2.5  ") == 2.5
+
+    def test_parse_float_invalid(self):
+        with pytest.raises(ValueError):
+            JFloat.parseFloat("abc")
+
+
+class TestValueOfFloat:
+    def test_value_of_positive(self):
+        result = JFloat.valueOf(3.14)
+        assert result._value == 3.14
+
+    def test_value_of_negative(self):
+        result = JFloat.valueOf(-5.5)
+        assert result._value == -5.5
+
+    def test_value_of_zero(self):
+        result = JFloat.valueOf(0.0)
+        assert result._value == 0.0
+
+
+class TestValueOfString:
+    def test_value_of_string_valid(self):
+        result = JFloat.valueOf("4.2")
+        assert result._value == 4.2
+
+    def test_value_of_string_whitespace(self):
+        result = JFloat.valueOf(" 1.5 ")
+        assert result._value == 1.5
+
+    def test_value_of_string_invalid(self):
+        with pytest.raises(ValueError):
+            JFloat.valueOf("abc")
+
+
+class TestToString:
+    def test_to_string_normal(self):
+        assert JFloat.toString(3.14) == "3.14"
+
+    def test_to_string_nan(self):
+        assert JFloat.toString(float("nan")) == "NaN"
+
+    def test_to_string_infinity(self):
+        assert JFloat.toString(float("inf")) == "Infinity"
+
+
+class TestToHexString:
+    def test_to_hex_string_one(self):
+        assert JFloat.toHexString(1.0) == "0x1.0000000000000p+0"
+
+    def test_to_hex_string_half(self):
+        assert JFloat.toHexString(0.5) == "0x1.0000000000000p-1"
+
+    def test_to_hex_string_nan(self):
+        assert JFloat.toHexString(float("nan")) == "NaN"
