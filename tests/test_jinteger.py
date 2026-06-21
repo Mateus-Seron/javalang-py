@@ -837,4 +837,3 @@ class TestByteValue:
 
     def test_bytevalue_retorna_int(self):
         assert isinstance(JInteger(10).byteValue(), int)
- 
