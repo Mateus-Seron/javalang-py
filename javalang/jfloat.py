@@ -12,19 +12,17 @@ def _to_float32(value: float) -> float:
     """
     return struct.unpack(">f", struct.pack(">f", float(value)))[0]
 
+# ── Pacote de Operações de Conversão Binária ─────────────────────────────────────────────────
 
-def _float_to_int_bits(value: float) -> int:
-    """Equivalente a Float.floatToIntBits(float)."""
+def floatToIntBits(value: float) -> int:
     return struct.unpack(">i", struct.pack(">f", value))[0]
 
 
-def _float_to_raw_bits(value: float) -> int:
-    """Bits IEEE-754 brutos (32 bits unsigned)."""
+def floatToRawBits(value: float) -> int:
     return struct.unpack(">I", struct.pack(">f", value))[0]
 
 
-def _int_bits_to_float(bits: int) -> float:
-    """Equivalente a Float.intBitsToFloat(int)."""
+def intBitsToFloat(bits: int) -> float:
     return struct.unpack(">f", struct.pack(">I", bits & 0xFFFFFFFF))[0]
 
 
@@ -79,8 +77,8 @@ class JFloat:
         if f1 > f2:
             return 1
 
-        bits1 = _float_to_int_bits(f1)
-        bits2 = _float_to_int_bits(f2)
+        bits1 = floatToIntBits(f1)
+        bits2 = floatToIntBits(f2)
 
         if bits1 == bits2:
             return 0
@@ -93,7 +91,7 @@ class JFloat:
             return a
 
         if a == 0.0 and b == 0.0:
-            return _int_bits_to_float(_float_to_raw_bits(a) & _float_to_raw_bits(b) & 0x7FFFFFFF)
+            return intBitsToFloat(floatToRawBits(a) & floatToRawBits(b) & 0x7FFFFFFF)
 
         return a if a >= b else b
 
@@ -103,7 +101,7 @@ class JFloat:
             return a
 
         if a == 0.0 and b == 0.0:
-            return _int_bits_to_float(_float_to_raw_bits(a) | _float_to_raw_bits(b))
+            return intBitsToFloat(floatToRawBits(a) | floatToRawBits(b))
 
         return a if a <= b else b
 
