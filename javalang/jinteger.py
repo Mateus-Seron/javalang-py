@@ -112,6 +112,28 @@ class JInteger:
             )
 
         return result
+    
+    @staticmethod
+    def valueOf(s_or_i, radix: int = None) -> int:
+        if isinstance(s_or_i, bool):
+            raise TypeError('valueOf() não aceita bool')
+
+        if isinstance(s_or_i, int) and radix is None:
+            i = s_or_i
+            if not (MIN_VALUE <= i <= MAX_VALUE):
+                raise ValueError(
+                    f'NumberFormatException: value {i} out of int range'
+                )
+            return _valueOf_cache.get(i, i)
+
+        if isinstance(s_or_i, str):
+            r = radix if radix is not None else 10
+            return parseInt(s_or_i, r)
+
+        raise TypeError(
+            f'valueOf() expects (int), (str) or (str, int); '
+            f'got {type(s_or_i).__name__}'
+        )
 
     # ── Operações bit a bit ────────────────────────────────────────────────
 
