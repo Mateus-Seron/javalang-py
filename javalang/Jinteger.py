@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 _MASK32 = 0xFFFFFFFF
+_DIGITS = "0123456789abcdefghijklmnopqrstuvwxyz"
+_MIN_RADIX = 2
+_MAX_RADIX = 36
 
 
 def _to_int32(value: int) -> int:
@@ -21,6 +24,24 @@ def _to_int32(value: int) -> int:
     if value >= 2**31:
         value -= 2**32
     return value
+
+
+def _to_string_radix_unsigned(u: int, radix: int) -> str:
+    digits: list[str] = []
+    while u > 0:
+        digits.append(_DIGITS[u % radix])
+        u //= radix
+    return "".join(reversed(digits))
+
+
+def _to_string_radix(i: int, radix: int) -> str:
+    i = _to_int32(i)
+    if i == 0:
+        return "0"
+    if i < 0:
+        magnitude = 2**31 if i == JInteger.MIN_VALUE else -i
+        return "-" + _to_string_radix_unsigned(magnitude, radix)
+    return _to_string_radix_unsigned(i, radix)
 
 
 class JInteger:
@@ -52,6 +73,13 @@ class JInteger:
     def _valid_digit_chars(s: str, radix: int) -> bool:
         valid = set(JInteger._DIGITS[:radix])
         return all(ch in valid for ch in s.lower())
+
+    def __init__(self, value):
+        "Equivale aos dois contrutores Integer(int) e Integer(String)"
+        self.value = int(value)
+
+    def intValue(self):
+        return self.value
 
     # ── Parsing ────────────────────────────────────────────────────────────
     @staticmethod
@@ -251,6 +279,59 @@ class JInteger:
             n += 1
         return n
 
+    # ── Operações de Formatação por Base ───────────────────────────────────
+
+    @staticmethod
+    def toString(self_or_i, radix: int = 10) -> str:
+        if isinstance(self_or_i, JInteger):
+            return str(int(self_or_i))
+
+        i = self_or_i
+
+        if radix < _MIN_RADIX or radix > _MAX_RADIX:
+            raise ValueError(f"radix {radix} out of range")
+
+        if radix == 10:
+            return str(_to_int32(i))
+
+        return _to_string_radix(i, radix)
+
+    @staticmethod
+    def toBinaryString(i: int) -> str:
+        """Integer.toBinaryString(int i) — representação binária sem sinal (32 bits)."""
+        v = i & _MASK32
+        if v == 0:
+            return "0"
+        return format(v, "b")
+
+    @staticmethod
+    def toOctalString(i: int) -> str:
+        """Integer.toOctalString(int i) — representação octal sem sinal (32 bits)."""
+        v = i & _MASK32
+        if v == 0:
+            return "0"
+        return format(v, "o")
+
+    @staticmethod
+    def toHexString(i: int) -> str:
+        """Integer.toHexString(int i) — representação hexadecimal sem sinal (32 bits)."""
+        v = i & _MASK32
+        if v == 0:
+            return "0"
+        return format(v, "x")
+
+    @staticmethod
+    def toUnsignedString(i: int, radix: int = 10) -> str:
+        """Integer.toUnsignedString(int i) / Integer.toUnsignedString(int i, int radix)."""
+        if radix < _MIN_RADIX or radix > _MAX_RADIX:
+            raise ValueError(f"radix {radix} out of range")
+        u = i & _MASK32
+        if radix == 10:
+            return str(u)
+        if u == 0:
+            return "0"
+        return _to_string_radix_unsigned(u, radix)
+
     @staticmethod
     def reverseBytes(i: int) -> int:
         """Integer.reverseBytes(int i) — inverte a ordem dos 4 bytes."""
@@ -332,3 +413,39 @@ class JInteger:
     def remainderUnsigned(dividend: int, divisor: int) -> int:
         """Integer.remainderUnsigned(int dividend, int divisor)"""
         return (dividend & _MASK32) % (divisor & _MASK32)
+
+    # ── Construtores e Conversão ────────────────────────────────────────────────
+
+    def longValue(self):
+        return self.value
+
+    def shortValue(self):
+        return self.value
+
+    def byteValue(self):
+        value = self.value & 0xFF
+
+        if value >= 128:
+            value -= 256
+
+        return value
+
+    def floatValue(self) -> float:
+        return float(self)
+
+    def equals(self, other) -> bool:
+        return self == other
+
+    def doubleValue(self) -> float:
+        return float(self)
+
+    def hashCode(self) -> int:
+        return hash(self)
+
+    def compareTo(self, i: int) -> int:
+        if self > i:
+            return 1
+        elif self < i:
+            return -1
+        else:
+            return 0

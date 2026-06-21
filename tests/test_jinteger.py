@@ -2,7 +2,7 @@
 
 import pytest
 
-from javalang.jinteger import JInteger
+from javalang.Jinteger import JInteger
 
 # ── CONSTANTES ─────────────────────────────────────────────────────────────
 
@@ -400,6 +400,76 @@ class TestNumberOfTrailingZeros:
         assert JInteger.numberOfTrailingZeros(JInteger.MIN_VALUE) == 31  # 0x80000000
 
 
+# ── Operações de Formatação por Base ─────────────────────────────────────────
+
+
+class TestOperacoesFormatacaoPorBase:
+    def test_to_string_decimal_positivo(self, valores_bit):
+        assert JInteger.toString(valores_bit["dez"]) == "10"
+
+    def test_to_string_decimal_negativo(self, valores_bit):
+        assert JInteger.toString(valores_bit["negativo"]) == "-1"
+
+    def test_to_string_decimal_min_value(self):
+        assert JInteger.toString(JInteger.MIN_VALUE) == "-2147483648"
+
+    def test_to_string_radix_hex(self):
+        assert JInteger.toString(255, 16) == "ff"
+
+    def test_to_string_radix_binario_negativo(self):
+        assert JInteger.toString(-10, 2) == "-1010"
+
+    def test_to_string_radix_fora_do_intervalo(self):
+        with pytest.raises(ValueError, match="radix 1 out of range"):
+            JInteger.toString(10, 1)
+
+    def test_to_binary_string_zero(self):
+        assert JInteger.toBinaryString(0) == "0"
+
+    def test_to_binary_string_positivo(self, valores_bit):
+        assert JInteger.toBinaryString(valores_bit["dez"]) == "1010"
+
+    def test_to_binary_string_negativo(self, valores_bit):
+        assert JInteger.toBinaryString(valores_bit["negativo"]) == "1" * 32
+
+    def test_to_octal_string_zero(self):
+        assert JInteger.toOctalString(0) == "0"
+
+    def test_to_octal_string_positivo(self, valores_bit):
+        assert JInteger.toOctalString(valores_bit["dez"]) == "12"
+
+    def test_to_octal_string_negativo(self, valores_bit):
+        assert JInteger.toOctalString(valores_bit["negativo"]) == "37777777777"
+
+    def test_to_hex_string_zero(self):
+        assert JInteger.toHexString(0) == "0"
+
+    def test_to_hex_string_positivo(self):
+        assert JInteger.toHexString(255) == "ff"
+
+    def test_to_hex_string_negativo(self, valores_bit):
+        assert JInteger.toHexString(valores_bit["negativo"]) == "ffffffff"
+
+    def test_to_unsigned_string_zero(self):
+        assert JInteger.toUnsignedString(0) == "0"
+
+    def test_to_unsigned_string_positivo(self, valores_bit):
+        assert JInteger.toUnsignedString(valores_bit["dez"]) == "10"
+
+    def test_to_unsigned_string_negativo(self, valores_bit):
+        assert JInteger.toUnsignedString(valores_bit["negativo"]) == "4294967295"
+
+    def test_to_unsigned_string_radix_hex(self, valores_bit):
+        assert JInteger.toUnsignedString(valores_bit["negativo"], 16) == "ffffffff"
+
+    def test_to_unsigned_string_radix_binario(self, valores_bit):
+        assert JInteger.toUnsignedString(valores_bit["negativo"], 2) == "1" * 32
+
+    def test_to_unsigned_string_radix_fora_do_intervalo(self):
+        with pytest.raises(ValueError, match="radix 37 out of range"):
+            JInteger.toUnsignedString(10, 37)
+
+
 # ── signum ───────────────────────────────────────────────────────────────────
 
 
@@ -561,3 +631,208 @@ class TestRemainderUnsigned:
 
     def test_remainderUnsigned_divisor_one(self):
         assert JInteger.remainderUnsigned(99, 1) == 0
+
+
+# ── floatValue ────────────────────────────────────────────────────────
+
+
+class TestFloatValue:
+    def test_floatValue_positive(self):
+        assert JInteger.floatValue(2) == 2.0
+
+    def test_floatValue_negative(self):
+        assert JInteger.floatValue(-2) == -2.0
+
+    def test_floatValue_zero(self):
+        assert JInteger.floatValue(0) == 0.0
+
+
+# ── toString ────────────────────────────────────────────────────────
+
+
+class TestToString:
+    def test_toString_positive_number(self):
+        assert JInteger.toString(2) == "2"
+
+    def test_toString_negative_number(self):
+        assert JInteger.toString(-2) == "-2"
+
+
+# ── equals ────────────────────────────────────────────────────────
+
+
+class TestEquals:
+    def test_equals_number_true(self):
+        assert JInteger.equals(2, 2) is True
+
+    def test_equals_float_true(self):
+        assert JInteger.equals("igual", "igual") is True
+
+    def test_equals_number_false(self):
+        assert JInteger.equals(2, 3) is False
+
+    def test_equals_float_false(self):
+        assert JInteger.equals("igual", "diferente") is False
+
+
+# ── doubleValue ────────────────────────────────────────────────────────
+
+
+class TestDoubleValue:
+    def test_doubleValue_positive(self):
+        assert JInteger.doubleValue(2) == 2.0
+
+    def test_doubleValue_negative(self):
+        assert JInteger.doubleValue(-2) == -2.0
+
+    def test_doubleValue_zero(self):
+        assert JInteger.doubleValue(0) == 0.0
+
+
+# ── hashCode ────────────────────────────────────────────────────────
+
+
+class TestHashCode:
+    def test_hashCode_same(self):
+        assert JInteger.hashCode(2) == JInteger.hashCode(2)
+
+    def test_hashCode_different(self):
+        assert JInteger.hashCode(2) != JInteger.hashCode(3)
+
+
+# ── compareTo ────────────────────────────────────────────────────────
+
+
+class TestcompareTo:
+    def test_compareTo_positive(self):
+        assert JInteger.compareTo(2, 1) > 0
+
+    def test_compareTo_negative(self):
+        assert JInteger.compareTo(-2, -1) < 0
+
+    def test_compareTo_equal(self):
+        assert JInteger.compareTo(2, 2) == 0
+
+
+class TestJIntegerInit:
+    def test_init_com_inteiro_positivo(self):
+        assert JInteger(42).value == 42
+
+    def test_init_com_inteiro_negativo(self):
+        assert JInteger(-10).value == -10
+
+    def test_init_com_zero(self):
+        assert JInteger(0).value == 0
+
+    def test_init_com_string_numerica(self):
+        assert JInteger("123").value == 123
+
+    def test_init_com_string_negativa(self):
+        assert JInteger("-99").value == -99
+
+    def test_init_com_float_trunca(self):
+        assert JInteger(3.9).value == 3
+
+    def test_init_string_invalida_levanta_excecao(self):
+        with pytest.raises(ValueError):
+            JInteger("abc")
+
+
+# ── intValue ────────────────────────────────────────────────────────────────
+
+
+class TestIntValue:
+    def test_intvalue_positivo(self):
+        assert JInteger(100).intValue() == 100
+
+    def test_intvalue_negativo(self):
+        assert JInteger(-50).intValue() == -50
+
+    def test_intvalue_zero(self):
+        assert JInteger(0).intValue() == 0
+
+    def test_intvalue_grande(self):
+        assert JInteger(2_147_483_647).intValue() == 2_147_483_647
+
+    def test_intvalue_retorna_int(self):
+        assert isinstance(JInteger(7).intValue(), int)
+
+
+# ── longValue ───────────────────────────────────────────────────────────────
+
+
+class TestLongValue:
+    def test_longvalue_positivo(self):
+        assert JInteger(1_000_000).longValue() == 1_000_000
+
+    def test_longvalue_negativo(self):
+        assert JInteger(-1_000_000).longValue() == -1_000_000
+
+    def test_longvalue_zero(self):
+        assert JInteger(0).longValue() == 0
+
+    def test_longvalue_numero_grande(self):
+        assert JInteger(9_223_372_036_854_775_807).longValue() == 9_223_372_036_854_775_807
+
+    def test_longvalue_retorna_int(self):
+        assert isinstance(JInteger(5).longValue(), int)
+
+
+# ── shortValue ──────────────────────────────────────────────────────────────
+
+
+class TestShortValue:
+    def test_shortvalue_positivo(self):
+        assert JInteger(32_767).shortValue() == 32_767
+
+    def test_shortvalue_negativo(self):
+        assert JInteger(-32_768).shortValue() == -32_768
+
+    def test_shortvalue_zero(self):
+        assert JInteger(0).shortValue() == 0
+
+    def test_shortvalue_retorna_int(self):
+        assert isinstance(JInteger(1).shortValue(), int)
+
+
+# ── byteValue ───────────────────────────────────────────────────────────────
+
+
+class TestByteValue:
+    def test_bytevalue_zero(self):
+        assert JInteger(0).byteValue() == 0
+
+    def test_bytevalue_um(self):
+        assert JInteger(1).byteValue() == 1
+
+    def test_bytevalue_maximo_positivo(self):
+        assert JInteger(127).byteValue() == 127
+
+    def test_bytevalue_128_vira_negativo(self):
+        assert JInteger(128).byteValue() == -128
+
+    def test_bytevalue_255_vira_menos_um(self):
+        assert JInteger(255).byteValue() == -1
+
+    def test_bytevalue_256_reinicia_para_zero(self):
+        assert JInteger(256).byteValue() == 0
+
+    def test_bytevalue_negativo_menos_1(self):
+        assert JInteger(-1).byteValue() == -1
+
+    def test_bytevalue_negativo_menos_128(self):
+        assert JInteger(-128).byteValue() == -128
+
+    def test_bytevalue_negativo_menos_129(self):
+        assert JInteger(-129).byteValue() == 127
+
+    def test_bytevalue_grande_positivo(self):
+        assert JInteger(300).byteValue() == 44
+
+    def test_bytevalue_resultado_dentro_da_faixa(self):
+        for v in range(-300, 301):
+            resultado = JInteger(v).byteValue()
+            assert -128 <= resultado <= 127
+
+    def test_bytevalue_retorna_int(self):
+        assert isinstance(JInteger(10).byteValue(), int)
