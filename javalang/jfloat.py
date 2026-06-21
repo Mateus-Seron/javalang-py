@@ -20,7 +20,7 @@ def _int_bits_to_float(bits: int) -> float:
 
 
 class JFloat:
-        # ── Constantes Float ──────────────────────────────────────────────
+    # ── Constantes Float ──────────────────────────────────────────────
 
     NaN = float("nan")
     MAX_EXPONENT = 127
