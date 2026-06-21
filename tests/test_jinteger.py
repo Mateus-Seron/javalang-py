@@ -632,3 +632,84 @@ class TestRemainderUnsigned:
 
     def test_remainderUnsigned_divisor_one(self):
         assert JInteger.remainderUnsigned(99, 1) == 0
+
+
+# ── floatValue ────────────────────────────────────────────────────────
+
+
+class TestFloatValue:
+    def test_floatValue_positive(self):
+        assert JInteger.floatValue(2) == 2.0
+
+    def test_floatValue_negative(self):
+        assert JInteger.floatValue(-2) == -2.0
+
+    def test_floatValue_zero(self):
+        assert JInteger.floatValue(0) == 0.0
+
+
+# ── toString ────────────────────────────────────────────────────────
+
+
+class TestToString:
+    def test_toString_positive_number(self):
+        assert JInteger.toString(2) == "2"
+
+    def test_toString_negative_number(self):
+        assert JInteger.toString(-2) == "-2"
+
+
+# ── equals ────────────────────────────────────────────────────────
+
+
+class TestEquals:
+    def test_equals_number_true(self):
+        assert JInteger.equals(2, 2) is True
+
+    def test_equals_float_true(self):
+        assert JInteger.equals("igual", "igual") is True
+
+    def test_equals_number_false(self):
+        assert JInteger.equals(2, 3) is False
+
+    def test_equals_float_false(self):
+        assert JInteger.equals("igual", "diferente") is False
+
+
+# ── doubleValue ────────────────────────────────────────────────────────
+
+
+class TestDoubleValue:
+    def test_doubleValue_positive(self):
+        assert JInteger.doubleValue(2) == 2.0
+
+    def test_doubleValue_negative(self):
+        assert JInteger.doubleValue(-2) == -2.0
+
+    def test_doubleValue_zero(self):
+        assert JInteger.doubleValue(0) == 0.0
+
+
+# ── hashCode ────────────────────────────────────────────────────────
+
+
+class TestHashCode:
+    def test_hashCode_same(self):
+        assert JInteger.hashCode(2) == JInteger.hashCode(2)
+
+    def test_hashCode_different(self):
+        assert JInteger.hashCode(2) != JInteger.hashCode(3)
+
+
+# ── compareTo ────────────────────────────────────────────────────────
+
+
+class TestcompareTo:
+    def test_compareTo_positive(self):
+        assert JInteger.compareTo(2, 1) > 0
+
+    def test_compareTo_negative(self):
+        assert JInteger.compareTo(-2, -1) < 0
+
+    def test_compareTo_equal(self):
+        assert JInteger.compareTo(2, 2) == 0
