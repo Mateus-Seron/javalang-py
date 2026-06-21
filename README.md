@@ -33,6 +33,11 @@ pip install -e ".[dev]"
 ## Executando os testes
 
 ```bash
+pip install -e ".[dev]"    # instala pytest + ruff
+ruff check . --fix
+ruff format .
+ruff check .
+ruff format --check .
 pytest
 ```
 
@@ -53,8 +58,21 @@ Esta implementação diverge da especificação Java SE 8 nos seguintes pontos, 
 | [ADR-0001](docs/adr/0001-nomenclatura-classes.md) | Prefixo `J` nas classes | Evita colisão com tipos nativos Python (`str`, `int`, `float`) |
 | [ADR-0002](docs/adr/0002-modelo-ramificacao.md) | GitHub Flow | Branch curto → PR → merge em `main`; adequado ao escopo acadêmico |
 | [ADR-0003](docs/adr/0003-tratamento-locale.md) | Locale via variável de ambiente | `JAVALANG_LOCALE` configura locale; padrão equivale a `Locale.ROOT` |
+| [ADR-0004](docs/adr/0004-representacao-int32.md) | Normalização de 32 bits em `JInteger` | Python `int` é arbitrário; Java `int` é fixo em 32 bits |
 
 Veja o índice completo em [`docs/adaptacoes.md`](docs/adaptacoes.md).
+
+### JInteger — representação de 32 bits
+
+Em Java, `int` tem exatamente 32 bits em complemento de dois (`-2³¹` a `2³¹ - 1`).
+Em Python, `int` não tem limite de tamanho.
+
+Para métodos bit a bit (`bitCount`, `highestOneBit`, `lowestOneBit`, `numberOfLeadingZeros`,
+`numberOfTrailingZeros`), os resultados são normalizados para o intervalo Java via função interna
+`_to_int32` em `javalang/jinteger.py`. Sem isso, casos como `highestOneBit(-1)` retornariam
+`2147483648` em Python, mas a especificação Java exige `-2147483648` (`Integer.MIN_VALUE`).
+
+Detalhes em [ADR-0004](docs/adr/0004-representacao-int32.md).
 
 > **Nota sobre locale e concorrência:** quando `JAVALANG_LOCALE` está definida, operações sensíveis a locale **não são thread-safe** (limitação de `locale.setlocale`). Em cenários multi-thread, deixe a variável não definida.
 
@@ -83,10 +101,10 @@ javalang-py/
 | Papel | Responsável |
 |-------|-------------|
 | Mantenedor | Mateus Miranda Seron |
-| Gerente de Configuração | ? |
-| Engenheiro de Qualidade | ? |
-| Desenvolvedor | ? |
-| Relator | ? |
+| Gerente de Configuração | Enzo Euvine Cunha Neves |
+| Engenheiro de Qualidade | Mariana Paulino da Silva |
+| Desenvolvedor | João Vitor Costa Braga |
+| Relator | Lucas Gabriel de Almeida Souza |
 
 ---
 
