@@ -21,6 +21,12 @@ def _int_bits_to_float(bits: int) -> float:
 class JFloat:
     """Wrapper imutável equivalente a java.lang.Float (Java SE 8)."""
 
+    MIN_VALUE = 1.4e-45
+    MAX_VALUE = 3.4028235e38
+    SIZE = 32
+    BYTES = 4
+    TYPE = float
+
     # ── Operações de Comparação de Float ───────────────────────────────────────
 
     @staticmethod
@@ -60,3 +66,12 @@ class JFloat:
     def sum(a: float, b: float) -> float:
         """Float.sum(float a, float b)."""
         return a + b
+
+    def __init__(self, value):
+        """
+        Equivale aos construtores:
+            Float(float value)
+            Float(double value)
+            Float(String s)
+        """
+        self.value = float(value)
