@@ -74,7 +74,7 @@ class JInteger:
         valid = set(JInteger._DIGITS[:radix])
         return all(ch in valid for ch in s.lower())
 
-    def init(self, value):
+    def __init__(self, value):
         "Equivale aos dois contrutores Integer(int) e Integer(String)"
         self.value = int(value)
 
