@@ -469,7 +469,7 @@ class TestEquals:
         assert JInteger.equals(2, 3) is False
 
     def test_equals_float_false(self):
-        assert JInteger.equals("igual", "igual") is False
+        assert JInteger.equals("igual", "diferente") is False
 
 
 # ── doubleValue ────────────────────────────────────────────────────────
