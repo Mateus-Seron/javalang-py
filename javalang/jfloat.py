@@ -5,7 +5,6 @@ import struct
 import sys
 
 
-
 def _float_to_int_bits(value: float) -> int:
     """Equivalente a Float.floatToIntBits(float) — bits interpretados como int com sinal."""
     return struct.unpack(">i", struct.pack(">f", value))[0]
@@ -135,5 +134,5 @@ class JFloat:
     MAX_VALUE = sys.float_info.max
     MIN_VALUE = sys.float_info.min * sys.float_info.epsilon
     MIN_NORMAL = sys.float_info.min
-    POSITIVE_INFINITY = float('inf')
-    NEGATIVE_INFINITY = float('-inf')
+    POSITIVE_INFINITY = float("inf")
+    NEGATIVE_INFINITY = float("-inf")

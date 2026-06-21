@@ -4,6 +4,8 @@ import math
 
 import pytest
 
+import sys
+
 from javalang.jfloat import JFloat
 
 # ── Operações de Verificação IEEE 754 ─────────────────────────────────────────
@@ -151,12 +153,9 @@ class TestToHexString:
     def test_to_hex_string_nan(self):
         assert JFloat.toHexString(float("nan")) == "NaN"
 
+
 """Testes para JFloat."""
 
-import sys
-import pytest
-
-from javalang.jfloat import JFloat
 
 # ── CONSTANTES ─────────────────────────────────────────────────────────────
 
