@@ -74,6 +74,13 @@ class JInteger:
         valid = set(JInteger._DIGITS[:radix])
         return all(ch in valid for ch in s.lower())
 
+    def __init__(self, value):
+        "Equivale aos dois contrutores Integer(int) e Integer(String)"
+        self.value = int(value)
+
+    def intValue(self):
+        return self.value
+
     # ── Parsing ────────────────────────────────────────────────────────────
     @staticmethod
     def parseInt(s: str, radix: int = 10) -> int:
@@ -408,6 +415,20 @@ class JInteger:
         return (dividend & _MASK32) % (divisor & _MASK32)
 
     # ── Construtores e Conversão ────────────────────────────────────────────────
+
+    def longValue(self):
+        return self.value
+
+    def shortValue(self):
+        return self.value
+
+    def byteValue(self):
+        value = self.value & 0xFF
+
+        if value >= 128:
+            value -= 256
+
+        return value
 
     def floatValue(self) -> float:
         return float(self)
