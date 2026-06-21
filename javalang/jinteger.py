@@ -134,6 +134,53 @@ class JInteger:
             f'valueOf() expects (int), (str) or (str, int); '
             f'got {type(s_or_i).__name__}'
         )
+    
+    @staticmethod
+    def decode(nm) -> int:
+        """
+        Decodes a String into an Integer.
+        Aceita decimal, hexadecimal (0x / 0X / #) e octal (zero inicial).
+        Reproduz: Integer.decode(String) — Java SE 8.
+        """
+        if nm is None:
+            raise ValueError('NumberFormatException: null')
+        if len(nm) == 0:
+            raise ValueError('NumberFormatException: Zero length string')
+
+        negative = False
+        idx = 0
+
+        if nm[0] == '-':
+            negative = True
+            idx = 1
+        elif nm[0] == '+':
+            idx = 1
+
+        radix = 10
+        if nm[idx: idx + 2] in ('0x', '0X'):
+            idx += 2
+            radix = 16
+        elif idx < len(nm) and nm[idx] == '#':
+            idx += 1
+            radix = 16
+        elif idx < len(nm) and nm[idx] == '0' and (len(nm) - idx) > 1:
+            idx += 1
+            radix = 8
+
+        rest = nm[idx:]
+        if not rest:
+            raise ValueError(f'NumberFormatException: For input string: "{nm}"')
+
+        if not _valid_digit_chars(rest, radix):
+            raise ValueError(f'NumberFormatException: For input string: "{nm}"')
+
+        magnitude = int(rest, radix)
+        result = -magnitude if negative else magnitude
+
+        if not (MIN_VALUE <= result <= MAX_VALUE):
+            raise ValueError(f'NumberFormatException: For input string: "{nm}"')
+
+        return result
 
     # ── Operações bit a bit ────────────────────────────────────────────────
 
