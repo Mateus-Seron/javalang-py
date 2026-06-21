@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import math
 import struct
+import sys
+
 
 
 def _float_to_int_bits(value: float) -> int:
@@ -128,12 +130,10 @@ class JFloat:
 
         return f.hex()
 
-import sys
-
-class JFloat:
-
     # ── Constantes ─────────────────────────────────────────────────────────
 
     MAX_VALUE = sys.float_info.max
     MIN_VALUE = sys.float_info.min * sys.float_info.epsilon
     MIN_NORMAL = sys.float_info.min
+    POSITIVE_INFINITY = float('inf')
+    NEGATIVE_INFINITY = float('-inf')
