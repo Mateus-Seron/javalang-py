@@ -470,3 +470,42 @@ class TestEquals:
 
     def test_equals_float_false(self):
         assert JInteger.equals("igual", "igual") is False
+
+
+# ── doubleValue ────────────────────────────────────────────────────────
+
+
+class TestDoubleValue:
+    def test_doubleValue_positive(self):
+        assert JInteger.doubleValue(2) == 2.0
+
+    def test_doubleValue_negative(self):
+        assert JInteger.doubleValue(-2) == -2.0
+
+    def test_doubleValue_zero(self):
+        assert JInteger.doubleValue(0) == 0.0
+
+
+# ── hashCode ────────────────────────────────────────────────────────
+
+
+class TestHashCode:
+    def test_hashCode_same(self):
+        assert JInteger.hashCode(2) == JInteger.hashCode(2)
+
+    def test_hashCode_different(self):
+        assert JInteger.hashCode(2) != JInteger.hashCode(3)
+
+
+# ── compareTo ────────────────────────────────────────────────────────
+
+
+class TestcompareTo:
+    def test_compareTo_positive(self):
+        assert JInteger.compareTo(2, 1) > 0
+
+    def test_compareTo_negative(self):
+        assert JInteger.compareTo(-2, -1) < 0
+
+    def test_compareTo_equal(self):
+        assert JInteger.compareTo(2, 2) == 0
