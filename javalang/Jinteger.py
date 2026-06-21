@@ -419,6 +419,17 @@ class JInteger:
     def longValue(self):
         return self.value
 
+    def shortValue(self):
+        return self.value
+
+    def byteValue(self):
+        value = self.value & 0xFF
+
+        if value >= 128:
+            value -= 256
+
+        return value
+
     def floatValue(self) -> float:
         return float(self)
 
