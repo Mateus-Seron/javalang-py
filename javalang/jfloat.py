@@ -91,8 +91,8 @@ class JFloat:
         try:
             return float(s.strip())
         except ValueError:
-            raise ValueError("NumberFormatException") 
-        
+            raise ValueError("NumberFormatException")
+
     @staticmethod
     def valueOf(f_or_s):
         if isinstance(f_or_s, str):
@@ -102,7 +102,7 @@ class JFloat:
                 raise ValueError("NumberFormatException")
 
         return JFloat(float(f_or_s))
-    
+
     @staticmethod
     def toString(f: float) -> str:
 
@@ -116,7 +116,7 @@ class JFloat:
             return "-0.0" if math.copysign(1.0, f) < 0 else "0.0"
 
         return str(float(f))
-    
+
     @staticmethod
     def toHexString(f: float) -> str:
 

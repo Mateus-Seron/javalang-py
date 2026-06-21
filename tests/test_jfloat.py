@@ -2,6 +2,8 @@
 
 import math
 
+import pytest
+
 from javalang.jfloat import JFloat
 
 # ── Operações de Verificação IEEE 754 ─────────────────────────────────────────
@@ -83,3 +85,68 @@ class TestOperacoesComparacaoDeFloat:
 
     def test_sum_mixed(self):
         assert JFloat.sum(-2.0, 5.0) == 3.0
+
+
+# ── Pacote de Operações de Parsing e Formatação ─────────────────────────────────────────
+
+
+class TestParseFloat:
+    def test_parse_float_valid(self):
+        assert JFloat.parseFloat("3.14") == 3.14
+
+    def test_parse_float_whitespace(self):
+        assert JFloat.parseFloat("  2.5  ") == 2.5
+
+    def test_parse_float_invalid(self):
+        with pytest.raises(ValueError):
+            JFloat.parseFloat("abc")
+
+
+class TestValueOfFloat:
+    def test_value_of_positive(self):
+        result = JFloat.valueOf(3.14)
+        assert result._value == 3.14
+
+    def test_value_of_negative(self):
+        result = JFloat.valueOf(-5.5)
+        assert result._value == -5.5
+
+    def test_value_of_zero(self):
+        result = JFloat.valueOf(0.0)
+        assert result._value == 0.0
+
+
+class TestValueOfString:
+    def test_value_of_string_valid(self):
+        result = JFloat.valueOf("4.2")
+        assert result._value == 4.2
+
+    def test_value_of_string_whitespace(self):
+        result = JFloat.valueOf(" 1.5 ")
+        assert result._value == 1.5
+
+    def test_value_of_string_invalid(self):
+        with pytest.raises(ValueError):
+            JFloat.valueOf("abc")
+
+
+class TestToString:
+    def test_to_string_normal(self):
+        assert JFloat.toString(3.14) == "3.14"
+
+    def test_to_string_nan(self):
+        assert JFloat.toString(float("nan")) == "NaN"
+
+    def test_to_string_infinity(self):
+        assert JFloat.toString(float("inf")) == "Infinity"
+
+
+class TestToHexString:
+    def test_to_hex_string_one(self):
+        assert JFloat.toHexString(1.0) == "0x1.0000000000000p+0"
+
+    def test_to_hex_string_half(self):
+        assert JFloat.toHexString(0.5) == "0x1.0000000000000p-1"
+
+    def test_to_hex_string_nan(self):
+        assert JFloat.toHexString(float("nan")) == "NaN"
