@@ -8,6 +8,7 @@ from javalang.jfloat import JFloat
 
 # ── Constantes ───────────────────────────────────────────────
 
+
 class TestNaNConstant:
     def test_nan_constant(self):
         assert math.isnan(JFloat.NaN)
