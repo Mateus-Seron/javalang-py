@@ -80,3 +80,25 @@ class JFloat:
     def sum(a: float, b: float) -> float:
         """Float.sum(float a, float b)."""
         return a + b
+
+    # ── Pacote de Operações de Parsing e Formatação ──────────────────────────────────────────────
+
+    @staticmethod
+    def parseFloat(s: str) -> float:
+        if s is None:
+            raise TypeError("NullPointerException")
+
+        try:
+            return float(s.strip())
+        except ValueError:
+            raise ValueError("NumberFormatException") 
+        
+    @staticmethod
+    def valueOf(f_or_s):
+        if isinstance(f_or_s, str):
+            try:
+                return JFloat(float(f_or_s.strip()))
+            except ValueError:
+                raise ValueError("NumberFormatException")
+
+        return JFloat(float(f_or_s))
