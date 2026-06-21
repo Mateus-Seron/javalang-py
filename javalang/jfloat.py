@@ -18,6 +18,22 @@ def _int_bits_to_float(bits: int) -> float:
     return struct.unpack(">f", struct.pack(">I", bits & 0xFFFFFFFF))[0]
 
 
+def _to_float32(value: float) -> float:
+    """Normaliza para precisão de float Java (32 bits)."""
+    return struct.unpack(">f", struct.pack(">f", value))[0]
+
+
+def _float_to_string(value: float) -> str:
+    """Equivalente a Float.toString(float) para casos especiais."""
+    if value != value:
+        return "NaN"
+    if value == float("inf"):
+        return "Infinity"
+    if value == float("-inf"):
+        return "-Infinity"
+    return str(value)
+
+
 class JFloat:
     """Wrapper imutável equivalente a java.lang.Float (Java SE 8)."""
 
@@ -60,3 +76,25 @@ class JFloat:
     def sum(a: float, b: float) -> float:
         """Float.sum(float a, float b)."""
         return a + b
+
+    # ── Operações de Construtores e Conversão de Float ─────────────────────
+
+    def __init__(self, value: float):
+        self._value = _to_float32(value)
+
+    @staticmethod
+    def valueOf(value: float) -> JFloat:
+        """Float.valueOf(float f)."""
+        return JFloat(value)
+
+    def floatValue(self) -> float:
+        """Float.floatValue()."""
+        return self._value
+
+    def doubleValue(self) -> float:
+        """Float.doubleValue()."""
+        return float(self._value)
+
+    def toString(self) -> str:
+        """Float.toString() — representação decimal do valor encapsulado."""
+        return _float_to_string(self._value)
