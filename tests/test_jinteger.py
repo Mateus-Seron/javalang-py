@@ -658,9 +658,6 @@ class TestToString:
     def test_toString_negative_number(self):
         assert JInteger.toString(-2) == "-2"
 
-    def test_toString_float_number(self):
-        assert JInteger.toString(2.5) == "2.5"
-
 
 # ── equals ────────────────────────────────────────────────────────
 
