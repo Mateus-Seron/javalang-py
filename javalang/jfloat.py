@@ -75,3 +75,34 @@ class JFloat:
             Float(String s)
         """
         self.value = float(value)
+    
+    # ── Conversões ─────────────────────────────────────────────
+
+    def byteValue(self) -> int:
+        """
+        Conversão narrowing para byte (8 bits com sinal).
+        """
+        value = int(self.value) & 0xFF
+
+        if value >= 128:
+            value -= 256
+
+        return value
+
+    def shortValue(self) -> int:
+        """
+        Conversão narrowing para short (16 bits com sinal).
+        """
+        value = int(self.value) & 0xFFFF
+
+        if value >= 32768:
+            value -= 65536
+
+        return value
+
+    def intValue(self) -> int:
+        """
+        Descarta a parte fracionária.
+        """
+        return int(self.value)
+
