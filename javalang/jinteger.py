@@ -252,6 +252,7 @@ class JInteger:
         if u == 0:
             return "0"
         return _to_string_radix_unsigned(u, radix)
+
     @staticmethod
     def reverseBytes(i: int) -> int:
         """Integer.reverseBytes(int i) — inverte a ordem dos 4 bytes."""

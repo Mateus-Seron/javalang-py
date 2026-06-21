@@ -288,7 +288,6 @@ class TestNumberOfTrailingZeros:
 
 
 class TestOperacoesFormatacaoPorBase:
-
     def test_to_string_decimal_positivo(self, valores_bit):
         assert JInteger.toString(valores_bit["dez"]) == "10"
 
@@ -353,6 +352,8 @@ class TestOperacoesFormatacaoPorBase:
     def test_to_unsigned_string_radix_fora_do_intervalo(self):
         with pytest.raises(ValueError, match="radix 37 out of range"):
             JInteger.toUnsignedString(10, 37)
+
+
 # ── signum ───────────────────────────────────────────────────────────────────
 
 
