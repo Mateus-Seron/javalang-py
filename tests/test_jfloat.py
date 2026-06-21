@@ -1,6 +1,7 @@
 """Testes para JFloat."""
 
 import math
+import sys
 
 import pytest
 
@@ -178,3 +179,28 @@ class TestToHexString:
 
     def test_to_hex_string_nan(self):
         assert JFloat.toHexString(float("nan")) == "NaN"
+
+
+"""Testes para JFloat."""
+
+
+# ── CONSTANTES ─────────────────────────────────────────────────────────────
+
+
+class TestConstants:
+    def test_max_value(self):
+        assert JFloat.MAX_VALUE == sys.float_info.max
+
+    def test_min_normal(self):
+        assert JFloat.MIN_NORMAL == sys.float_info.min
+
+    def test_min_value(self):
+        assert JFloat.MIN_VALUE == 5e-324
+
+    def test_positive_infinity(self):
+        assert math.isinf(JFloat.POSITIVE_INFINITY)
+        assert JFloat.POSITIVE_INFINITY > 0
+
+    def test_negative_infinity(self):
+        assert math.isinf(JFloat.NEGATIVE_INFINITY)
+        assert JFloat.NEGATIVE_INFINITY < 0

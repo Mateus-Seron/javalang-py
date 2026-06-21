@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import math
 import struct
+import sys
 
 
 def _float_to_int_bits(value: float) -> int:
@@ -22,6 +23,11 @@ def _int_bits_to_float(bits: int) -> float:
 class JFloat:
     # ── Constantes Float ──────────────────────────────────────────────
 
+    MAX_VALUE = sys.float_info.max
+    MIN_VALUE = sys.float_info.min * sys.float_info.epsilon
+    MIN_NORMAL = sys.float_info.min
+    POSITIVE_INFINITY = float("inf")
+    NEGATIVE_INFINITY = float("-inf")
     NaN = float("nan")
     MAX_EXPONENT = 127
     MIN_EXPONENT = -126
