@@ -12,6 +12,13 @@ class JFloat:
             return math.isnan(self_or_v._value)
 
         return math.isnan(self_or_v)
-    
 
+    def isInfinite(self_or_v):
+        if isinstance(self_or_v, JFloat):
+            return math.isinf(self_or_v._value)
+
+        return math.isinf(self_or_v)
     
+    @staticmethod
+    def isFinite(f: float) -> bool:
+        return math.isfinite(f)
