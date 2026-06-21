@@ -106,3 +106,8 @@ class JFloat:
         """
         return int(self.value)
 
+    def longValue(self) -> int:
+        """
+        Em Python int já possui precisão arbitrária.
+        """
+        return int(self.value)
