@@ -117,6 +117,33 @@ class TestOperacoesConstrutoresEConversaoDeFloat:
 
     def test_toString_nan(self):
         assert JFloat.valueOf(float("nan")).toString() == "NaN"
+
+    def test_hashCode_same_value(self):
+        assert JFloat.valueOf(2.5).hashCode() == JFloat.valueOf(2.5).hashCode()
+
+    def test_hashCode_different_value(self):
+        assert JFloat.valueOf(2.5).hashCode() != JFloat.valueOf(3.0).hashCode()
+
+    def test_hashCode_zeros(self):
+        assert JFloat.valueOf(-0.0).hashCode() == JFloat.valueOf(0.0).hashCode()
+
+    def test_equals_same_value(self):
+        assert JFloat.valueOf(2.5).equals(JFloat.valueOf(2.5)) is True
+
+    def test_equals_different_value(self):
+        assert JFloat.valueOf(2.5).equals(JFloat.valueOf(3.0)) is False
+
+    def test_equals_not_jfloat(self):
+        assert JFloat.valueOf(2.5).equals(2.5) is False
+
+    def test_compareTo_greater(self):
+        assert JFloat.valueOf(3.0).compareTo(JFloat.valueOf(1.0)) > 0
+
+    def test_compareTo_less(self):
+        assert JFloat.valueOf(1.0).compareTo(JFloat.valueOf(3.0)) < 0
+
+    def test_compareTo_equal(self):
+        assert JFloat.valueOf(2.0).compareTo(JFloat.valueOf(2.0)) == 0
 # ── Pacote de Operações de Parsing e Formatação ─────────────────────────────────────────
 
 
@@ -135,7 +162,7 @@ class TestParseFloat:
 class TestValueOfFloat:
     def test_value_of_positive(self):
         result = JFloat.valueOf(3.14)
-        assert result._value == 3.14
+        assert result.floatValue() == pytest.approx(3.14, rel=1e-6)
 
     def test_value_of_negative(self):
         result = JFloat.valueOf(-5.5)
@@ -149,7 +176,7 @@ class TestValueOfFloat:
 class TestValueOfString:
     def test_value_of_string_valid(self):
         result = JFloat.valueOf("4.2")
-        assert result._value == 4.2
+        assert result.floatValue() == pytest.approx(4.2, rel=1e-6)
 
     def test_value_of_string_whitespace(self):
         result = JFloat.valueOf(" 1.5 ")
