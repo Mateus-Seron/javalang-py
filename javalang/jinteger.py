@@ -275,12 +275,18 @@ class JInteger:
     # ── Operações de Formatação por Base ───────────────────────────────────
 
     @staticmethod
-    def toString(i: int, radix: int = 10) -> str:
-        """Integer.toString(int i) / Integer.toString(int i, int radix)."""
+    def toString(self_or_i, radix: int = 10) -> str:
+        if isinstance(self_or_i, JInteger):
+            return str(int(self_or_i))
+
+        i = self_or_i
+
         if radix < _MIN_RADIX or radix > _MAX_RADIX:
             raise ValueError(f"radix {radix} out of range")
+
         if radix == 10:
             return str(_to_int32(i))
+
         return _to_string_radix(i, radix)
 
     @staticmethod
@@ -400,3 +406,25 @@ class JInteger:
     def remainderUnsigned(dividend: int, divisor: int) -> int:
         """Integer.remainderUnsigned(int dividend, int divisor)"""
         return (dividend & _MASK32) % (divisor & _MASK32)
+
+    # ── Construtores e Conversão ────────────────────────────────────────────────
+
+    def floatValue(self) -> float:
+        return float(self)
+
+    def equals(self, other) -> bool:
+        return self == other
+
+    def doubleValue(self) -> float:
+        return float(self)
+
+    def hashCode(self) -> int:
+        return hash(self)
+
+    def compareTo(self, i: int) -> int:
+        if self > i:
+            return 1
+        elif self < i:
+            return -1
+        else:
+            return 0
