@@ -1,15 +1,31 @@
+from __future__ import annotations
+
+
 ## class JString:
+class JString:
+    # ==========================================================
+    # CONSTRUTORES
+    # ==========================================================
 
-# ==========================================================
-# CONSTRUTORES
-# ==========================================================
+    # String()
+    @staticmethod
+    def string(self) -> str:
+        return ""
 
-# String()
-# String(char[] value)
-# String(byte[] bytes)
-# String(byte[], int offset, int length)
-# String(StringBuilder builder)
-# String(String original)
+    # String(char[] value)
+    @staticmethod
+    def stringCharArray(value: list[str]) -> str:
+        return "".join(value)
+
+    # String(byte[] bytes)
+    # String(byte[], int offset, int length)
+    # String(StringBuilder builder)
+    # String(String original)
+    @staticmethod
+    def stringOriginal(original: str) -> str:
+        return str(original)
+
+
 # String(char[] value, int offset, int count)
 # String(byte[] bytes, String charset)
 # String(int[] codePoints, int offset, int count)
