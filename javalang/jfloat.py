@@ -59,3 +59,10 @@ class JFloat:
         if a == 0.0 and b == 0.0:
             return _int_bits_to_float(_float_to_raw_bits(a) | _float_to_raw_bits(b))
         return a if a <= b else b
+
+    # ── Aritmética estática ────────────────────────────────────────────────
+
+    @staticmethod
+    def sum(a: float, b: float) -> float:
+        """Float.sum(float a, float b)."""
+        return a + b
