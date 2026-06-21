@@ -2,10 +2,25 @@ from __future__ import annotations
 
 import math
 import struct
+import sys
+
+
+def _to_float32(value: float) -> float:
+    """Normaliza para precisão de float Java (32 bits)."""
+    return struct.unpack(">f", struct.pack(">f", float(value)))[0]
 
 
 def _float_to_int_bits(value: float) -> int:
-    """Equivalente a Float.floatToIntBits(float) — bits interpretados como int com sinal."""
+    """Bits brutos IEEE 754 como int com sinal (preserva sinal de zero)."""
+    return struct.unpack(">i", struct.pack(">f", value))[0]
+
+
+def _float_to_canonical_int_bits(value: float) -> int:
+    """Equivalente a Float.floatToIntBits — NaN e zeros canônicos."""
+    if value != value:
+        return 0x7FC00000
+    if value == 0.0:
+        return 0
     return struct.unpack(">i", struct.pack(">f", value))[0]
 
 
@@ -19,77 +34,165 @@ def _int_bits_to_float(bits: int) -> float:
     return struct.unpack(">f", struct.pack(">I", bits & 0xFFFFFFFF))[0]
 
 
+def _float_to_string(value: float) -> str:
+    """Formatação instância toString()."""
+    if value != value:
+        return "NaN"
+    if value == float("inf"):
+        return "Infinity"
+    if value == float("-inf"):
+        return "-Infinity"
+    return str(value)
+
+
+def _float_to_string_static(f: float) -> str:
+    """Equivalente a Float.toString(float)."""
+    if math.isnan(f):
+        return "NaN"
+    if math.isinf(f):
+        return "Infinity" if f > 0 else "-Infinity"
+    if f == 0.0:
+        return "-0.0" if math.copysign(1.0, f) < 0 else "0.0"
+    return str(float(f))
+
+
+class _ToString:
+    """Unifica Float.toString() (instância) e Float.toString(float) (estático)."""
+
+    def __get__(self, obj, owner):
+        if obj is None:
+            return owner._toString_static
+        return lambda: _float_to_string(obj.value)
+
+
 class JFloat:
     # ── Constantes Float ──────────────────────────────────────────────
 
+    MAX_VALUE = sys.float_info.max
+    MIN_VALUE = sys.float_info.min * sys.float_info.epsilon
+    MIN_NORMAL = sys.float_info.min
+
+    POSITIVE_INFINITY = float("inf")
+    NEGATIVE_INFINITY = float("-inf")
     NaN = float("nan")
+
     MAX_EXPONENT = 127
     MIN_EXPONENT = -126
+
     SIZE = 32
     BYTES = 4
+    TYPE = float
+
+    # ── Construtor ────────────────────────────────────────────────────
 
     def __init__(self, value):
-        self._value = float(value)
+        """
+        Equivale aos construtores:
+            Float(float value)
+            Float(double value)
+            Float(String s)
+        """
+        self.value = _to_float32(float(value))
 
-    # ── Operações de Verificação IEEE 754  ──────────────────────────────────────────────
+    # ── Operações de Verificação IEEE 754 ─────────────────────────────
 
-    def isNaN(self_or_v):
-        if isinstance(self_or_v, JFloat):
-            return math.isnan(self_or_v._value)
+    def isNaN(self):
+        return math.isnan(self.value)
 
-        return math.isnan(self_or_v)
-
-    def isInfinite(self_or_v):
-        if isinstance(self_or_v, JFloat):
-            return math.isinf(self_or_v._value)
-
-        return math.isinf(self_or_v)
+    def isInfinite(self):
+        return math.isinf(self.value)
 
     @staticmethod
     def isFinite(f: float) -> bool:
         return math.isfinite(f)
 
-    # ── Operações de Comparação de Float ───────────────────────────────────────
+    # ── Operações de Comparação ───────────────────────────────────────
 
     @staticmethod
     def compare(f1: float, f2: float) -> int:
-        """Float.compare(float f1, float f2)."""
         if f1 < f2:
             return -1
+
         if f1 > f2:
             return 1
+
         bits1 = _float_to_int_bits(f1)
         bits2 = _float_to_int_bits(f2)
+
         if bits1 == bits2:
             return 0
-        if bits1 < bits2:
-            return -1
-        return 1
+
+        return -1 if bits1 < bits2 else 1
 
     @staticmethod
     def max(a: float, b: float) -> float:
-        """Float.max(float a, float b)."""
-        if a != a:
+        if math.isnan(a):
             return a
+
         if a == 0.0 and b == 0.0:
             return _int_bits_to_float(_float_to_raw_bits(a) & _float_to_raw_bits(b) & 0x7FFFFFFF)
+
         return a if a >= b else b
 
     @staticmethod
     def min(a: float, b: float) -> float:
-        """Float.min(float a, float b)."""
-        if a != a:
+        if math.isnan(a):
             return a
+
         if a == 0.0 and b == 0.0:
             return _int_bits_to_float(_float_to_raw_bits(a) | _float_to_raw_bits(b))
+
         return a if a <= b else b
 
     @staticmethod
     def sum(a: float, b: float) -> float:
-        """Float.sum(float a, float b)."""
         return a + b
 
-    # ── Pacote de Operações de Parsing e Formatação ──────────────────────────────────────────────
+    # ── Conversões ────────────────────────────────────────────────────
+
+    def byteValue(self) -> int:
+        value = int(self.value) & 0xFF
+
+        if value >= 128:
+            value -= 256
+
+        return value
+
+    def shortValue(self) -> int:
+        value = int(self.value) & 0xFFFF
+
+        if value >= 32768:
+            value -= 65536
+
+        return value
+
+    def intValue(self) -> int:
+        return int(self.value)
+
+    def longValue(self) -> int:
+        return int(self.value)
+
+    def floatValue(self) -> float:
+        return self.value
+
+    def doubleValue(self) -> float:
+        return float(self.value)
+
+    _toString_static = staticmethod(_float_to_string_static)
+    toString = _ToString()
+
+    def hashCode(self) -> int:
+        return _float_to_canonical_int_bits(self.value)
+
+    def equals(self, other) -> bool:
+        if not isinstance(other, JFloat):
+            return False
+        return _float_to_canonical_int_bits(self.value) == _float_to_canonical_int_bits(other.value)
+
+    def compareTo(self, other: JFloat) -> int:
+        return JFloat.compare(self.value, other.value)
+
+    # ── Parsing e Formatação ──────────────────────────────────────────
 
     @staticmethod
     def parseFloat(s: str) -> float:
@@ -97,7 +200,7 @@ class JFloat:
             raise TypeError("NullPointerException")
 
         try:
-            return float(s.strip())
+            return _to_float32(float(s.strip()))
         except ValueError:
             raise ValueError("NumberFormatException")
 
@@ -105,29 +208,14 @@ class JFloat:
     def valueOf(f_or_s):
         if isinstance(f_or_s, str):
             try:
-                return JFloat(float(f_or_s.strip()))
+                return JFloat(f_or_s.strip())
             except ValueError:
                 raise ValueError("NumberFormatException")
 
-        return JFloat(float(f_or_s))
-
-    @staticmethod
-    def toString(f: float) -> str:
-
-        if math.isnan(f):
-            return "NaN"
-
-        if math.isinf(f):
-            return "Infinity" if f > 0 else "-Infinity"
-
-        if f == 0.0:
-            return "-0.0" if math.copysign(1.0, f) < 0 else "0.0"
-
-        return str(float(f))
+        return JFloat(f_or_s)
 
     @staticmethod
     def toHexString(f: float) -> str:
-
         if math.isnan(f):
             return "NaN"
 
@@ -135,3 +223,17 @@ class JFloat:
             return "Infinity" if f > 0 else "-Infinity"
 
         return f.hex()
+
+    # ── Pacote de Operações de Conversão Binária ──────────────────────
+
+    @staticmethod
+    def floatToIntBits(value: float) -> int:
+        return _float_to_canonical_int_bits(value)
+
+    @staticmethod
+    def floatToRawBits(value: float) -> int:
+        return struct.unpack(">i", struct.pack(">f", value))[0]
+
+    @staticmethod
+    def intBitsToFloat(bits: int) -> float:
+        return _int_bits_to_float(bits)

@@ -1,48 +1,55 @@
 """Testes para JFloat."""
 
 import math
+import struct
+import sys
 
 import pytest
 
 from javalang.jfloat import JFloat
 
-# ── Constantes ───────────────────────────────────────────────
+# ── CONSTANTES ─────────────────────────────────────────────────────────────
 
 
-class TestNaNConstant:
+class TestConstants:
+    def test_max_value(self):
+        assert JFloat.MAX_VALUE == sys.float_info.max
+
+    def test_min_normal(self):
+        assert JFloat.MIN_NORMAL == sys.float_info.min
+
+    def test_min_value(self):
+        assert JFloat.MIN_VALUE == sys.float_info.min * sys.float_info.epsilon
+
+    def test_positive_infinity(self):
+        assert math.isinf(JFloat.POSITIVE_INFINITY)
+        assert JFloat.POSITIVE_INFINITY > 0
+
+    def test_negative_infinity(self):
+        assert math.isinf(JFloat.NEGATIVE_INFINITY)
+        assert JFloat.NEGATIVE_INFINITY < 0
+
     def test_nan_constant(self):
         assert math.isnan(JFloat.NaN)
 
-
-class TestMaxExponent:
-    def test_max_exponent_value(self):
+    def test_max_exponent(self):
         assert JFloat.MAX_EXPONENT == 127
 
-
-class TestMinExponent:
-    def test_min_exponent_value(self):
+    def test_min_exponent(self):
         assert JFloat.MIN_EXPONENT == -126
 
-
-class TestSize:
-    def test_size_value(self):
+    def test_size(self):
         assert JFloat.SIZE == 32
 
-
-class TestBytes:
-    def test_bytes_value(self):
+    def test_bytes(self):
         assert JFloat.BYTES == 4
 
 
-# ── Operações de Verificação IEEE 754 ─────────────────────────────────────────
+# ── Operações de Verificação IEEE 754 ──────────────────────────────────────
 
 
 class TestIsNaN:
     def test_is_nan_instance(self):
-        value = JFloat(float("nan"))
-        assert value.isNaN() is True
-
-    def test_is_nan_static(self):
         assert JFloat(float("nan")).isNaN() is True
 
     def test_is_nan_false(self):
@@ -50,17 +57,14 @@ class TestIsNaN:
 
 
 class TestIsInfinite:
-    def test_is_infinite_instance(self):
-        value = JFloat(float("inf"))
-        assert value.isInfinite() is True
+    def test_is_infinite_positive(self):
+        assert JFloat(float("inf")).isInfinite() is True
 
-    def test_is_infinite_static(self):
-        value = JFloat(float("-inf"))
-        assert value.isInfinite() is True
+    def test_is_infinite_negative(self):
+        assert JFloat(float("-inf")).isInfinite() is True
 
     def test_is_infinite_false(self):
-        value = JFloat(100.0)
-        assert value.isInfinite() is False
+        assert JFloat(100.0).isInfinite() is False
 
 
 class TestIsFinite:
@@ -74,7 +78,7 @@ class TestIsFinite:
         assert JFloat.isFinite(float("nan")) is False
 
 
-# ── Operações de Comparação de Float ─────────────────────────────────────────
+# ── Operações de Comparação ────────────────────────────────────────────────
 
 
 class TestOperacoesComparacaoDeFloat:
@@ -115,15 +119,203 @@ class TestOperacoesComparacaoDeFloat:
         assert JFloat.sum(-2.0, 5.0) == 3.0
 
 
-# ── Pacote de Operações de Parsing e Formatação ─────────────────────────────────────────
+# ── Operações de Construtores e Conversão de Float ─────────────────────────
+
+
+class TestOperacoesConstrutoresEConversaoDeFloat:
+    def test_floatValue_positive(self):
+        assert JFloat.valueOf(2.5).floatValue() == 2.5
+
+    def test_floatValue_negative(self):
+        assert JFloat.valueOf(-3.0).floatValue() == -3.0
+
+    def test_floatValue_zero(self):
+        assert JFloat.valueOf(0.0).floatValue() == 0.0
+
+    def test_doubleValue_positive(self):
+        assert JFloat.valueOf(2.5).doubleValue() == 2.5
+
+    def test_doubleValue_negative(self):
+        assert JFloat.valueOf(-3.0).doubleValue() == -3.0
+
+    def test_doubleValue_zero(self):
+        assert JFloat.valueOf(0.0).doubleValue() == 0.0
+
+    def test_toString_positive(self):
+        assert JFloat.valueOf(2.5).toString() == "2.5"
+
+    def test_toString_negative(self):
+        assert JFloat.valueOf(-2.0).toString() == "-2.0"
+
+    def test_toString_nan(self):
+        assert JFloat.valueOf(float("nan")).toString() == "NaN"
+
+    def test_hashCode_same_value(self):
+        assert JFloat.valueOf(2.5).hashCode() == JFloat.valueOf(2.5).hashCode()
+
+    def test_hashCode_different_value(self):
+        assert JFloat.valueOf(2.5).hashCode() != JFloat.valueOf(3.0).hashCode()
+
+    def test_hashCode_zeros(self):
+        assert JFloat.valueOf(-0.0).hashCode() == JFloat.valueOf(0.0).hashCode()
+
+    def test_equals_same_value(self):
+        assert JFloat.valueOf(2.5).equals(JFloat.valueOf(2.5)) is True
+
+    def test_equals_different_value(self):
+        assert JFloat.valueOf(2.5).equals(JFloat.valueOf(3.0)) is False
+
+    def test_equals_not_jfloat(self):
+        assert JFloat.valueOf(2.5).equals(2.5) is False
+
+    def test_compareTo_greater(self):
+        assert JFloat.valueOf(3.0).compareTo(JFloat.valueOf(1.0)) > 0
+
+    def test_compareTo_less(self):
+        assert JFloat.valueOf(1.0).compareTo(JFloat.valueOf(3.0)) < 0
+
+    def test_compareTo_equal(self):
+        assert JFloat.valueOf(2.0).compareTo(JFloat.valueOf(2.0)) == 0
+
+
+class TestJFloatInit:
+    def test_init_com_float(self):
+        assert JFloat(3.14).value == pytest.approx(3.14)
+
+    def test_init_com_int(self):
+        assert JFloat(10).value == 10.0
+
+    def test_init_com_string(self):
+        assert JFloat("2.5").value == pytest.approx(2.5)
+
+    def test_init_com_string_negativa(self):
+        assert JFloat("-7.25").value == pytest.approx(-7.25)
+
+    def test_init_com_zero(self):
+        assert JFloat(0).value == 0.0
+
+    def test_init_string_invalida_levanta_excecao(self):
+        with pytest.raises(ValueError):
+            JFloat("abc")
+
+
+# ── byteValue ──────────────────────────────────────────────────────────────
+
+
+class TestByteValue:
+    def test_bytevalue_zero(self):
+        assert JFloat(0.0).byteValue() == 0
+
+    def test_bytevalue_um(self):
+        assert JFloat(1.9).byteValue() == 1
+
+    def test_bytevalue_maximo_positivo(self):
+        assert JFloat(127.9).byteValue() == 127
+
+    def test_bytevalue_128_vira_negativo(self):
+        assert JFloat(128.0).byteValue() == -128
+
+    def test_bytevalue_255_vira_menos_um(self):
+        assert JFloat(255.99).byteValue() == -1
+
+    def test_bytevalue_256_reinicia_para_zero(self):
+        assert JFloat(256.0).byteValue() == 0
+
+    def test_bytevalue_negativo_menos_1(self):
+        assert JFloat(-1.5).byteValue() == -1
+
+    def test_bytevalue_negativo_menos_128(self):
+        assert JFloat(-128.0).byteValue() == -128
+
+    def test_bytevalue_negativo_menos_129(self):
+        assert JFloat(-129.0).byteValue() == 127
+
+    def test_bytevalue_grande_positivo(self):
+        assert JFloat(300.75).byteValue() == 44
+
+    def test_bytevalue_retorna_int(self):
+        assert isinstance(JFloat(10.5).byteValue(), int)
+
+
+# ── shortValue ─────────────────────────────────────────────────────────────
+
+
+class TestShortValue:
+    def test_shortvalue_zero(self):
+        assert JFloat(0.0).shortValue() == 0
+
+    def test_shortvalue_positivo(self):
+        assert JFloat(32767.99).shortValue() == 32767
+
+    def test_shortvalue_negativo(self):
+        assert JFloat(-32768.99).shortValue() == -32768
+
+    def test_shortvalue_32768_vira_negativo(self):
+        assert JFloat(32768.0).shortValue() == -32768
+
+    def test_shortvalue_65535_vira_menos_um(self):
+        assert JFloat(65535.0).shortValue() == -1
+
+    def test_shortvalue_65536_reinicia(self):
+        assert JFloat(65536.0).shortValue() == 0
+
+    def test_shortvalue_negativo_menos_32769(self):
+        assert JFloat(-32769.0).shortValue() == 32767
+
+    def test_shortvalue_retorna_int(self):
+        assert isinstance(JFloat(5.5).shortValue(), int)
+
+
+# ── intValue ───────────────────────────────────────────────────────────────
+
+
+class TestIntValue:
+    def test_intvalue_positivo(self):
+        assert JFloat(100.99).intValue() == 100
+
+    def test_intvalue_negativo(self):
+        assert JFloat(-50.99).intValue() == -50
+
+    def test_intvalue_zero(self):
+        assert JFloat(0.0).intValue() == 0
+
+    def test_intvalue_trunca_decimal(self):
+        assert JFloat(123.999).intValue() == 123
+
+    def test_intvalue_retorna_int(self):
+        assert isinstance(JFloat(7.7).intValue(), int)
+
+
+# ── longValue ──────────────────────────────────────────────────────────────
+
+
+class TestLongValue:
+    def test_longvalue_positivo(self):
+        assert JFloat(1_000_000.9).longValue() == 1_000_000
+
+    def test_longvalue_negativo(self):
+        assert JFloat(-1_000_000.9).longValue() == -1_000_000
+
+    def test_longvalue_zero(self):
+        assert JFloat(0.0).longValue() == 0
+
+    def test_longvalue_grande(self):
+        valor = 2**53
+        assert JFloat(float(valor)).longValue() == valor
+
+    def test_longvalue_retorna_int(self):
+        assert isinstance(JFloat(5.5).longValue(), int)
+
+
+# ── Parsing e Formatação ───────────────────────────────────────────────────
 
 
 class TestParseFloat:
     def test_parse_float_valid(self):
-        assert JFloat.parseFloat("3.14") == 3.14
+        assert JFloat.parseFloat("3.14") == pytest.approx(3.14)
 
     def test_parse_float_whitespace(self):
-        assert JFloat.parseFloat("  2.5  ") == 2.5
+        assert JFloat.parseFloat("  2.5  ") == pytest.approx(2.5)
 
     def test_parse_float_invalid(self):
         with pytest.raises(ValueError):
@@ -133,25 +325,25 @@ class TestParseFloat:
 class TestValueOfFloat:
     def test_value_of_positive(self):
         result = JFloat.valueOf(3.14)
-        assert result._value == 3.14
+        assert result.value == pytest.approx(3.14)
 
     def test_value_of_negative(self):
         result = JFloat.valueOf(-5.5)
-        assert result._value == -5.5
+        assert result.value == pytest.approx(-5.5)
 
     def test_value_of_zero(self):
         result = JFloat.valueOf(0.0)
-        assert result._value == 0.0
+        assert result.value == 0.0
 
 
 class TestValueOfString:
     def test_value_of_string_valid(self):
         result = JFloat.valueOf("4.2")
-        assert result._value == 4.2
+        assert result.value == pytest.approx(4.2)
 
     def test_value_of_string_whitespace(self):
         result = JFloat.valueOf(" 1.5 ")
-        assert result._value == 1.5
+        assert result.value == pytest.approx(1.5)
 
     def test_value_of_string_invalid(self):
         with pytest.raises(ValueError):
@@ -168,6 +360,12 @@ class TestToString:
     def test_to_string_infinity(self):
         assert JFloat.toString(float("inf")) == "Infinity"
 
+    def test_to_string_negative_infinity(self):
+        assert JFloat.toString(float("-inf")) == "-Infinity"
+
+    def test_to_string_zero(self):
+        assert JFloat.toString(0.0) == "0.0"
+
 
 class TestToHexString:
     def test_to_hex_string_one(self):
@@ -178,3 +376,66 @@ class TestToHexString:
 
     def test_to_hex_string_nan(self):
         assert JFloat.toHexString(float("nan")) == "NaN"
+
+    def test_to_hex_string_infinity(self):
+        assert JFloat.toHexString(float("inf")) == "Infinity"
+
+
+# ── Pacote de Operações de Conversão Binária ─────────────────────────────────
+
+
+class TestFloatToIntBits:
+    def test_float_to_int_bits_positivo(self):
+        assert JFloat.floatToIntBits(5.5) == struct.unpack(">i", struct.pack(">f", 5.5))[0]
+
+    def test_float_to_int_bits_negativo(self):
+        assert JFloat.floatToIntBits(-1.5) == struct.unpack(">i", struct.pack(">f", -1.5))[0]
+
+    def test_float_to_int_bits_zero(self):
+        assert JFloat.floatToIntBits(0.0) == 0
+
+    def test_float_to_int_bits_nan(self):
+        assert JFloat.floatToIntBits(math.nan) == 0x7FC00000
+
+    def test_float_to_int_bits_infinito_positivo(self):
+        assert JFloat.floatToIntBits(math.inf) == 0x7F800000
+
+    def test_float_to_int_bits_infinito_negativo(self):
+        assert (
+            JFloat.floatToIntBits(-math.inf) == struct.unpack(">i", struct.pack(">f", -math.inf))[0]
+        )
+
+
+class TestFloatToRawIntBits:
+    def test_float_to_raw_int_bits_positivo(self):
+        assert JFloat.floatToRawBits(5.55) == struct.unpack(">i", struct.pack(">f", 5.55))[0]
+
+    def test_float_to_raw_int_bits_negativo(self):
+        assert JFloat.floatToRawBits(-2.55) == struct.unpack(">i", struct.pack(">f", -2.55))[0]
+
+    def test_float_to_raw_int_bits_nan(self):
+        result = JFloat.floatToRawBits(math.nan)
+        assert math.isnan(struct.unpack(">f", struct.pack(">i", result))[0])
+
+
+class TestIntBitsToFloat:
+    def test_int_bits_to_float_positivo(self):
+        bits = struct.unpack(">i", struct.pack(">f", 3.0))[0]
+        assert JFloat.intBitsToFloat(bits) == 3.0
+
+    def test_int_bits_to_float_negativo(self):
+        bits = struct.unpack(">i", struct.pack(">f", -0.5))[0]
+        assert JFloat.intBitsToFloat(bits) == -0.5
+
+    def test_int_bits_to_float_nan(self):
+        assert math.isnan(JFloat.intBitsToFloat(0x7FC00000))
+
+    def test_int_bits_to_float_infinito(self):
+        assert JFloat.intBitsToFloat(0x7F800000) == math.inf
+
+
+class TestRoundTrip:
+    def test_round_trip(self):
+        value = 7.5
+        bits = JFloat.floatToIntBits(value)
+        assert JFloat.intBitsToFloat(bits) == value
