@@ -6,6 +6,7 @@ from javalang.Jinteger import JInteger
 
 # ── CONSTANTES ─────────────────────────────────────────────────────────────
 
+
 class TestConstantes:
     def test_min(self):
         assert JInteger.MIN_VALUE == -2147483648

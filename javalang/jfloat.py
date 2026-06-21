@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-import struct
 import math
+import struct
+
 
 def _float_to_int_bits(value: float) -> int:
     """Equivalente a Float.floatToIntBits(float) — bits interpretados como int com sinal."""
@@ -17,8 +18,8 @@ def _int_bits_to_float(bits: int) -> float:
     """Equivalente a Float.intBitsToFloat(int)."""
     return struct.unpack(">f", struct.pack(">I", bits & 0xFFFFFFFF))[0]
 
-class JFloat:
 
+class JFloat:
     def __init__(self, value):
         self._value = float(value)
 
@@ -35,7 +36,7 @@ class JFloat:
             return math.isinf(self_or_v._value)
 
         return math.isinf(self_or_v)
-    
+
     @staticmethod
     def isFinite(f: float) -> bool:
         return math.isfinite(f)
