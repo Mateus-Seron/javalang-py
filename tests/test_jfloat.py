@@ -119,6 +119,65 @@ class TestOperacoesComparacaoDeFloat:
         assert JFloat.sum(-2.0, 5.0) == 3.0
 
 
+# ── Operações de Construtores e Conversão de Float ─────────────────────────
+
+
+class TestOperacoesConstrutoresEConversaoDeFloat:
+    def test_floatValue_positive(self):
+        assert JFloat.valueOf(2.5).floatValue() == 2.5
+
+    def test_floatValue_negative(self):
+        assert JFloat.valueOf(-3.0).floatValue() == -3.0
+
+    def test_floatValue_zero(self):
+        assert JFloat.valueOf(0.0).floatValue() == 0.0
+
+    def test_doubleValue_positive(self):
+        assert JFloat.valueOf(2.5).doubleValue() == 2.5
+
+    def test_doubleValue_negative(self):
+        assert JFloat.valueOf(-3.0).doubleValue() == -3.0
+
+    def test_doubleValue_zero(self):
+        assert JFloat.valueOf(0.0).doubleValue() == 0.0
+
+    def test_toString_positive(self):
+        assert JFloat.valueOf(2.5).toString() == "2.5"
+
+    def test_toString_negative(self):
+        assert JFloat.valueOf(-2.0).toString() == "-2.0"
+
+    def test_toString_nan(self):
+        assert JFloat.valueOf(float("nan")).toString() == "NaN"
+
+    def test_hashCode_same_value(self):
+        assert JFloat.valueOf(2.5).hashCode() == JFloat.valueOf(2.5).hashCode()
+
+    def test_hashCode_different_value(self):
+        assert JFloat.valueOf(2.5).hashCode() != JFloat.valueOf(3.0).hashCode()
+
+    def test_hashCode_zeros(self):
+        assert JFloat.valueOf(-0.0).hashCode() == JFloat.valueOf(0.0).hashCode()
+
+    def test_equals_same_value(self):
+        assert JFloat.valueOf(2.5).equals(JFloat.valueOf(2.5)) is True
+
+    def test_equals_different_value(self):
+        assert JFloat.valueOf(2.5).equals(JFloat.valueOf(3.0)) is False
+
+    def test_equals_not_jfloat(self):
+        assert JFloat.valueOf(2.5).equals(2.5) is False
+
+    def test_compareTo_greater(self):
+        assert JFloat.valueOf(3.0).compareTo(JFloat.valueOf(1.0)) > 0
+
+    def test_compareTo_less(self):
+        assert JFloat.valueOf(1.0).compareTo(JFloat.valueOf(3.0)) < 0
+
+    def test_compareTo_equal(self):
+        assert JFloat.valueOf(2.0).compareTo(JFloat.valueOf(2.0)) == 0
+
+
 class TestJFloatInit:
     def test_init_com_float(self):
         assert JFloat(3.14).value == pytest.approx(3.14)
@@ -321,7 +380,8 @@ class TestToHexString:
     def test_to_hex_string_infinity(self):
         assert JFloat.toHexString(float("inf")) == "Infinity"
 
-    # ── Pacote de Operações de Conversão Binária ─────────────────────────────────────────────────
+
+# ── Pacote de Operações de Conversão Binária ─────────────────────────────────
 
 
 class TestFloatToIntBits:

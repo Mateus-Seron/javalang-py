@@ -60,7 +60,8 @@ Esta implementação diverge da especificação Java SE 8 nos seguintes pontos, 
 | [ADR-0003](docs/adr/0003-tratamento-locale.md) | Locale via variável de ambiente | `JAVALANG_LOCALE` configura locale; padrão equivale a `Locale.ROOT` |
 | [ADR-0004](docs/adr/0004-representacao-int32.md) | Normalização de 32 bits em `JInteger` | Python `int` é arbitrário; Java `int` é fixo em 32 bits |
 | [ADR-0005](docs/adr/0005-unificacao-tostring.md) | Sobrecargas com `radix` em `JInteger` | Python não tem sobrecarga; `toString` e `toUnsignedString` usam `radix=10` |
-| [ADR-0006](docs/adr/0006-representacao-float32.md) | Semântica IEEE 754 em `JFloat` | `compare`/`max`/`min` usam bits do float para `-0.0`, `+0.0` e `NaN` |
+| [ADR-0006](docs/adr/0006-representacao-float32.md) | Semântica IEEE 754 em `JFloat` | Normalização float32, bits brutos vs canônicos, `compare`/`hashCode`/`equals` |
+| [ADR-0007](docs/adr/0007-unificacao-tostring-jfloat.md) | `toString` instância/estático em `JFloat` | Descriptor `_ToString` unifica `toString()` e `toString(float)` |
 
 Veja o índice completo em [`docs/adaptacoes.md`](docs/adaptacoes.md).
 
@@ -84,12 +85,21 @@ com `radix=10` opcional. Detalhes em [ADR-0005](docs/adr/0005-unificacao-tostrin
 
 ### JFloat — semântica IEEE 754
 
-`Float.compare`, `Float.max` e `Float.min` em Java tratam `-0.0`, `+0.0` e `NaN` de forma
-especial — não basta usar `<` ou `>=` em Python. Em `javalang/jfloat.py`, helpers internos
-(`_float_to_int_bits`, `_float_to_raw_bits`, `_int_bits_to_float`) emulam `floatToIntBits` /
-`intBitsToFloat` para reproduzir esse comportamento.
+`Float.compare`, `Float.max`, `Float.min`, `Float.hashCode` e `Float.equals` em Java tratam
+`-0.0`, `+0.0` e `NaN` de forma especial. Em `javalang/jfloat.py`:
+
+- `_to_float32` normaliza o valor encapsulado para 32 bits.
+- `_float_to_int_bits` (bits brutos) desempata `compare` / `compareTo` (`-0.0` < `+0.0`).
+- `_float_to_canonical_int_bits` emula `floatToIntBits` para `hashCode` / `equals` (zeros e NaN
+  canônicos).
 
 Detalhes em [ADR-0006](docs/adr/0006-representacao-float32.md).
+
+### JFloat — `toString` instância e estático
+
+Java define `toString()` no wrapper e `toString(float)` como estático. Em Python, o descriptor
+`_ToString` expõe ambas as formas sem conflito de nome. Detalhes em
+[ADR-0007](docs/adr/0007-unificacao-tostring-jfloat.md).
 
 > **Nota sobre locale e concorrência:** quando `JAVALANG_LOCALE` está definida, operações sensíveis a locale **não são thread-safe** (limitação de `locale.setlocale`). Em cenários multi-thread, deixe a variável não definida.
 
