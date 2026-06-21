@@ -161,7 +161,7 @@ from javalang.jfloat import JFloat
 # ── CONSTANTES ─────────────────────────────────────────────────────────────
 
 
-class TestConstantes:
+class TestConstants:
     def test_max_value(self):
         assert JFloat.MAX_VALUE == sys.float_info.max
 
@@ -170,3 +170,11 @@ class TestConstantes:
 
     def test_min_value(self):
         assert JFloat.MIN_VALUE == 5e-324
+
+    def test_positive_infinity(self):
+        assert math.isinf(JFloat.POSITIVE_INFINITY)
+        assert JFloat.POSITIVE_INFINITY > 0
+
+    def test_negative_infinity(self):
+        assert math.isinf(JFloat.NEGATIVE_INFINITY)
+        assert JFloat.NEGATIVE_INFINITY < 0
