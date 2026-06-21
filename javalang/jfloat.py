@@ -80,3 +80,50 @@ class JFloat:
     def sum(a: float, b: float) -> float:
         """Float.sum(float a, float b)."""
         return a + b
+
+    # ── Pacote de Operações de Parsing e Formatação ──────────────────────────────────────────────
+
+    @staticmethod
+    def parseFloat(s: str) -> float:
+        if s is None:
+            raise TypeError("NullPointerException")
+
+        try:
+            return float(s.strip())
+        except ValueError:
+            raise ValueError("NumberFormatException")
+
+    @staticmethod
+    def valueOf(f_or_s):
+        if isinstance(f_or_s, str):
+            try:
+                return JFloat(float(f_or_s.strip()))
+            except ValueError:
+                raise ValueError("NumberFormatException")
+
+        return JFloat(float(f_or_s))
+
+    @staticmethod
+    def toString(f: float) -> str:
+
+        if math.isnan(f):
+            return "NaN"
+
+        if math.isinf(f):
+            return "Infinity" if f > 0 else "-Infinity"
+
+        if f == 0.0:
+            return "-0.0" if math.copysign(1.0, f) < 0 else "0.0"
+
+        return str(float(f))
+
+    @staticmethod
+    def toHexString(f: float) -> str:
+
+        if math.isnan(f):
+            return "NaN"
+
+        if math.isinf(f):
+            return "Infinity" if f > 0 else "-Infinity"
+
+        return f.hex()
