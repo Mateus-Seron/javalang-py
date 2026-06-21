@@ -401,6 +401,76 @@ class TestNumberOfTrailingZeros:
         assert JInteger.numberOfTrailingZeros(JInteger.MIN_VALUE) == 31  # 0x80000000
 
 
+# ── Operações de Formatação por Base ─────────────────────────────────────────
+
+
+class TestOperacoesFormatacaoPorBase:
+    def test_to_string_decimal_positivo(self, valores_bit):
+        assert JInteger.toString(valores_bit["dez"]) == "10"
+
+    def test_to_string_decimal_negativo(self, valores_bit):
+        assert JInteger.toString(valores_bit["negativo"]) == "-1"
+
+    def test_to_string_decimal_min_value(self):
+        assert JInteger.toString(JInteger.MIN_VALUE) == "-2147483648"
+
+    def test_to_string_radix_hex(self):
+        assert JInteger.toString(255, 16) == "ff"
+
+    def test_to_string_radix_binario_negativo(self):
+        assert JInteger.toString(-10, 2) == "-1010"
+
+    def test_to_string_radix_fora_do_intervalo(self):
+        with pytest.raises(ValueError, match="radix 1 out of range"):
+            JInteger.toString(10, 1)
+
+    def test_to_binary_string_zero(self):
+        assert JInteger.toBinaryString(0) == "0"
+
+    def test_to_binary_string_positivo(self, valores_bit):
+        assert JInteger.toBinaryString(valores_bit["dez"]) == "1010"
+
+    def test_to_binary_string_negativo(self, valores_bit):
+        assert JInteger.toBinaryString(valores_bit["negativo"]) == "1" * 32
+
+    def test_to_octal_string_zero(self):
+        assert JInteger.toOctalString(0) == "0"
+
+    def test_to_octal_string_positivo(self, valores_bit):
+        assert JInteger.toOctalString(valores_bit["dez"]) == "12"
+
+    def test_to_octal_string_negativo(self, valores_bit):
+        assert JInteger.toOctalString(valores_bit["negativo"]) == "37777777777"
+
+    def test_to_hex_string_zero(self):
+        assert JInteger.toHexString(0) == "0"
+
+    def test_to_hex_string_positivo(self):
+        assert JInteger.toHexString(255) == "ff"
+
+    def test_to_hex_string_negativo(self, valores_bit):
+        assert JInteger.toHexString(valores_bit["negativo"]) == "ffffffff"
+
+    def test_to_unsigned_string_zero(self):
+        assert JInteger.toUnsignedString(0) == "0"
+
+    def test_to_unsigned_string_positivo(self, valores_bit):
+        assert JInteger.toUnsignedString(valores_bit["dez"]) == "10"
+
+    def test_to_unsigned_string_negativo(self, valores_bit):
+        assert JInteger.toUnsignedString(valores_bit["negativo"]) == "4294967295"
+
+    def test_to_unsigned_string_radix_hex(self, valores_bit):
+        assert JInteger.toUnsignedString(valores_bit["negativo"], 16) == "ffffffff"
+
+    def test_to_unsigned_string_radix_binario(self, valores_bit):
+        assert JInteger.toUnsignedString(valores_bit["negativo"], 2) == "1" * 32
+
+    def test_to_unsigned_string_radix_fora_do_intervalo(self):
+        with pytest.raises(ValueError, match="radix 37 out of range"):
+            JInteger.toUnsignedString(10, 37)
+
+
 # ── signum ───────────────────────────────────────────────────────────────────
 
 

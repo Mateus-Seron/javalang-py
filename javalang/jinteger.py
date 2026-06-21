@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 _MASK32 = 0xFFFFFFFF
+_DIGITS = "0123456789abcdefghijklmnopqrstuvwxyz"
+_MIN_RADIX = 2
+_MAX_RADIX = 36
 
 
 def _to_int32(value: int) -> int:
@@ -21,6 +24,24 @@ def _to_int32(value: int) -> int:
     if value >= 2**31:
         value -= 2**32
     return value
+
+
+def _to_string_radix_unsigned(u: int, radix: int) -> str:
+    digits: list[str] = []
+    while u > 0:
+        digits.append(_DIGITS[u % radix])
+        u //= radix
+    return "".join(reversed(digits))
+
+
+def _to_string_radix(i: int, radix: int) -> str:
+    i = _to_int32(i)
+    if i == 0:
+        return "0"
+    if i < 0:
+        magnitude = 2**31 if i == JInteger.MIN_VALUE else -i
+        return "-" + _to_string_radix_unsigned(magnitude, radix)
+    return _to_string_radix_unsigned(i, radix)
 
 
 class JInteger:
@@ -250,6 +271,53 @@ class JInteger:
         if v & 0x00000001 == 0:
             n += 1
         return n
+
+    # ── Operações de Formatação por Base ───────────────────────────────────
+
+    @staticmethod
+    def toString(i: int, radix: int = 10) -> str:
+        """Integer.toString(int i) / Integer.toString(int i, int radix)."""
+        if radix < _MIN_RADIX or radix > _MAX_RADIX:
+            raise ValueError(f"radix {radix} out of range")
+        if radix == 10:
+            return str(_to_int32(i))
+        return _to_string_radix(i, radix)
+
+    @staticmethod
+    def toBinaryString(i: int) -> str:
+        """Integer.toBinaryString(int i) — representação binária sem sinal (32 bits)."""
+        v = i & _MASK32
+        if v == 0:
+            return "0"
+        return format(v, "b")
+
+    @staticmethod
+    def toOctalString(i: int) -> str:
+        """Integer.toOctalString(int i) — representação octal sem sinal (32 bits)."""
+        v = i & _MASK32
+        if v == 0:
+            return "0"
+        return format(v, "o")
+
+    @staticmethod
+    def toHexString(i: int) -> str:
+        """Integer.toHexString(int i) — representação hexadecimal sem sinal (32 bits)."""
+        v = i & _MASK32
+        if v == 0:
+            return "0"
+        return format(v, "x")
+
+    @staticmethod
+    def toUnsignedString(i: int, radix: int = 10) -> str:
+        """Integer.toUnsignedString(int i) / Integer.toUnsignedString(int i, int radix)."""
+        if radix < _MIN_RADIX or radix > _MAX_RADIX:
+            raise ValueError(f"radix {radix} out of range")
+        u = i & _MASK32
+        if radix == 10:
+            return str(u)
+        if u == 0:
+            return "0"
+        return _to_string_radix_unsigned(u, radix)
 
     @staticmethod
     def reverseBytes(i: int) -> int:
