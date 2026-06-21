@@ -149,6 +149,27 @@ class JInteger:
             return "0"
         return format(v, "b")
 
+    @staticmethod
+    def toOctalString(i: int) -> str:
+        """Integer.toOctalString(int i) — representação octal sem sinal (32 bits)."""
+        v = i & _MASK32
+        if v == 0:
+            return "0"
+        return format(v, "o")
+
+    @staticmethod
+    def toHexString(i: int) -> str:
+        """Integer.toHexString(int i) — representação hexadecimal sem sinal (32 bits)."""
+        v = i & _MASK32
+        if v == 0:
+            return "0"
+        return format(v, "x")
+
+    @staticmethod
+    def toUnsignedString(i: int) -> str:
+        """Integer.toUnsignedString(int i) — representação decimal sem sinal (32 bits)."""
+        return str(i & _MASK32)
+
     # ── Aritmética estática ────────────────────────────────────────────────
 
     @staticmethod
