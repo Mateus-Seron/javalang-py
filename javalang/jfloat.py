@@ -75,7 +75,7 @@ class JFloat:
             Float(String s)
         """
         self.value = float(value)
-    
+
     # ── Conversões ─────────────────────────────────────────────
 
     def byteValue(self) -> int:
