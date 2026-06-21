@@ -432,13 +432,13 @@ class TestRemainderUnsigned:
 
 class TestFloatValue:
     def test_floatValue_positive(self):
-        assert JInterger.floatValue(2) == 2.0
+        assert JInteger.floatValue(2) == 2.0
 
     def test_floatValue_negative(self):
-        assert JInterger.floatValue(-2) == -2.0
+        assert JInteger.floatValue(-2) == -2.0
 
     def test_floatValue_zero(self):
-        assert JInterger.floatValue(0) == 0.0
+        assert JInteger.floatValue(0) == 0.0
 
 
 # ── toString ────────────────────────────────────────────────────────
@@ -447,7 +447,7 @@ class TestFloatValue:
 class TestToString:
     def test_toString_positive_number(self):
         assert JInteger.toString(2) == "2"
-    
+
     def test_toString_negative_number(self):
         assert JInteger.toString(-2) == "-2"
 
