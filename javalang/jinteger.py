@@ -1,9 +1,3 @@
-"""Implementação parcial de java.lang.Integer (Java SE 8) em Python.
-
-Métodos adicionados incrementalmente via PRs.
-Referência: https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html
-"""
-
 from __future__ import annotations
 
 _MASK32 = 0xFFFFFFFF
@@ -53,10 +47,92 @@ def _to_string_radix(i: int, radix: int) -> str:
 class JInteger:
     """Wrapper imutável equivalente a java.lang.Integer (Java SE 8)."""
 
+    # ── Constantes ─────────────────────────────────────────────────────────
+
+    MIN_RADIX = 2
+    MAX_RADIX = 36
     MIN_VALUE: int = -(2**31)
     MAX_VALUE: int = 2**31 - 1
     SIZE: int = 32
     BYTES: int = 4
+    TYPE = int
+    MAX_UNSIGNED_VALUE: int = 2**32 - 1
+
+    _DIGITS = "0123456789abcdefghijklmnopqrstuvwxyz"
+    _valueOf_cache: dict = {i: i for i in range(-128, 128)}
+
+    @staticmethod
+    def _check_radix(radix: int) -> None:
+        if not (JInteger.MIN_RADIX <= radix <= JInteger.MAX_RADIX):
+            raise ValueError(
+                f"NumberFormatException: radix {radix} out of range "
+                f"[{JInteger.MIN_RADIX}, {JInteger.MAX_RADIX}]"
+            )
+
+    @staticmethod
+    def _valid_digit_chars(s: str, radix: int) -> bool:
+        valid = set(JInteger._DIGITS[:radix])
+        return all(ch in valid for ch in s.lower())
+
+    # ── Parsing ────────────────────────────────────────────────────────────
+    @staticmethod
+    def parseInt(s: str, radix: int = 10) -> int:
+        if s is None:
+            raise ValueError("NumberFormatException: null")
+
+        if len(s) == 0:
+            raise ValueError('NumberFormatException: For input string: ""')
+
+        JInteger._check_radix(radix)
+
+        body = s
+        if body[0] in ("+", "-"):
+            if len(body) == 1:
+                raise ValueError(f'NumberFormatException: For input string: "{s}"')
+            body = body[1:]
+
+        if not JInteger._valid_digit_chars(body, radix):
+            raise ValueError(f'NumberFormatException: For input string: "{s}"')
+
+        result = int(s, radix)
+
+        if not (JInteger.MIN_VALUE <= result <= JInteger.MAX_VALUE):
+            raise ValueError(f'NumberFormatException: For input string: "{s}"')
+
+        return result
+
+    @staticmethod
+    def parseUnsignedInt(s: str, radix: int = 10) -> int:
+        if s is None:
+            raise ValueError("NumberFormatException: null")
+
+        if len(s) == 0:
+            raise ValueError('NumberFormatException: For input string: ""')
+
+        JInteger._check_radix(radix)
+
+        if s[0] == "-":
+            raise ValueError(
+                f'NumberFormatException: Illegal leading minus sign on unsigned string "{s}"'
+            )
+
+        body = s
+        if body[0] == "+":
+            if len(body) == 1:
+                raise ValueError(f'NumberFormatException: For input string: "{s}"')
+            body = body[1:]
+
+        if not JInteger._valid_digit_chars(body, radix):
+            raise ValueError(f'NumberFormatException: For input string: "{s}"')
+
+        result = int(body, radix)
+
+        if result > JInteger.MAX_UNSIGNED_VALUE:
+            raise ValueError(
+                f'NumberFormatException: String value "{s}" exceeds range of unsigned int'
+            )
+
+        return result
 
     # ── Operações bit a bit ────────────────────────────────────────────────
 
@@ -176,6 +252,44 @@ class JInteger:
         if u == 0:
             return "0"
         return _to_string_radix_unsigned(u, radix)
+    @staticmethod
+    def reverseBytes(i: int) -> int:
+        """Integer.reverseBytes(int i) — inverte a ordem dos 4 bytes."""
+        v = i & _MASK32
+        result = (
+            ((v >> 24) & 0xFF)
+            | ((v >> 16) & 0xFF) << 8
+            | ((v >> 8) & 0xFF) << 16
+            | (v & 0xFF) << 24
+        )
+        return _to_int32(result)
+
+    @staticmethod
+    def rotateLeft(i: int, distance: int) -> int:
+        """Integer.rotateLeft(int i, int distance) — rotação à esquerda em 32 bits."""
+        v = i & _MASK32
+        distance &= 0x1F
+        if distance == 0:
+            return _to_int32(v)
+        return _to_int32((v << distance) | (v >> (32 - distance)))
+
+    @staticmethod
+    def rotateRight(i: int, distance: int) -> int:
+        """Integer.rotateRight(int i, int distance) — rotação à direita em 32 bits."""
+        v = i & _MASK32
+        distance &= 0x1F
+        if distance == 0:
+            return _to_int32(v)
+        return _to_int32((v >> distance) | (v << (32 - distance)))
+
+    @staticmethod
+    def signum(i: int) -> int:
+        """Integer.signum(int i) — retorna -1, 0 ou 1 conforme o sinal de i."""
+        if i > 0:
+            return 1
+        if i < 0:
+            return -1
+        return 0
 
     # ── Aritmética estática ────────────────────────────────────────────────
 
