@@ -141,5 +141,3 @@ class JFloat:
             return "Infinity" if f > 0 else "-Infinity"
 
         return f.hex()
-
-

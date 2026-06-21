@@ -4,9 +4,6 @@ import math
 import sys
 
 import pytest
-
-import sys
-
 from javalang.jfloat import JFloat
 
 # ── Constantes ───────────────────────────────────────────────
