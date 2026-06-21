@@ -21,6 +21,14 @@ def _int_bits_to_float(bits: int) -> float:
 
 
 class JFloat:
+    # ── Constantes Float ──────────────────────────────────────────────
+
+    NaN = float("nan")
+    MAX_EXPONENT = 127
+    MIN_EXPONENT = -126
+    SIZE = 32
+    BYTES = 4
+
     def __init__(self, value):
         self._value = float(value)
 

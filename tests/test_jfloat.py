@@ -7,6 +7,34 @@ import pytest
 
 from javalang.jfloat import JFloat
 
+# ── Constantes ───────────────────────────────────────────────
+
+
+class TestNaNConstant:
+    def test_nan_constant(self):
+        assert math.isnan(JFloat.NaN)
+
+
+class TestMaxExponent:
+    def test_max_exponent_value(self):
+        assert JFloat.MAX_EXPONENT == 127
+
+
+class TestMinExponent:
+    def test_min_exponent_value(self):
+        assert JFloat.MIN_EXPONENT == -126
+
+
+class TestSize:
+    def test_size_value(self):
+        assert JFloat.SIZE == 32
+
+
+class TestBytes:
+    def test_bytes_value(self):
+        assert JFloat.BYTES == 4
+
+
 # ── Operações de Verificação IEEE 754 ─────────────────────────────────────────
 
 
