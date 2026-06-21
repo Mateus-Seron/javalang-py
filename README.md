@@ -60,6 +60,7 @@ Esta implementação diverge da especificação Java SE 8 nos seguintes pontos, 
 | [ADR-0003](docs/adr/0003-tratamento-locale.md) | Locale via variável de ambiente | `JAVALANG_LOCALE` configura locale; padrão equivale a `Locale.ROOT` |
 | [ADR-0004](docs/adr/0004-representacao-int32.md) | Normalização de 32 bits em `JInteger` | Python `int` é arbitrário; Java `int` é fixo em 32 bits |
 | [ADR-0005](docs/adr/0005-unificacao-tostring.md) | Sobrecargas com `radix` em `JInteger` | Python não tem sobrecarga; `toString` e `toUnsignedString` usam `radix=10` |
+| [ADR-0006](docs/adr/0006-representacao-float32.md) | Semântica IEEE 754 em `JFloat` | `compare`/`max`/`min` usam bits do float para `-0.0`, `+0.0` e `NaN` |
 
 Veja o índice completo em [`docs/adaptacoes.md`](docs/adaptacoes.md).
 
@@ -80,6 +81,15 @@ Detalhes em [ADR-0004](docs/adr/0004-representacao-int32.md).
 Java define `toString(int)` / `toString(int, int radix)` e `toUnsignedString(int)` /
 `toUnsignedString(int, int radix)` como métodos distintos. Em Python, cada par fica em um método
 com `radix=10` opcional. Detalhes em [ADR-0005](docs/adr/0005-unificacao-tostring.md).
+
+### JFloat — semântica IEEE 754
+
+`Float.compare`, `Float.max` e `Float.min` em Java tratam `-0.0`, `+0.0` e `NaN` de forma
+especial — não basta usar `<` ou `>=` em Python. Em `javalang/jfloat.py`, helpers internos
+(`_float_to_int_bits`, `_float_to_raw_bits`, `_int_bits_to_float`) emulam `floatToIntBits` /
+`intBitsToFloat` para reproduzir esse comportamento.
+
+Detalhes em [ADR-0006](docs/adr/0006-representacao-float32.md).
 
 > **Nota sobre locale e concorrência:** quando `JAVALANG_LOCALE` está definida, operações sensíveis a locale **não são thread-safe** (limitação de `locale.setlocale`). Em cenários multi-thread, deixe a variável não definida.
 
