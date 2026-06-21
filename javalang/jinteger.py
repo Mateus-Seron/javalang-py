@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 _MASK32 = 0xFFFFFFFF
+_DIGITS = "0123456789abcdefghijklmnopqrstuvwxyz"
+_MIN_RADIX = 2
+_MAX_RADIX = 36
 
 
 def _to_int32(value: int) -> int:
@@ -21,6 +24,24 @@ def _to_int32(value: int) -> int:
     if value >= 2**31:
         value -= 2**32
     return value
+
+
+def _to_string_radix_unsigned(u: int, radix: int) -> str:
+    digits: list[str] = []
+    while u > 0:
+        digits.append(_DIGITS[u % radix])
+        u //= radix
+    return "".join(reversed(digits))
+
+
+def _to_string_radix(i: int, radix: int) -> str:
+    i = _to_int32(i)
+    if i == 0:
+        return "0"
+    if i < 0:
+        magnitude = 2**31 if i == JInteger.MIN_VALUE else -i
+        return "-" + _to_string_radix_unsigned(magnitude, radix)
+    return _to_string_radix_unsigned(i, radix)
 
 
 class JInteger:
@@ -113,6 +134,72 @@ class JInteger:
 
         return result
 
+    @staticmethod
+    def valueOf(s_or_i, radix: int | None = None) -> int:
+        if isinstance(s_or_i, bool):
+            raise TypeError("valueOf() não aceita bool")
+
+        if isinstance(s_or_i, int) and radix is None:
+            i = s_or_i
+            if not (JInteger.MIN_VALUE <= i <= JInteger.MAX_VALUE):
+                raise ValueError(f"NumberFormatException: value {i} out of int range")
+            return JInteger._valueOf_cache.get(i, i)
+
+        if isinstance(s_or_i, str):
+            r = radix if radix is not None else 10
+            return JInteger.parseInt(s_or_i, r)
+
+        raise TypeError(
+            f"valueOf() expects (int), (str) or (str, int); got {type(s_or_i).__name__}"
+        )
+
+    @staticmethod
+    def decode(nm) -> int:
+        """
+        Decodes a String into an Integer.
+        Aceita decimal, hexadecimal (0x / 0X / #) e octal (zero inicial).
+        Reproduz: Integer.decode(String) — Java SE 8.
+        """
+        if nm is None:
+            raise ValueError("NumberFormatException: null")
+        if len(nm) == 0:
+            raise ValueError("NumberFormatException: Zero length string")
+
+        negative = False
+        idx = 0
+
+        if nm[0] == "-":
+            negative = True
+            idx = 1
+        elif nm[0] == "+":
+            idx = 1
+
+        radix = 10
+        if nm[idx : idx + 2] in ("0x", "0X"):
+            idx += 2
+            radix = 16
+        elif idx < len(nm) and nm[idx] == "#":
+            idx += 1
+            radix = 16
+        elif idx < len(nm) and nm[idx] == "0" and (len(nm) - idx) > 1:
+            idx += 1
+            radix = 8
+
+        rest = nm[idx:]
+        if not rest:
+            raise ValueError(f'NumberFormatException: For input string: "{nm}"')
+
+        if not JInteger._valid_digit_chars(rest, radix):
+            raise ValueError(f'NumberFormatException: For input string: "{nm}"')
+
+        magnitude = int(rest, radix)
+        result = -magnitude if negative else magnitude
+
+        if not (JInteger.MIN_VALUE <= result <= JInteger.MAX_VALUE):
+            raise ValueError(f'NumberFormatException: For input string: "{nm}"')
+
+        return result
+
     # ── Operações bit a bit ────────────────────────────────────────────────
 
     @staticmethod
@@ -184,6 +271,53 @@ class JInteger:
         if v & 0x00000001 == 0:
             n += 1
         return n
+
+    # ── Operações de Formatação por Base ───────────────────────────────────
+
+    @staticmethod
+    def toString(i: int, radix: int = 10) -> str:
+        """Integer.toString(int i) / Integer.toString(int i, int radix)."""
+        if radix < _MIN_RADIX or radix > _MAX_RADIX:
+            raise ValueError(f"radix {radix} out of range")
+        if radix == 10:
+            return str(_to_int32(i))
+        return _to_string_radix(i, radix)
+
+    @staticmethod
+    def toBinaryString(i: int) -> str:
+        """Integer.toBinaryString(int i) — representação binária sem sinal (32 bits)."""
+        v = i & _MASK32
+        if v == 0:
+            return "0"
+        return format(v, "b")
+
+    @staticmethod
+    def toOctalString(i: int) -> str:
+        """Integer.toOctalString(int i) — representação octal sem sinal (32 bits)."""
+        v = i & _MASK32
+        if v == 0:
+            return "0"
+        return format(v, "o")
+
+    @staticmethod
+    def toHexString(i: int) -> str:
+        """Integer.toHexString(int i) — representação hexadecimal sem sinal (32 bits)."""
+        v = i & _MASK32
+        if v == 0:
+            return "0"
+        return format(v, "x")
+
+    @staticmethod
+    def toUnsignedString(i: int, radix: int = 10) -> str:
+        """Integer.toUnsignedString(int i) / Integer.toUnsignedString(int i, int radix)."""
+        if radix < _MIN_RADIX or radix > _MAX_RADIX:
+            raise ValueError(f"radix {radix} out of range")
+        u = i & _MASK32
+        if radix == 10:
+            return str(u)
+        if u == 0:
+            return "0"
+        return _to_string_radix_unsigned(u, radix)
 
     @staticmethod
     def reverseBytes(i: int) -> int:
