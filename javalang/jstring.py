@@ -5,6 +5,7 @@ from __future__ import annotations
 class JString:
     def init(self, value: str = ""):
         self._value = value
+
     # ==========================================================
     # CONSTRUTORES
     # ==========================================================
