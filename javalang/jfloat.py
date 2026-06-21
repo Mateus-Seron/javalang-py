@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 import struct
 
 
@@ -35,7 +36,26 @@ def _float_to_string(value: float) -> str:
 
 
 class JFloat:
-    """Wrapper imutável equivalente a java.lang.Float (Java SE 8)."""
+    def __init__(self, value):
+        self._value = float(value)
+
+    # ── Operações de Verificação IEEE 754  ──────────────────────────────────────────────
+
+    def isNaN(self_or_v):
+        if isinstance(self_or_v, JFloat):
+            return math.isnan(self_or_v._value)
+
+        return math.isnan(self_or_v)
+
+    def isInfinite(self_or_v):
+        if isinstance(self_or_v, JFloat):
+            return math.isinf(self_or_v._value)
+
+        return math.isinf(self_or_v)
+
+    @staticmethod
+    def isFinite(f: float) -> bool:
+        return math.isfinite(f)
 
     # ── Operações de Comparação de Float ───────────────────────────────────────
 
@@ -98,3 +118,49 @@ class JFloat:
     def toString(self) -> str:
         """Float.toString() — representação decimal do valor encapsulado."""
         return _float_to_string(self._value)
+    # ── Pacote de Operações de Parsing e Formatação ──────────────────────────────────────────────
+
+    @staticmethod
+    def parseFloat(s: str) -> float:
+        if s is None:
+            raise TypeError("NullPointerException")
+
+        try:
+            return float(s.strip())
+        except ValueError:
+            raise ValueError("NumberFormatException")
+
+    @staticmethod
+    def valueOf(f_or_s):
+        if isinstance(f_or_s, str):
+            try:
+                return JFloat(float(f_or_s.strip()))
+            except ValueError:
+                raise ValueError("NumberFormatException")
+
+        return JFloat(float(f_or_s))
+
+    @staticmethod
+    def toString(f: float) -> str:
+
+        if math.isnan(f):
+            return "NaN"
+
+        if math.isinf(f):
+            return "Infinity" if f > 0 else "-Infinity"
+
+        if f == 0.0:
+            return "-0.0" if math.copysign(1.0, f) < 0 else "0.0"
+
+        return str(float(f))
+
+    @staticmethod
+    def toHexString(f: float) -> str:
+
+        if math.isnan(f):
+            return "NaN"
+
+        if math.isinf(f):
+            return "Infinity" if f > 0 else "-Infinity"
+
+        return f.hex()
