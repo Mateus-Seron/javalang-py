@@ -1,113 +1,113 @@
-class JString:
-  
-    # ==========================================================
-    # CONSTRUTORES
-    # ==========================================================
+## class JString:
 
-    # String()
-    # String(char[] value)
-    # String(byte[] bytes)
-    # String(byte[], int offset, int length)
-    # String(StringBuilder builder)
-    # String(String original)
-    # String(char[] value, int offset, int count)
-    # String(byte[] bytes, String charset)
-    # String(int[] codePoints, int offset, int count)
+# ==========================================================
+# CONSTRUTORES
+# ==========================================================
 
-    # ==========================================================
-    # ACESSO E TAMANHO
-    # ==========================================================
+# String()
+# String(char[] value)
+# String(byte[] bytes)
+# String(byte[], int offset, int length)
+# String(StringBuilder builder)
+# String(String original)
+# String(char[] value, int offset, int count)
+# String(byte[] bytes, String charset)
+# String(int[] codePoints, int offset, int count)
 
-    # length()
-    # isEmpty()
-    # charAt(int index)
-    # codePointAt(int index)
-    # codePointBefore(int index)
-    # codePointCount(int beginIndex, int endIndex)
-    # offsetByCodePoints(int index, int codePointOffset)
-    # getChars(int srcBegin, int srcEnd, char[] dst, int dstBegin)
-    # toCharArray()
-    # getBytes()
-    # getBytes(String charset)
+# ==========================================================
+# ACESSO E TAMANHO
+# ==========================================================
 
-    # ==========================================================
-    # COMPARAÇÃO
-    # ==========================================================
+# length()
+# isEmpty()
+# charAt(int index)
+# codePointAt(int index)
+# codePointBefore(int index)
+# codePointCount(int beginIndex, int endIndex)
+# offsetByCodePoints(int index, int codePointOffset)
+# getChars(int srcBegin, int srcEnd, char[] dst, int dstBegin)
+# toCharArray()
+# getBytes()
+# getBytes(String charset)
 
-    # equals(Object obj)
-    # equalsIgnoreCase(String anotherString)
-    # compareTo(String anotherString)
-    # compareToIgnoreCase(String str)
-    # contentEquals(CharSequence cs)
-    # regionMatches(int toffset, String other, int ooffset, int len)
-    # regionMatches(boolean ignoreCase, int toffset,
-    #               String other, int ooffset, int len)
-    # hashCode()
+# ==========================================================
+# COMPARAÇÃO
+# ==========================================================
 
-    # ==========================================================
-    # BUSCA
-    # ==========================================================
+# equals(Object obj)
+# equalsIgnoreCase(String anotherString)
+# compareTo(String anotherString)
+# compareToIgnoreCase(String str)
+# contentEquals(CharSequence cs)
+# regionMatches(int toffset, String other, int ooffset, int len)
+# regionMatches(boolean ignoreCase, int toffset,
+#               String other, int ooffset, int len)
+# hashCode()
 
-    # indexOf(int ch)
-    # indexOf(int ch, int fromIndex)
-    # indexOf(String str)
-    # indexOf(String str, int fromIndex)
+# ==========================================================
+# BUSCA
+# ==========================================================
 
-    # lastIndexOf(int ch)
-    # lastIndexOf(int ch, int fromIndex)
-    # lastIndexOf(String str)
-    # lastIndexOf(String str, int fromIndex)
+# indexOf(int ch)
+# indexOf(int ch, int fromIndex)
+# indexOf(String str)
+# indexOf(String str, int fromIndex)
 
-    # contains(CharSequence s)
-    # startsWith(String prefix)
-    # startsWith(String prefix, int toffset)
-    # endsWith(String suffix)
+# lastIndexOf(int ch)
+# lastIndexOf(int ch, int fromIndex)
+# lastIndexOf(String str)
+# lastIndexOf(String str, int fromIndex)
 
-    # ==========================================================
-    # TRANSFORMAÇÃO
-    # ==========================================================
+# contains(CharSequence s)
+# startsWith(String prefix)
+# startsWith(String prefix, int toffset)
+# endsWith(String suffix)
 
-    # substring(int beginIndex)
-    # substring(int beginIndex, int endIndex)
-    # subSequence(int beginIndex, int endIndex)
+# ==========================================================
+# TRANSFORMAÇÃO
+# ==========================================================
 
-    # concat(String str)
+# substring(int beginIndex)
+# substring(int beginIndex, int endIndex)
+# subSequence(int beginIndex, int endIndex)
 
-    # replace(char oldChar, char newChar)
-    # replace(CharSequence target, CharSequence replacement)
+# concat(String str)
 
-    # toLowerCase()
-    # toUpperCase()
-    # trim()
+# replace(char oldChar, char newChar)
+# replace(CharSequence target, CharSequence replacement)
 
-    # intern()
+# toLowerCase()
+# toUpperCase()
+# trim()
 
-    # ==========================================================
-    # EXPRESSÕES REGULARES
-    # ==========================================================
+# intern()
 
-    # matches(String regex)
-    # replaceAll(String regex, String replacement)
-    # replaceFirst(String regex, String replacement)
+# ==========================================================
+# EXPRESSÕES REGULARES
+# ==========================================================
 
-    # split(String regex)
-    # split(String regex, int limit)
+# matches(String regex)
+# replaceAll(String regex, String replacement)
+# replaceFirst(String regex, String replacement)
 
-    # ==========================================================
-    # MÉTODOS ESTÁTICOS
-    # ==========================================================
+# split(String regex)
+# split(String regex, int limit)
 
-    # String.valueOf(int value)
-    # String.valueOf(long value)
-    # String.valueOf(float value)
-    # String.valueOf(double value)
-    # String.valueOf(boolean value)
-    # String.valueOf(char value)
-    # String.valueOf(char[] value)
-    # String.valueOf(Object obj)
+# ==========================================================
+# MÉTODOS ESTÁTICOS
+# ==========================================================
 
-    # String.copyValueOf(char[] value)
+# String.valueOf(int value)
+# String.valueOf(long value)
+# String.valueOf(float value)
+# String.valueOf(double value)
+# String.valueOf(boolean value)
+# String.valueOf(char value)
+# String.valueOf(char[] value)
+# String.valueOf(Object obj)
 
-    # String.format(String format, Object... args)
+# String.copyValueOf(char[] value)
 
-    # String.join(...)
+# String.format(String format, Object... args)
+
+# String.join(...)
