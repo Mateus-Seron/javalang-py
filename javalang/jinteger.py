@@ -166,9 +166,16 @@ class JInteger:
         return format(v, "x")
 
     @staticmethod
-    def toUnsignedString(i: int) -> str:
-        """Integer.toUnsignedString(int i) — representação decimal sem sinal (32 bits)."""
-        return str(i & _MASK32)
+    def toUnsignedString(i: int, radix: int = 10) -> str:
+        """Integer.toUnsignedString(int i) / Integer.toUnsignedString(int i, int radix)."""
+        if radix < _MIN_RADIX or radix > _MAX_RADIX:
+            raise ValueError(f"radix {radix} out of range")
+        u = i & _MASK32
+        if radix == 10:
+            return str(u)
+        if u == 0:
+            return "0"
+        return _to_string_radix_unsigned(u, radix)
 
     # ── Aritmética estática ────────────────────────────────────────────────
 
