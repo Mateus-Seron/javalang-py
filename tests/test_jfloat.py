@@ -1,10 +1,39 @@
 """Testes para JFloat."""
 
 import math
+import sys
 
 import pytest
 
 from javalang.jfloat import JFloat
+
+# ── Constantes ───────────────────────────────────────────────
+
+
+class TestNaNConstant:
+    def test_nan_constant(self):
+        assert math.isnan(JFloat.NaN)
+
+
+class TestMaxExponent:
+    def test_max_exponent_value(self):
+        assert JFloat.MAX_EXPONENT == 127
+
+
+class TestMinExponent:
+    def test_min_exponent_value(self):
+        assert JFloat.MIN_EXPONENT == -126
+
+
+class TestSize:
+    def test_size_value(self):
+        assert JFloat.SIZE == 32
+
+
+class TestBytes:
+    def test_bytes_value(self):
+        assert JFloat.BYTES == 4
+
 
 # ── Operações de Verificação IEEE 754 ─────────────────────────────────────────
 
@@ -207,3 +236,28 @@ class TestToHexString:
 
     def test_to_hex_string_nan(self):
         assert JFloat.toHexString(float("nan")) == "NaN"
+
+
+"""Testes para JFloat."""
+
+
+# ── CONSTANTES ─────────────────────────────────────────────────────────────
+
+
+class TestConstants:
+    def test_max_value(self):
+        assert JFloat.MAX_VALUE == sys.float_info.max
+
+    def test_min_normal(self):
+        assert JFloat.MIN_NORMAL == sys.float_info.min
+
+    def test_min_value(self):
+        assert JFloat.MIN_VALUE == 5e-324
+
+    def test_positive_infinity(self):
+        assert math.isinf(JFloat.POSITIVE_INFINITY)
+        assert JFloat.POSITIVE_INFINITY > 0
+
+    def test_negative_infinity(self):
+        assert math.isinf(JFloat.NEGATIVE_INFINITY)
+        assert JFloat.NEGATIVE_INFINITY < 0
