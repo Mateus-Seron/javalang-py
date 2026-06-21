@@ -321,53 +321,61 @@ class TestToHexString:
     def test_to_hex_string_infinity(self):
         assert JFloat.toHexString(float("inf")) == "Infinity"
 
+    # ── Pacote de Operações de Conversão Binária ─────────────────────────────────────────────────
 
-# ── Pacote de Operações de Conversão Binária ─────────────────────────────────────────────────
 
+class TestFloatToIntBits:
+    def test_float_to_int_bits_positivo(self):
+        assert JFloat.floatToIntBits(5.5) == struct.unpack(">i", struct.pack(">f", 5.5))[0]
 
-    def test_float_to_int_bits_positivo():
-        assert JFloat.floatToIntBits(5.5) == struct.unpack('>i', struct.pack('>f', 5.5))[0]
+    def test_float_to_int_bits_negativo(self):
+        assert JFloat.floatToIntBits(-1.5) == struct.unpack(">i", struct.pack(">f", -1.5))[0]
 
-    def test_float_to_int_bits_negativo():
-        assert JFloat.floatToIntBits(-1.5) == struct.unpack('>i', struct.pack('>f', -1.5))[0]
-
-    def test_float_to_int_bits_zero():
+    def test_float_to_int_bits_zero(self):
         assert JFloat.floatToIntBits(0.0) == 0
 
-    def test_float_to_int_bits_nan():
-        assert JFloat.floatToIntBits(math.nan) == 0x7fc00000
+    def test_float_to_int_bits_nan(self):
+        assert JFloat.floatToIntBits(math.nan) == 0x7FC00000
 
-    def test_float_to_int_bits_infinito_positivo():
-        assert JFloat.floatToIntBits(math.inf) == 0x7f800000
+    def test_float_to_int_bits_infinito_positivo(self):
+        assert JFloat.floatToIntBits(math.inf) == 0x7F800000
 
-    def test_float_to_int_bits_infinito_negativo():
-        assert JFloat.floatToIntBits(-math.inf) == struct.unpack('>i', struct.pack('>f', -math.inf))[0]
+    def test_float_to_int_bits_infinito_negativo(self):
+        assert (
+            JFloat.floatToIntBits(-math.inf) == struct.unpack(">i", struct.pack(">f", -math.inf))[0]
+        )
 
-    def test_float_to_raw_int_bits_positivo():
-        assert JFloat.floatToRawIntBits(5.55) == struct.unpack('>i', struct.pack('>f', 5.55))[0]
 
-    def test_float_to_raw_int_bits_negativo():
-        assert JFloat.floatToRawIntBits(-2.55) == struct.unpack('>i', struct.pack('>f', -2.55))[0]
+class TestFloatToRawIntBits:
+    def test_float_to_raw_int_bits_positivo(self):
+        assert JFloat.floatToRawBits(5.55) == struct.unpack(">i", struct.pack(">f", 5.55))[0]
 
-    def test_float_to_raw_int_bits_nan():
-        result = JFloat.floatToRawIntBits(math.nan)
-        assert math.isnan(struct.unpack('>f', struct.pack('>i', result))[0])
+    def test_float_to_raw_int_bits_negativo(self):
+        assert JFloat.floatToRawBits(-2.55) == struct.unpack(">i", struct.pack(">f", -2.55))[0]
 
-    def test_int_bits_to_float_positivo():
-        bits = struct.unpack('>i', struct.pack('>f', 3.0))[0]
+    def test_float_to_raw_int_bits_nan(self):
+        result = JFloat.floatToRawBits(math.nan)
+        assert math.isnan(struct.unpack(">f", struct.pack(">i", result))[0])
+
+
+class TestIntBitsToFloat:
+    def test_int_bits_to_float_positivo(self):
+        bits = struct.unpack(">i", struct.pack(">f", 3.0))[0]
         assert JFloat.intBitsToFloat(bits) == 3.0
 
-    def test_int_bits_to_float_negativo():
-        bits = struct.unpack('>i', struct.pack('>f', -0.5))[0]
+    def test_int_bits_to_float_negativo(self):
+        bits = struct.unpack(">i", struct.pack(">f", -0.5))[0]
         assert JFloat.intBitsToFloat(bits) == -0.5
 
-    def test_int_bits_to_float_nan():
-        assert math.isnan(JFloat.intBitsToFloat(0x7fc00000))
+    def test_int_bits_to_float_nan(self):
+        assert math.isnan(JFloat.intBitsToFloat(0x7FC00000))
 
-    def test_int_bits_to_float_infinito():
-        assert JFloat.intBitsToFloat(0x7f800000) == math.inf
+    def test_int_bits_to_float_infinito(self):
+        assert JFloat.intBitsToFloat(0x7F800000) == math.inf
 
-    def test_round_trip():
+
+class TestRoundTrip:
+    def test_round_trip(self):
         value = 7.5
         bits = JFloat.floatToIntBits(value)
         assert JFloat.intBitsToFloat(bits) == value
