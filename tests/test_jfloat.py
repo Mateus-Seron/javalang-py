@@ -4,6 +4,46 @@ import math
 
 from javalang.jfloat import JFloat
 
+# ── Operações de Verificação IEEE 754 ─────────────────────────────────────────
+
+
+class TestIsNaN:
+    def test_is_nan_instance(self):
+        value = JFloat(float("nan"))
+        assert value.isNaN() is True
+
+    def test_is_nan_static(self):
+        assert JFloat(float("nan")).isNaN() is True
+
+    def test_is_nan_false(self):
+        assert JFloat(10.5).isNaN() is False
+
+
+class TestIsInfinite:
+    def test_is_infinite_instance(self):
+        value = JFloat(float("inf"))
+        assert value.isInfinite() is True
+
+    def test_is_infinite_static(self):
+        value = JFloat(float("-inf"))
+        assert value.isInfinite() is True
+
+    def test_is_infinite_false(self):
+        value = JFloat(100.0)
+        assert value.isInfinite() is False
+
+
+class TestIsFinite:
+    def test_is_finite_true(self):
+        assert JFloat.isFinite(42.0) is True
+
+    def test_is_finite_infinity(self):
+        assert JFloat.isFinite(float("inf")) is False
+
+    def test_is_finite_nan(self):
+        assert JFloat.isFinite(float("nan")) is False
+
+
 # ── Operações de Comparação de Float ─────────────────────────────────────────
 
 

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 import struct
 
 
@@ -19,7 +20,26 @@ def _int_bits_to_float(bits: int) -> float:
 
 
 class JFloat:
-    """Wrapper imutável equivalente a java.lang.Float (Java SE 8)."""
+    def __init__(self, value):
+        self._value = float(value)
+
+    # ── Operações de Verificação IEEE 754  ──────────────────────────────────────────────
+
+    def isNaN(self_or_v):
+        if isinstance(self_or_v, JFloat):
+            return math.isnan(self_or_v._value)
+
+        return math.isnan(self_or_v)
+
+    def isInfinite(self_or_v):
+        if isinstance(self_or_v, JFloat):
+            return math.isinf(self_or_v._value)
+
+        return math.isinf(self_or_v)
+
+    @staticmethod
+    def isFinite(f: float) -> bool:
+        return math.isfinite(f)
 
     # ── Operações de Comparação de Float ───────────────────────────────────────
 
