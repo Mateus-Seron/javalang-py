@@ -12,19 +12,6 @@ def _to_float32(value: float) -> float:
     """
     return struct.unpack(">f", struct.pack(">f", float(value)))[0]
 
-# ── Pacote de Operações de Conversão Binária ─────────────────────────────────────────────────
-
-def floatToIntBits(value: float) -> int:
-    return struct.unpack(">i", struct.pack(">f", value))[0]
-
-
-def floatToRawBits(value: float) -> int:
-    return struct.unpack(">I", struct.pack(">f", value))[0]
-
-
-def intBitsToFloat(bits: int) -> float:
-    return struct.unpack(">f", struct.pack(">I", bits & 0xFFFFFFFF))[0]
-
 
 class JFloat:
     # ── Constantes Float ──────────────────────────────────────────────
@@ -77,8 +64,8 @@ class JFloat:
         if f1 > f2:
             return 1
 
-        bits1 = floatToIntBits(f1)
-        bits2 = floatToIntBits(f2)
+        bits1 = JFloat.floatToIntBits(f1)
+        bits2 = JFloat.floatToIntBits(f2)
 
         if bits1 == bits2:
             return 0
@@ -91,7 +78,9 @@ class JFloat:
             return a
 
         if a == 0.0 and b == 0.0:
-            return intBitsToFloat(floatToRawBits(a) & floatToRawBits(b) & 0x7FFFFFFF)
+            return JFloat.intBitsToFloat(
+                JFloat.floatToRawBits(a) & JFloat.floatToRawBits(b) & 0x7FFFFFFF
+            )
 
         return a if a >= b else b
 
@@ -101,7 +90,7 @@ class JFloat:
             return a
 
         if a == 0.0 and b == 0.0:
-            return intBitsToFloat(floatToRawBits(a) | floatToRawBits(b))
+            return JFloat.intBitsToFloat(JFloat.floatToRawBits(a) | JFloat.floatToRawBits(b))
 
         return a if a <= b else b
 
@@ -183,3 +172,14 @@ class JFloat:
             return "Infinity" if f > 0 else "-Infinity"
 
         return f.hex()
+
+    # ── Pacote de Operações de Conversão Binária ─────────────────────────────────────────────────
+
+    def floatToIntBits(value: float) -> int:
+        return struct.unpack(">i", struct.pack(">f", value))[0]
+
+    def floatToRawBits(value: float) -> int:
+        return struct.unpack(">i", struct.pack(">f", value))[0]
+
+    def intBitsToFloat(bits: int) -> float:
+        return struct.unpack(">f", struct.pack(">I", bits & 0xFFFFFFFF))[0]
