@@ -44,9 +44,7 @@ class JFloat:
         if a != a:
             return a
         if a == 0.0 and b == 0.0:
-            return _int_bits_to_float(
-                _float_to_raw_bits(a) & _float_to_raw_bits(b) & 0x7FFFFFFF
-            )
+            return _int_bits_to_float(_float_to_raw_bits(a) & _float_to_raw_bits(b) & 0x7FFFFFFF)
         return a if a >= b else b
 
     @staticmethod
