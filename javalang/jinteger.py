@@ -24,12 +24,17 @@ def _to_int32(value: int) -> int:
 
 
 class JInteger:
+    """Wrapper imutável equivalente a java.lang.Integer (Java SE 8)."""
+
+    # ── Constantes ─────────────────────────────────────────────────────────
+
     MIN_RADIX = 2
     MAX_RADIX = 36
     MIN_VALUE: int = -(2**31)
     MAX_VALUE: int = 2**31 - 1
     SIZE: int = 32
     BYTES: int = 4
+    TYPE = int
     MAX_UNSIGNED_VALUE: int = 2**32 - 1
 
     _DIGITS = "0123456789abcdefghijklmnopqrstuvwxyz"
