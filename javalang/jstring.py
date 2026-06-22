@@ -332,10 +332,6 @@ class JString:
 
         return self.value.rfind(value, 0, inicio + 1)
 
-    # indexOf(String str, int fromIndex)
-    # lastIndexOf(int ch)
-    # lastIndexOf(int ch, int fromIndex)
-
     def lastIndexOf(self, str_: str, fromIndex: int = None) -> int:  # type: ignore
         """
         Returns the index of the last occurrence of the specified substring.
