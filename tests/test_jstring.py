@@ -279,6 +279,7 @@ class TestGetBytes:
 
 # ── Pacote de busca em String ──────────────────────────────────────────────
 
+
 class TestPacoteDePesquisaEmString:
     def test_indexOf_char_found(self):
         assert JString("banana").index_of(ord("a")) == 1
