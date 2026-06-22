@@ -430,23 +430,43 @@ class JString:
 
         return JString(self.value + str(other))
 
-    # replace(char, char)
-    def replace(self, old: str, new: str):
-        if not isinstance(old, str) or not isinstance(new, str):
-            raise TypeError("replace expects characters as strings")
-
-        if len(old) != 1 or len(new) != 1:
-            raise ValueError("replace expects single characters")
-
-        return JString(self.value.replace(old, new))
-
+    # replace(char oldChar, char newChar)
     # replace(CharSequence target, CharSequence replacement)
 
-    # toLowerCase()
-    # toUpperCase()
-    # trim()
+    def replace(self, target, replacement) -> JString:
+        """String.replace(CharSequence target, CharSequence replacement).
 
-    # intern()
+        Aceita `str` ou `JString`; equivalente a replace(char, char) para chars isolados.
+        """
+        tgt_str = _coerce_str(target)
+        repl_str = _coerce_str(replacement)
+        return JString(self.value.replace(tgt_str, repl_str))
+
+    def toLowerCase(self) -> JString:
+        """String.toLowerCase()."""
+        return JString(self.value.lower())
+
+    def toUpperCase(self) -> JString:
+        """String.toUpperCase()."""
+        return JString(self.value.upper())
+
+    def trim(self) -> JString:
+        """String.trim()."""
+        start = 0
+        end = len(self.value)
+
+        while start < end and ord(self.value[start]) <= 32:
+            start += 1
+        while end > start and ord(self.value[end - 1]) <= 32:
+            end -= 1
+
+        return JString(self.value[start:end])
+
+    def intern(self) -> JString:
+        """String.intern()."""
+        import sys
+
+        return JString(sys.intern(self.value))
 
     # ==========================================================
     # EXPRESSÕES REGULARES
