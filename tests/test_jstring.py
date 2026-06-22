@@ -344,3 +344,37 @@ class TestGetBytes:
 
         with pytest.raises(ValueError):
             s.getBytes("charset-inexistente")
+
+
+class TestTransformations:
+    def test_substring(self):
+        js = JString("abcdef")
+        assert str(js.substring(2)) == "cdef"
+
+    def test_substring_range(self):
+        js = JString("abcdef")
+        assert str(js.substring_range(1, 4)) == "bcd"
+
+    def test_subsequence(self):
+        js = JString("abcdef")
+        assert str(js.subSequence(1, 4)) == "bcd"
+
+    def test_invalid_start_substring(self):
+        js = JString("abc")
+        with pytest.raises(IndexError):
+            js.substring(10)
+
+    def test_invalid_start_range(self):
+        js = JString("abc")
+        with pytest.raises(IndexError):
+            js.substring_range(10, 1)
+
+    def test_invalid_end_range(self):
+        js = JString("abc")
+        with pytest.raises(IndexError):
+            js.substring_range(1, 0)
+
+    def test_invalid_subsequence(self):
+        js = JString("abc")
+        with pytest.raises(IndexError):
+            js.subSequence(2, 1)
