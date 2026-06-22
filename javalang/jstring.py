@@ -13,39 +13,92 @@ class JString:
     def _from_code_unit(self, cu: int):
         return chr(cu)
 
-# ==========================================================
-# CONSTRUTORES
-# ==========================================================
+    # ==========================================================
+    # CONSTRUTORES
+    # ==========================================================
 
-# String()
-# String(char[] value)
-# String(byte[] bytes)
-# String(byte[], int offset, int length)
-# String(StringBuilder builder)
-# String(String original)
-# String(char[] value, int offset, int count)
-# String(byte[] bytes, String charset)
-# String(int[] codePoints, int offset, int count)
+    # String()
+    # String(char[] value)
+    # String(byte[] bytes)
+    # String(byte[], int offset, int length)
+    # String(StringBuilder builder)
+    # String(String original)
+    # String(char[] value, int offset, int count)
+    # String(byte[] bytes, String charset)
+    # String(int[] codePoints, int offset, int count)
 
-# ==========================================================
-# ACESSO E TAMANHO
-# ==========================================================
+    # ==========================================================
+    # ACESSO E TAMANHO
+    # ==========================================================
 
     def length(self) -> int:
         return len(self._code_units())
 
     def isEmpty(self) -> bool:
         return self.length() == 0
-    
+
     def charAt(self, index: int) -> str:
         units = self._code_units()
         if index < 0 or index >= len(units):
             raise IndexError("String index out of range")
         return chr(units[index])
-    
-# codePointAt(int index)
-# codePointBefore(int index)
-# codePointCount(int beginIndex, int endIndex)
+
+    def codePointAt(self, index: int) -> int:
+        units = self._code_units()
+
+        if index < 0 or index >= len(units):
+            raise IndexError("Index out of range")
+
+        cu1 = units[index]
+
+        # high surrogate
+        if 0xD800 <= cu1 <= 0xDBFF and index + 1 < len(units):
+            cu2 = units[index + 1]
+            if 0xDC00 <= cu2 <= 0xDFFF:
+                return 0x10000 + ((cu1 - 0xD800) << 10) + (cu2 - 0xDC00)
+
+        return cu1
+
+    def codePointBefore(self, index: int) -> int:
+        units = self._code_units()
+
+        if index <= 0 or index > len(units):
+            raise IndexError("Index out of range")
+
+        cu1 = units[index - 1]
+
+        # low surrogate
+        if 0xDC00 <= cu1 <= 0xDFFF and index - 2 >= 0:
+            cu2 = units[index - 2]
+            if 0xD800 <= cu2 <= 0xDBFF:
+                return 0x10000 + ((cu2 - 0xD800) << 10) + (cu1 - 0xDC00)
+
+        return cu1
+
+    def codePointCount(self, beginIndex: int, endIndex: int) -> int:
+        units = self._code_units()
+
+        if beginIndex < 0 or endIndex > len(units) or beginIndex > endIndex:
+            raise IndexError("Index out of range")
+
+        i = beginIndex
+        count = 0
+
+        while i < endIndex:
+            cu1 = units[i]
+
+            if (
+                0xD800 <= cu1 <= 0xDBFF
+                and i + 1 < endIndex
+                and 0xDC00 <= units[i + 1] <= 0xDFFF
+            ):
+                i += 2
+            else:
+                i += 1
+
+            count += 1
+
+        return count
 
 
 # offsetByCodePoints(int index, int codePointOffset)
