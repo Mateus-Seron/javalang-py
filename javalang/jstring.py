@@ -1,4 +1,17 @@
-## class JString:
+class JString:
+
+    def __init__(self, value: str = ""):
+        self.value = str(value)
+
+    # ----------------------------------------------------------
+    # UTILITÁRIO: converte string Python para UTF-16 code units
+    # ----------------------------------------------------------
+    def _code_units(self):
+        b = self.value.encode("utf-16-le")
+        return [b[i] + (b[i + 1] << 8) for i in range(0, len(b), 2)]
+
+    def _from_code_unit(self, cu: int):
+        return chr(cu)
 
 # ==========================================================
 # CONSTRUTORES
@@ -18,12 +31,23 @@
 # ACESSO E TAMANHO
 # ==========================================================
 
-# length()
-# isEmpty()
-# charAt(int index)
+    def length(self) -> int:
+        return len(self._code_units())
+
+    def isEmpty(self) -> bool:
+        return self.length() == 0
+    
+    def charAt(self, index: int) -> str:
+        units = self._code_units()
+        if index < 0 or index >= len(units):
+            raise IndexError("String index out of range")
+        return chr(units[index])
+    
 # codePointAt(int index)
 # codePointBefore(int index)
 # codePointCount(int beginIndex, int endIndex)
+
+
 # offsetByCodePoints(int index, int codePointOffset)
 # getChars(int srcBegin, int srcEnd, char[] dst, int dstBegin)
 # toCharArray()
