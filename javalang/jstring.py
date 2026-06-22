@@ -67,12 +67,9 @@ class JString:
     def stringBytes(byte: bytes) -> str:
         return byte.decode()
 
-    # String(byte[], int offset, int length)
-    # String(StringBuilder builder)
     def from_stringbuilder(self, builder):
         return self(str(builder))
 
-    # String(String original)
     @staticmethod
     def stringOriginal(original: str) -> str:
         return str(original)
@@ -81,14 +78,12 @@ class JString:
     def stringCharArrayOffsetCount(value: list[str], offset: int, count: int) -> str:
         return "".join(value[offset : offset + count])
 
-    # String(byte[] bytes, String charset)
     @classmethod
     def from_bytes(cls, data: bytes, charset: str = "utf-8"):
         if not isinstance(data, (bytes, bytearray)):
             raise TypeError("data must be bytes")
         return cls(data.decode(charset))
 
-    # String(int[] codePoints, int offset, int count)
     @classmethod
     def from_codepoints(cls, codepoints: list[int], offset: int = 0, count: int | None = None):
         if count is None:
@@ -318,20 +313,74 @@ class JString:
     # BUSCA
     # ==========================================================
 
-    # indexOf(int ch)
-    # indexOf(int ch, int fromIndex)
-    # indexOf(String str)
-    # indexOf(String str, int fromIndex)
+    def index_of(self, value, inicio=None):
+        "Equivale ao métodos indexOf(int ch),"
+        "indexOf(int ch, int fromIndex) e "
+        "indexOf(String str)"
+        if isinstance(value, int):
+            value = chr(value)
 
-    # lastIndexOf(int ch)
-    # lastIndexOf(int ch, int fromIndex)
-    # lastIndexOf(String str)
-    # lastIndexOf(String str, int fromIndex)
+        if inicio is None:
+            return self.value.find(value)
 
-    # contains(CharSequence s)
-    # startsWith(String prefix)
-    # startsWith(String prefix, int toffset)
-    # endsWith(String suffix)
+        return self.value.find(value, inicio)
+
+    def index_of_string_from(self, value, inicio):
+        return self.value.find(value, inicio)
+
+    def last_index_of(self, value, inicio=None):
+        "Equivale ao métodos lastIndexOf(int) e lastIndexOf(int, int)"
+        if isinstance(value, int):
+            value = chr(value)
+
+        if inicio is None:
+            return self.value.rfind(value)
+
+        return self.value.rfind(value, 0, inicio + 1)
+
+    def lastIndexOf(self, str_: str, fromIndex: int = None) -> int:  # type: ignore
+        """
+        Returns the index of the last occurrence of the specified substring.
+        """
+
+        if fromIndex is None:
+            return self.value.rfind(str_)
+
+        if fromIndex < 0:
+            return -1
+
+        if str_ == "":
+            return min(fromIndex, len(self.value))
+
+        max_start = min(fromIndex, len(self.value) - len(str_))
+
+        for i in range(max_start, -1, -1):
+            if self.value.startswith(str_, i):
+                return i
+
+        return -1
+
+    def contains(self, s) -> bool:
+        """
+        Returns true if this string contains the specified sequence.
+        """
+        return str(s) in self.value
+
+    def startsWith(self, prefix: str, toffset: int = 0) -> bool:
+        """
+        Tests if this string starts with the specified prefix.
+        """
+
+        if toffset < 0 or toffset > len(self.value):
+            return False
+
+        return self.value.startswith(prefix, toffset)
+
+    def endsWith(self, suffix: str) -> bool:
+        """
+        Tests if this string ends with the specified suffix.
+        """
+        return self.value.endswith(suffix)
 
     # ==========================================================
     # TRANSFORMAÇÃO
