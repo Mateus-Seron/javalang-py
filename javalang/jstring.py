@@ -39,6 +39,12 @@ class JString:
     def __init__(self, value: str = ""):
         self.value = str(value)
 
+    def __str__(self):
+        return self.value
+
+    def __repr__(self):
+        return self.value
+
     # ----------------------------------------------------------
     # UTILITÁRIO: converte string Python para UTF-16 code units
     # ----------------------------------------------------------
@@ -90,12 +96,16 @@ class JString:
         chars = (chr(cp) for cp in codepoints[offset : offset + count])
         return cls("".join(chars))
 
+    # String(byte[], int offset, int length)
     @classmethod
     def from_bytes_range(cls, data: bytes, start: int, length: int, charset: str = "utf-8"):
         if not isinstance(data, (bytes, bytearray)):
             raise TypeError("data must be bytes")
         subset = data[start : start + length]
         return cls(subset.decode(charset))
+
+    # String(byte[] bytes, String charset)
+    # String(int[] codePoints, int offset, int count)
 
     # ==========================================================
     # ACESSO E TAMANHO
@@ -380,13 +390,58 @@ class JString:
     # TRANSFORMAÇÃO
     # ==========================================================
 
-    # substring(int beginIndex)
-    # substring(int beginIndex, int endIndex)
-    # subSequence(int beginIndex, int endIndex)
+    # substring(int)
+    def substring(self, start: int):
+        n = len(self.value)
 
-    # concat(String str)
+        if start < 0 or start > n:
+            raise IndexError("start index out of range")
+
+        return JString(self.value[start:])
+
+    # substring(int, int)
+    def substring_range(self, start: int, end: int):
+        n = len(self.value)
+
+        if start < 0 or start > n:
+            raise IndexError("start index out of range")
+
+        if end < 0 or end > n or end < start:
+            raise IndexError("end index out of range")
+
+        return JString(self.value[start:end])
+
+    # subSequence(int, int)
+    def subSequence(self, start: int, end: int):
+        n = len(self.value)
+
+        if start < 0 or start > n:
+            raise IndexError("start index out of range")
+
+        if end < 0 or end > n or end < start:
+            raise IndexError("end index out of range")
+
+        return JString(self.value[start:end])
+
+    # concat(String)
+    def concat(self, other: str):
+        if other is None:
+            raise TypeError("cannot concat None")
+
+        return JString(self.value + str(other))
+
+    # replace(char, char)
+    def replace(self, old: str, new: str):
+        if not isinstance(old, str) or not isinstance(new, str):
+            raise TypeError("replace expects characters as strings")
+
+        if len(old) != 1 or len(new) != 1:
+            raise ValueError("replace expects single characters")
+
+        return JString(self.value.replace(old, new))
 
     # replace(char oldChar, char newChar)
+    # replace(CharSequence target, CharSequence replacement)
 
     def replace(self, target, replacement) -> JString:
         """String.replace(CharSequence target, CharSequence replacement).

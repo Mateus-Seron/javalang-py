@@ -581,3 +581,68 @@ class TestIntern:
     def test_intern_value_equivalence(self):
         s = JString("java")
         assert s.intern().value == "java"
+class TestTransformations:
+    def test_substring(self):
+        js = JString("abcdef")
+        assert str(js.substring(2)) == "cdef"
+
+    def test_substring_range(self):
+        js = JString("abcdef")
+        assert str(js.substring_range(1, 4)) == "bcd"
+
+    def test_subsequence(self):
+        js = JString("abcdef")
+        assert str(js.subSequence(1, 4)) == "bcd"
+
+    def test_invalid_start_substring(self):
+        js = JString("abc")
+        with pytest.raises(IndexError):
+            js.substring(10)
+
+    def test_invalid_start_range(self):
+        js = JString("abc")
+        with pytest.raises(IndexError):
+            js.substring_range(10, 1)
+
+    def test_invalid_end_range(self):
+        js = JString("abc")
+        with pytest.raises(IndexError):
+            js.substring_range(1, 0)
+
+    def test_invalid_subsequence(self):
+        js = JString("abc")
+        with pytest.raises(IndexError):
+            js.subSequence(2, 1)
+
+    def test_concat(self):
+        js = JString("abc")
+        result = js.concat("def")
+        assert str(result) == "abcdef"
+
+    def test_concat_with_empty(self):
+        js = JString("abc")
+        result = js.concat("")
+        assert str(result) == "abc"
+
+    def test_concat_none(self):
+        js = JString("abc")
+        with pytest.raises(TypeError):
+            js.concat(None)
+
+    def test_replace_basic(self):
+        js = JString("banana")
+        result = js.replace("a", "o")
+        assert str(result) == "bonono"
+
+    def test_replace_no_match(self):
+        js = JString("abc")
+        result = js.replace("x", "y")
+        assert str(result) == "abc"
+
+    def test_replace_invalid_char_size(self):
+        js = JString("abc")
+        with pytest.raises(ValueError):
+            js.replace("ab", "c")
+
+        with pytest.raises(ValueError):
+            js.replace("a", "cd")
