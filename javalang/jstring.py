@@ -387,7 +387,7 @@ class JString:
     # concat(String str)
 
     # replace(char oldChar, char newChar)
-    
+
     def replace(self, target, replacement) -> JString:
         """String.replace(CharSequence target, CharSequence replacement).
         Também suporta a sobrecarga antiga (char, char).
@@ -404,9 +404,22 @@ class JString:
         """String.toUpperCase()."""
         return JString(self.value.upper())
     
-    # trim()
+    def trim(self) -> JString:
+        """String.trim()."""
+        start = 0
+        end = len(self.value)
+        
+        while start < end and ord(self.value[start]) <= 32:
+            start += 1
+        while end > start and ord(self.value[end - 1]) <= 32:
+            end -= 1
+            
+        return JString(self.value[start:end])
 
-    # intern()
+    def intern(self) -> JString:
+        """String.intern()."""
+        import sys
+        return JString(sys.intern(self.value))
 
     # ==========================================================
     # EXPRESSÕES REGULARES
