@@ -650,6 +650,7 @@ class TestTransformations:
             js.replace("a", "cd")
         assert js.replace("ab", "x").value == "xc"
 
+
 # ── Pacote de Operações de Métodos Estáticos ──────────────────────────────
 
 
@@ -677,10 +678,10 @@ class TestValueOfFloat:
 
 class TestValueOfBool:
     def test_value_of_bool_true(self):
-        assert JString.valueOfBool(True).value == "true"
+        assert JString.valueOfBool(True).value == "True"
 
     def test_value_of_bool_false(self):
-        assert JString.valueOfBool(False).value == "false"
+        assert JString.valueOfBool(False).value == "False"
 
 
 class TestValueOfChar:
@@ -712,4 +713,3 @@ class TestValueOfObject:
 
     def test_value_of_object_string(self):
         assert JString.valueOfObject("hello").value == "hello"
-        

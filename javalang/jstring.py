@@ -440,6 +440,8 @@ class JString:
         """
         tgt_str = _coerce_str(target)
         repl_str = _coerce_str(replacement)
+        if len(tgt_str) != len(repl_str):
+            raise ValueError(f"Target and replacement must have the same length")
         return JString(self.value.replace(tgt_str, repl_str))
 
     def toLowerCase(self) -> JString:
@@ -517,29 +519,29 @@ class JString:
     # ==========================================================
 
     @staticmethod
-    def valueOfInt(value: int) -> 'JString':
+    def valueOfInt(value: int) -> JString:
         return JString(str(value))
 
     @staticmethod
-    def valueOfFloat(value: float) -> 'JString':
+    def valueOfFloat(value: float) -> JString:
         return JString(str(value))
 
     @staticmethod
-    def valueOfBool(value: bool) -> 'JString':
-        return JString(str(value))
-    
+    def valueOfBool(value: bool) -> JString:
+        return JString("true" if value else "false")
+
     @staticmethod
-    def valueOfChar(value: str) -> 'JString':
+    def valueOfChar(value: str) -> JString:
         if len(value) != 1:
             raise ValueError("Argumento deve ser um caractere único")
         return JString(value)
 
     @staticmethod
-    def valueOfCharArray(value: list) -> 'JString':
+    def valueOfCharArray(value: list) -> JString:
         return JString("".join(value))
 
     @staticmethod
-    def valueOfObject(value: object) -> 'JString':
+    def valueOfObject(value: object) -> JString:
         if value is None:
             return JString("null")
         return JString(str(value))
