@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import re
+
 
 def _coerce_str(value) -> str:
     if value is None:
@@ -63,6 +65,12 @@ class JString:
     def stringBytes(byte: bytes) -> str:
         return byte.decode()
 
+    # String(byte[], int offset, int length)
+    # String(StringBuilder builder)
+    def from_stringbuilder(self, builder):
+        return self(str(builder))
+
+    # String(String original)
     @staticmethod
     def stringOriginal(original: str) -> str:
         return str(original)
@@ -70,6 +78,39 @@ class JString:
     @staticmethod
     def stringCharArrayOffsetCount(value: list[str], offset: int, count: int) -> str:
         return "".join(value[offset : offset + count])
+
+    # String(byte[] bytes, String charset)
+    @classmethod
+    def from_bytes(cls, data: bytes, charset: str = "utf-8"):
+        if not isinstance(data, (bytes, bytearray)):
+            raise TypeError("data must be bytes")
+        return cls(data.decode(charset))
+
+    # String(int[] codePoints, int offset, int count)
+    @classmethod
+    def from_codepoints(cls, codepoints: list[int], offset: int = 0, count: int | None = None):
+        if count is None:
+            count = len(codepoints) - offset
+
+        chars = (chr(cp) for cp in codepoints[offset : offset + count])
+        return cls("".join(chars))
+
+    # String()
+    # String(char[] value)
+    # String(byte[] bytes)
+    # String(byte[], int offset, int length)
+    @classmethod
+    def from_bytes_range(cls, data: bytes, start: int, length: int, charset: str = "utf-8"):
+        if not isinstance(data, (bytes, bytearray)):
+            raise TypeError("data must be bytes")
+        subset = data[start : start + length]
+        return cls(subset.decode(charset))
+
+    # String(StringBuilder builder)
+    # String(String original)
+    # String(char[] value, int offset, int count)
+    # String(byte[] bytes, String charset)
+    # String(int[] codePoints, int offset, int count)
 
     # ==========================================================
     # ACESSO E TAMANHO
@@ -355,12 +396,45 @@ class JString:
     # EXPRESSÕES REGULARES
     # ==========================================================
 
-    # matches(String regex)
-    # replaceAll(String regex, String replacement)
-    # replaceFirst(String regex, String replacement)
+    def matches(self, regex: str) -> bool:
+        """String.matches(String regex) — a regex deve casar a string inteira."""
+        try:
+            return re.fullmatch(regex, self.value) is not None
+        except re.error as err:
+            raise ValueError("PatternSyntaxException") from err
 
-    # split(String regex)
-    # split(String regex, int limit)
+    def replaceFirst(self, regex: str, replacement: str) -> JString:
+        """String.replaceFirst(String regex, String replacement)."""
+        try:
+            return JString(re.sub(regex, replacement, self.value, count=1))
+        except re.error as err:
+            raise ValueError("PatternSyntaxException") from err
+
+    def replaceAll(self, regex: str, replacement: str) -> JString:
+        """String.replaceAll(String regex, String replacement)."""
+        try:
+            return JString(re.sub(regex, replacement, self.value))
+        except re.error as err:
+            raise ValueError("PatternSyntaxException") from err
+
+    def split(self, regex: str, limit: int = 0) -> list[JString]:
+        """String.split(String regex) e String.split(String regex, int limit)."""
+        try:
+            if limit == 1:
+                return [JString(self.value)]
+
+            if limit > 1:
+                parts = re.split(regex, self.value, maxsplit=limit - 1)
+            else:
+                parts = re.split(regex, self.value)
+
+            if limit == 0:
+                while len(parts) > 1 and parts[-1] == "":
+                    parts.pop()
+
+            return [JString(part) for part in parts]
+        except re.error as err:
+            raise ValueError("PatternSyntaxException") from err
 
     # ==========================================================
     # MÉTODOS ESTÁTICOS
