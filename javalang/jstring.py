@@ -320,9 +320,21 @@ class JString:
         """
         return str(s) in self.value
 
-    # startsWith(String prefix)
-    # startsWith(String prefix, int toffset)
-    # endsWith(String suffix)
+    def startsWith(self, prefix: str, toffset: int = 0) -> bool:
+        """
+        Tests if this string starts with the specified prefix.
+        """
+
+        if toffset < 0 or toffset > len(self.value):
+            return False
+
+        return self.value.startswith(prefix, toffset)
+    
+    def endsWith(self, suffix: str) -> bool:
+        """
+        Tests if this string ends with the specified suffix.
+        """
+        return self.value.endswith(suffix)
 
     # ==========================================================
     # TRANSFORMAÇÃO
