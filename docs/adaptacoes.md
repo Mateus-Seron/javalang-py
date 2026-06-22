@@ -29,6 +29,7 @@ Toda vez que a equipe decide:
 | 5 | Unificação de `toString` e `toUnsignedString` com `radix=10` (sobrecargas Java) | [ADR-0005](adr/0005-unificacao-tostring.md) | 2026-06-18 | — |
 | 6 | Helpers IEEE 754 em `JFloat` para `compare`, `max` e `min` | [ADR-0006](adr/0006-representacao-float32.md) | 2026-06-19 | — |
 | 7 | Unificação de `toString` instância/estático em `JFloat` via descriptor | [ADR-0007](adr/0007-unificacao-tostring-jfloat.md) | 2026-06-19 | — |
+| 8 | Expressões regulares em `JString` via módulo `re` (não `java.util.regex`) | [ADR-0008](adr/0008-regex-python-re-jstring.md) | 2026-06-19 | — |
 
 ---
 
