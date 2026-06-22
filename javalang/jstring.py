@@ -100,9 +100,19 @@ class JString:
     # BUSCA
     # ==========================================================
 
-    # indexOf(int ch)
-    # indexOf(int ch, int fromIndex)
-    # indexOf(String str)
+    def index_of(self, value, inicio=None):
+        "Equivale ao métodos indexOf(int ch), "
+        "indexOf(int ch, int fromIndex) e "
+        "indexOf(String str)"
+        if isinstance(value, int):
+            value = chr(value)
+
+        if inicio is None:
+            return self.value.find(value)
+
+        return self.value.find(value, inicio)
+
+
     # indexOf(String str, int fromIndex)
 
     # lastIndexOf(int ch)
