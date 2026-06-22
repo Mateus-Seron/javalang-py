@@ -545,13 +545,13 @@ class JString:
         return JString(str(value))
 
     @staticmethod
-    def copyValueOf(value: list) -> 'JString':
+    def copyValueOf(value: list) -> JString:
         return JString("".join(value))
 
     @staticmethod
-    def format(fmt: str, *args) -> 'JString':
+    def format(fmt: str, *args) -> JString:
         return JString(fmt % args)
 
     @staticmethod
-    def join(delimiter: str, *elements) -> 'JString':
+    def join(delimiter: str, *elements) -> JString:
         return JString(delimiter.join(str(e) for e in elements))

@@ -705,6 +705,7 @@ class TestValueOfObject:
     def test_value_of_object_string(self):
         assert JString.valueOfObject("hello").value == "hello"
 
+
 class TestCopyValueOf:
     def test_copy_value_of_normal(self):
         assert JString.copyValueOf(["h", "e", "l", "l", "o"]).value == "hello"
