@@ -95,7 +95,6 @@ class JString:
         chars = (chr(cp) for cp in codepoints[offset : offset + count])
         return cls("".join(chars))
 
-    # String()
     # String(char[] value)
     # String(byte[] bytes)
     # String(byte[], int offset, int length)
@@ -106,9 +105,39 @@ class JString:
         subset = data[start : start + length]
         return cls(subset.decode(charset))
 
-    # String(StringBuilder builder)
-    # String(String original)
-    # String(char[] value, int offset, int count)
+    # substring(int)
+    def substring(self, start: int):
+        n = len(self.value)
+
+        if start < 0 or start > n:
+            raise IndexError("start index out of range")
+
+        return JString(self.value[start:])
+
+    # substring(int, int)
+    def substring_range(self, start: int, end: int):
+        n = len(self.value)
+
+        if start < 0 or start > n:
+            raise IndexError("start index out of range")
+
+        if end < 0 or end > n or end < start:
+            raise IndexError("end index out of range")
+
+        return JString(self.value[start:end])
+
+    # subSequence(int, int)
+    def subSequence(self, start: int, end: int):
+        n = len(self.value)
+
+        if start < 0 or start > n:
+            raise IndexError("start index out of range")
+
+        if end < 0 or end > n or end < start:
+            raise IndexError("end index out of range")
+
+        return JString(self.value[start:end])
+
     # String(byte[] bytes, String charset)
     # String(int[] codePoints, int offset, int count)
 
