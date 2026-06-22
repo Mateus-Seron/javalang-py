@@ -443,17 +443,14 @@ class JString:
     # MÉTODOS ESTÁTICOS
     # ==========================================================
 
-    # String.valueOf(int value)
-    # String.valueOf(long value)
-    # String.valueOf(float value)
-    # String.valueOf(double value)
-    # String.valueOf(boolean value)
-    # String.valueOf(char value)
-    # String.valueOf(char[] value)
-    # String.valueOf(Object obj)
+    @staticmethod
+    def valueOfInt(value: int) -> 'JString':
+        return JString(str(value))
 
-    # String.copyValueOf(char[] value)
+    @staticmethod
+    def valueOfFloat(value: float) -> 'JString':
+        return JString(str(value))
 
-    # String.format(String format, Object... args)
-
-    # String.join(...)
+    @staticmethod
+    def valueOfBool(value: bool) -> 'JString':
+        return JString(str(value))
