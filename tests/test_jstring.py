@@ -704,3 +704,35 @@ class TestValueOfObject:
 
     def test_value_of_object_string(self):
         assert JString.valueOfObject("hello").value == "hello"
+
+class TestCopyValueOf:
+    def test_copy_value_of_normal(self):
+        assert JString.copyValueOf(["h", "e", "l", "l", "o"]).value == "hello"
+
+    def test_copy_value_of_vazio(self):
+        assert JString.copyValueOf([]).value == ""
+
+
+class TestFormat:
+    def test_format_string(self):
+        assert JString.format("hello %s", "world").value == "hello world"
+
+    def test_format_int(self):
+        assert JString.format("valor %d", 42).value == "valor 42"
+
+    def test_format_multiplos(self):
+        assert JString.format("%s tem %d anos", "João", 30).value == "João tem 30 anos"
+
+
+class TestJoin:
+    def test_join_normal(self):
+        assert JString.join(", ", "a", "b", "c").value == "a, b, c"
+
+    def test_join_unico(self):
+        assert JString.join(", ", "a").value == "a"
+
+    def test_join_vazio(self):
+        assert JString.join(", ").value == ""
+
+    def test_join_delimitador_vazio(self):
+        assert JString.join("", "a", "b", "c").value == "abc"
