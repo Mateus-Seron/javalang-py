@@ -503,6 +503,86 @@ class TestEndsWith:
         assert s.endsWith("banana")
 
 
+# ── Pacote de Operações de Transformação ─────────────────────
+
+
+class TestReplace:
+    def test_replace_basic(self):
+        s = JString("banana")
+        assert s.replace("a", "o").value == "bonono"
+
+    def test_replace_with_jstring(self):
+        s = JString("hello world")
+        target = JString("world")
+        replacement = JString("python")
+        assert s.replace(target, replacement).value == "hello python"
+
+    def test_replace_no_match(self):
+        s = JString("abc")
+        assert s.replace("x", "y").value == "abc"
+
+    def test_replace_empty_target(self):
+        s = JString("abc")
+        assert s.replace("", "-").value == "-a-b-c-"
+
+
+class TestToLowerCase:
+    def test_to_lower_case_mixed(self):
+        s = JString("JaVa 123")
+        assert s.toLowerCase().value == "java 123"
+
+    def test_to_lower_case_already_lower(self):
+        s = JString("python")
+        assert s.toLowerCase().value == "python"
+
+    def test_to_lower_case_returns_jstring(self):
+        s = JString("ABC")
+        assert isinstance(s.toLowerCase(), JString)
+
+
+class TestToUpperCase:
+    def test_to_upper_case_mixed(self):
+        s = JString("jAvA 123")
+        assert s.toUpperCase().value == "JAVA 123"
+
+    def test_to_upper_case_already_upper(self):
+        s = JString("PYTHON")
+        assert s.toUpperCase().value == "PYTHON"
+
+    def test_to_upper_case_returns_jstring(self):
+        s = JString("abc")
+        assert isinstance(s.toUpperCase(), JString)
+
+
+class TestTrim:
+    def test_trim_basic_spaces(self):
+        s = JString("  hello world  ")
+        assert s.trim().value == "hello world"
+
+    def test_trim_control_characters(self):
+        s = JString("\t\n\r hello \t\n\r")
+        assert s.trim().value == "hello"
+
+    def test_trim_no_spaces(self):
+        s = JString("abc")
+        assert s.trim().value == "abc"
+
+    def test_trim_only_spaces(self):
+        s = JString("   \t   ")
+        assert s.trim().value == ""
+
+
+class TestIntern:
+    def test_intern_same_reference(self):
+        s1 = JString("teste_intern").intern()
+        s2 = JString("teste_intern").intern()
+        assert s1.value is s2.value
+
+    def test_intern_value_equivalence(self):
+        s = JString("java")
+        assert s.intern().value == "java"
+
+
 class TestTransformations:
     def test_substring(self):
         js = JString("abcdef")
@@ -561,14 +641,14 @@ class TestTransformations:
         result = js.replace("x", "y")
         assert str(result) == "abc"
 
-    def test_replace_invalid_char_size(self):
+    def test_replace_sequence(self):
         js = JString("abc")
         with pytest.raises(ValueError):
             js.replace("ab", "c")
 
         with pytest.raises(ValueError):
             js.replace("a", "cd")
-
+        assert js.replace("ab", "x").value == "xc"
 
 # ── Pacote de Operações de Métodos Estáticos ──────────────────────────────
 
@@ -632,3 +712,4 @@ class TestValueOfObject:
 
     def test_value_of_object_string(self):
         assert JString.valueOfObject("hello").value == "hello"
+        
