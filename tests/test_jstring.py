@@ -1,4 +1,4 @@
-"""Testes para JString."""
+import pytest
 
 from javalang.jstring import JString
 
@@ -41,3 +41,58 @@ class TestPacoteDeOperacoesDeComparacaoDeString:
 
     def test_compareToIgnoreCase_equal(self):
         assert JString("Java").compareToIgnoreCase("JAVA") == 0
+
+
+# ── Pacote de Operações de Acesso e Tamanho ──────────────────────────────
+
+
+class TestLength:
+    def test_length_empty(self):
+        s = JString("")
+        assert s.length() == 0
+
+    def test_length_normal(self):
+        s = JString("abc")
+        assert s.length() == 3
+
+
+class TestIsEmpty:
+    def test_true(self):
+        assert JString("").isEmpty() is True
+
+    def test_false(self):
+        assert JString("a").isEmpty() is False
+
+
+class TestCharAt:
+    def test_char_at_basic(self):
+        s = JString("abc")
+        assert s.charAt(0) == "a"
+        assert s.charAt(2) == "c"
+
+    def test_char_at_exception(self):
+        s = JString("abc")
+        with pytest.raises(IndexError):
+            s.charAt(5)
+
+
+class TestCodePointAt:
+    def test_ascii(self):
+        s = JString("abc")
+        assert s.codePointAt(1) == ord("b")
+
+
+class TestCodePointBefore:
+    def test_ascii(self):
+        s = JString("abc")
+        assert s.codePointBefore(2) == ord("b")
+
+
+class TestCodePointCount:
+    def test_basic(self):
+        s = JString("hello")
+        assert s.codePointCount(0, 5) == 5
+
+    def test_partial_range(self):
+        s = JString("abcdef")
+        assert s.codePointCount(1, 5) == 4
