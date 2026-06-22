@@ -22,8 +22,8 @@ class JString:
 
     # String(byte[] bytes)
     @staticmethod
-    def stringBytes(bytes: bytes) -> str:
-        return bytes.decode()
+    def stringBytes(byte: bytes) -> str:
+        return byte.decode()
 
     # String(byte[], int offset, int length)
     # String(StringBuilder builder)
