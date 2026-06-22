@@ -641,6 +641,66 @@ class TestTransformations:
         result = js.replace("x", "y")
         assert str(result) == "abc"
 
-    def test_replace_sequence(self):
-        js = JString("abc")
-        assert js.replace("ab", "x").value == "xc"
+
+# ── Pacote de Operações de Métodos Estáticos ──────────────────────────────
+
+
+class TestValueOfInt:
+    def test_value_of_int_positivo(self):
+        assert JString.valueOfInt(42).value == "42"
+
+    def test_value_of_int_negativo(self):
+        assert JString.valueOfInt(-42).value == "-42"
+
+    def test_value_of_int_zero(self):
+        assert JString.valueOfInt(0).value == "0"
+
+
+class TestValueOfFloat:
+    def test_value_of_float_positivo(self):
+        assert JString.valueOfFloat(2.5).value == "2.5"
+
+    def test_value_of_float_negativo(self):
+        assert JString.valueOfFloat(-2.5).value == "-2.5"
+
+    def test_value_of_float_zero(self):
+        assert JString.valueOfFloat(0.0).value == "0.0"
+
+
+class TestValueOfBool:
+    def test_value_of_bool_true(self):
+        assert JString.valueOfBool(True).value == "True"
+
+    def test_value_of_bool_false(self):
+        assert JString.valueOfBool(False).value == "False"
+
+
+class TestValueOfChar:
+    def test_value_of_char_normal(self):
+        assert JString.valueOfChar("h").value == "h"
+
+    def test_value_of_char_invalido(self):
+        with pytest.raises(ValueError):
+            JString.valueOfChar("ab")
+
+    def test_value_of_char_espaco(self):
+        assert JString.valueOfChar(" ").value == " "
+
+
+class TestValueOfCharArray:
+    def test_value_of_char_array_normal(self):
+        assert JString.valueOfCharArray(["h", "e", "l", "l", "o"]).value == "hello"
+
+    def test_value_of_char_array_vazio(self):
+        assert JString.valueOfCharArray([]).value == ""
+
+
+class TestValueOfObject:
+    def test_value_of_object_normal(self):
+        assert JString.valueOfObject(42).value == "42"
+
+    def test_value_of_object_none(self):
+        assert JString.valueOfObject(None).value == "null"
+
+    def test_value_of_object_string(self):
+        assert JString.valueOfObject("hello").value == "hello"

@@ -30,6 +30,7 @@ Toda vez que a equipe decide:
 | 6 | Helpers IEEE 754 em `JFloat` para `compare`, `max` e `min` | [ADR-0006](adr/0006-representacao-float32.md) | 2026-06-19 | — |
 | 7 | Unificação de `toString` instância/estático em `JFloat` via descriptor | [ADR-0007](adr/0007-unificacao-tostring-jfloat.md) | 2026-06-19 | — |
 | 8 | Expressões regulares em `JString` via módulo `re` (não `java.util.regex`) | [ADR-0008](adr/0008-regex-python-re-jstring.md) | 2026-06-19 | — |
+| 9 | Unificação de `int`/`long`, `double`/`float`, e `valueOf(Object)` retorna `"null"` no `JString` | [ADR-0009](adr/0009-adapt-metodos-estaticos.md) | 2026-06-21 | — | 
 
 ---
 

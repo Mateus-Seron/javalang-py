@@ -63,6 +63,7 @@ Esta implementação diverge da especificação Java SE 8 nos seguintes pontos, 
 | [ADR-0006](docs/adr/0006-representacao-float32.md) | Semântica IEEE 754 em `JFloat` | Normalização float32, bits brutos vs canônicos, `compare`/`hashCode`/`equals` |
 | [ADR-0007](docs/adr/0007-unificacao-tostring-jfloat.md) | `toString` instância/estático em `JFloat` | Descriptor `_ToString` unifica `toString()` e `toString(float)` |
 | [ADR-0008](docs/adr/0008-regex-python-re-jstring.md) | Regex em `JString` via `re` | `matches`/`replace*`/`split` usam stdlib Python, não `Pattern` Java |
+| [ADR-0009](docs/adr/0009-adapt-metodos-estaticos.md) | Unificação de `int`/`long`, `double`/`float`, e `valueOf(Object)` retorna `"null"` no `JString` | Adaptação em Python |
 
 Veja o índice completo em [`docs/adaptacoes.md`](docs/adaptacoes.md).
 
@@ -110,6 +111,13 @@ gera `ValueError("PatternSyntaxException")`. Casos avançados (ex.: `$1` na repl
 divergir do JDK. Detalhes em [ADR-0008](docs/adr/0008-regex-python-re-jstring.md).
 
 > **Nota sobre locale e concorrência:** quando `JAVALANG_LOCALE` está definida, operações sensíveis a locale **não são thread-safe** (limitação de `locale.setlocale`). Em cenários multi-thread, deixe a variável não definida.
+
+### JString — Adaptações dos Métodos Estáticos
+
+O Python não diferencia int de long, portanto valueOf(int) e valueOf(long) foram unificados;
+O mesmo ocorre com float e double, logo valueOf(float) e valueOf(double) unificados;
+E por fim, para manter a fidelidade ao Java, valueOf(Object) retorna "null" para None.
+Detalhes em [ADR-0009](docs/adr/0009-adapt-metodos-estaticos.md).
 
 ---
 
