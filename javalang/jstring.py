@@ -4,9 +4,13 @@ import re
 
 
 def _coerce_str(value) -> str:
+    if value is None:
+        return None
     if isinstance(value, JString):
         return value.value
-    return str(value)
+    if isinstance(value, str):
+        return value
+    raise TypeError(f"Tipo inválido: {type(value).__name__}")
 
 
 def _chars_region_match(c1: str, c2: str, ignore_case: bool) -> bool:
@@ -48,6 +52,36 @@ class JString:
     # ==========================================================
     # CONSTRUTORES
     # ==========================================================
+
+    # String()
+    @staticmethod
+    def string(self) -> str:
+        return ""
+
+    # String(char[] value)
+    @staticmethod
+    def stringCharArray(value: list[str]) -> str:
+        return "".join(value)
+
+    # String(byte[] bytes)
+    @staticmethod
+    def stringBytes(byte: bytes) -> str:
+        return byte.decode()
+
+    # String(byte[], int offset, int length)
+    # String(StringBuilder builder)
+    # String(String original)
+    @staticmethod
+    def stringOriginal(original: str) -> str:
+        return str(original)
+
+    # String(char[] value, int offset, int count)
+    @staticmethod
+    def stringCharArrayOffsetCount(value: list[str], offset: int, count: int) -> str:
+        return "".join(value[offset : offset + count])
+
+    # String(byte[] bytes, String charset)
+    # String(int[] codePoints, int offset, int count)
 
     # String()
     # String(char[] value)
@@ -128,11 +162,54 @@ class JString:
 
         return count
 
-    # offsetByCodePoints(int index, int codePointOffset)
-    # getChars(int srcBegin, int srcEnd, char[] dst, int dstBegin)
-    # toCharArray()
-    # getBytes()
-    # getBytes(String charset)
+    def offsetByCodePoints(self, index: int, codePointOffset: int) -> int:
+        length = len(self.value)
+
+        if index < 0 or index > length:
+            raise IndexError("index out of bounds")
+
+        result = index + codePointOffset
+
+        if result < 0 or result > length:
+            raise IndexError("codePointOffset out of bounds")
+
+        return result
+
+    def getChars(self, srcBegin: int, srcEnd: int, dst: list, dstBegin: int) -> None:
+
+        length = len(self.value)
+
+        if srcBegin < 0:
+            raise IndexError("srcBegin out of bounds")
+
+        if srcBegin > srcEnd:
+            raise IndexError("srcBegin greater than srcEnd")
+
+        if srcEnd > length:
+            raise IndexError("srcEnd out of bounds")
+
+        if dstBegin < 0:
+            raise IndexError("dstBegin out of bounds")
+
+        copy_len = srcEnd - srcBegin
+
+        if dstBegin + copy_len > len(dst):
+            raise IndexError("destination array too small")
+
+        for i in range(copy_len):
+            dst[dstBegin + i] = self.value[srcBegin + i]
+
+    def toCharArray(self) -> list:
+        return list(self.value)
+
+    def getBytes(self, charsetName: str = None) -> bytes:  # type: ignore
+        if charsetName is None:
+            return self.value.encode()
+
+        try:
+            return self.value.encode(charsetName)
+        except LookupError:
+            raise ValueError(f"Unsupported encoding: {charsetName}")
 
     # ==========================================================
     # COMPARAÇÃO
