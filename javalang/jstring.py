@@ -72,7 +72,24 @@ class JString:
                 return ord(c1) - ord(c2)
         return len(self.value) - len(other_str)
 
-    # compareToIgnoreCase(String str)
+    def compareToIgnoreCase(self, other) -> int:
+        """String.compareToIgnoreCase(String str)."""
+        other_str = _coerce_str(other)
+        limit = min(len(self.value), len(other_str))
+        for i in range(limit):
+            c1 = self.value[i]
+            c2 = other_str[i]
+            if c1 != c2:
+                u1 = c1.upper()
+                u2 = c2.upper()
+                if u1 != u2:
+                    return ord(u1) - ord(u2)
+                l1 = c1.lower()
+                l2 = c2.lower()
+                if l1 != l2:
+                    return ord(l1) - ord(l2)
+        return len(self.value) - len(other_str)
+
     # contentEquals(CharSequence cs)
     # regionMatches(int toffset, String other, int ooffset, int len)
     # regionMatches(boolean ignoreCase, int toffset,
