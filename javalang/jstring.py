@@ -322,9 +322,31 @@ class JString:
     # BUSCA
     # ==========================================================
 
-    # indexOf(int ch)
-    # indexOf(int ch, int fromIndex)
-    # indexOf(String str)
+    def index_of(self, value, inicio=None):
+        "Equivale ao métodos indexOf(int ch),"
+        "indexOf(int ch, int fromIndex) e "
+        "indexOf(String str)"
+        if isinstance(value, int):
+            value = chr(value)
+
+        if inicio is None:
+            return self.value.find(value)
+
+        return self.value.find(value, inicio)
+
+    def index_of_string_from(self, value, inicio):
+        return self.value.find(value, inicio)
+
+    def last_index_of(self, value, inicio=None):
+        "Equivale ao métodos lastIndexOf(int) e lastIndexOf(int, int)"
+        if isinstance(value, int):
+            value = chr(value)
+
+        if inicio is None:
+            return self.value.rfind(value)
+
+        return self.value.rfind(value, 0, inicio + 1)
+
     # indexOf(String str, int fromIndex)
 
     # lastIndexOf(int ch)

@@ -344,3 +344,41 @@ class TestGetBytes:
 
         with pytest.raises(ValueError):
             s.getBytes("charset-inexistente")
+
+
+# ── Pacote de busca em String ──────────────────────────────────────────────
+
+
+class TestPacoteDePesquisaEmString:
+    def test_indexOf_char_found(self):
+        assert JString("banana").index_of(ord("a")) == 1
+
+    def test_indexOf_char_not_found(self):
+        assert JString("banana").index_of(ord("x")) == -1
+
+    def test_indexOf_char_from_index(self):
+        assert JString("banana").index_of(ord("a"), 2) == 3
+
+    def test_indexOf_string_found(self):
+        assert JString("banana").index_of("na") == 2
+
+    def test_indexOf_string_not_found(self):
+        assert JString("banana").index_of("xyz") == -1
+
+    def test_indexOf_string_from(self):
+        assert JString("banana").index_of_string_from("na", 3) == 4
+
+    def test_indexOf_string_from_not_found(self):
+        assert JString("banana").index_of_string_from("na", 5) == -1
+
+    def test_lastIndexOf_char_found(self):
+        assert JString("banana").last_index_of(ord("a")) == 5
+
+    def test_lastIndexOf_char_not_found(self):
+        assert JString("banana").last_index_of(ord("x")) == -1
+
+    def test_lastIndexOf_char_from_index(self):
+        assert JString("banana").last_index_of(ord("a"), 4) == 3
+
+    def test_lastIndexOf_char_from_index_not_found(self):
+        assert JString("banana").last_index_of(ord("a"), 0) == -1
