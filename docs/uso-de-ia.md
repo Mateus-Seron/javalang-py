@@ -53,7 +53,6 @@ dos métodos sempre que possível.
 | JFloat   | Métodos implementados na sprint v0.3-jfloat   | Enzo Euvine, João Braga, Lucas Gabriel, Mateus Seron, Mariana Paulino | Implementação, revisão e documentação com auxílio de IA |
 | JString  | Métodos implementados na sprint v0.4-jstring  | Enzo Euvine, João Braga, Lucas Gabriel, Mateus Seron, Mariana Paulino | Implementação, revisão e documentação com auxílio de IA |
 
-
 ---
 
 ## Compromisso
