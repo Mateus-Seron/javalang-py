@@ -78,6 +78,7 @@ class TestPacoteDeOperacoesDeComparacaoDeString:
     def test_hashCode_empty(self):
         assert JString("").hashCode() == 0
 
+
 # ── Pacote de Operações de Acesso e Tamanho ──────────────────────────────
 
 
