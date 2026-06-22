@@ -403,22 +403,23 @@ class JString:
     def toUpperCase(self) -> JString:
         """String.toUpperCase()."""
         return JString(self.value.upper())
-    
+
     def trim(self) -> JString:
         """String.trim()."""
         start = 0
         end = len(self.value)
-        
+
         while start < end and ord(self.value[start]) <= 32:
             start += 1
         while end > start and ord(self.value[end - 1]) <= 32:
             end -= 1
-            
+
         return JString(self.value[start:end])
 
     def intern(self) -> JString:
         """String.intern()."""
         import sys
+
         return JString(sys.intern(self.value))
 
     # ==========================================================
