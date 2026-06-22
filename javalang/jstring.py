@@ -71,6 +71,9 @@ class JString:
 
     # String(byte[], int offset, int length)
     # String(StringBuilder builder)
+    def from_stringbuilder(self, builder):
+        return self(str(builder))
+    
     # String(String original)
     @staticmethod
     def stringOriginal(original: str) -> str:
@@ -86,14 +89,20 @@ class JString:
         return self(data.decode(charset))
 
     # String(int[] codePoints, int offset, int count)
+    def from_codepoints(self, codepoints: list[int], offset: int = 0, count: int | None = None):
+        if count is None:
+            count = len(codepoints) - offset
+
+        chars = (chr(cp) for cp in codepoints[offset:offset + count])
+        return self("".join(chars))
 
     # String()
     # String(char[] value)
     # String(byte[] bytes)
     # String(byte[], int offset, int length)
-    def from_bytes_range(cls, data: bytes, start: int, length: int):
+    def from_bytes_range(self, data: bytes, start: int, length: int):
         subset = data[start : start + length]
-        return cls(subset.decode("utf-8"))
+        return self(subset.decode("utf-8"))
 
     # String(StringBuilder builder)
     # String(String original)
