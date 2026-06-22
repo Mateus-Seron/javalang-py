@@ -430,22 +430,13 @@ class JString:
 
         return JString(self.value + str(other))
 
-    # replace(char, char)
-    def replace(self, old: str, new: str):
-        if not isinstance(old, str) or not isinstance(new, str):
-            raise TypeError("replace expects characters as strings")
-
-        if len(old) != 1 or len(new) != 1:
-            raise ValueError("replace expects single characters")
-
-        return JString(self.value.replace(old, new))
-
     # replace(char oldChar, char newChar)
     # replace(CharSequence target, CharSequence replacement)
 
     def replace(self, target, replacement) -> JString:
         """String.replace(CharSequence target, CharSequence replacement).
-        Também suporta a sobrecarga antiga (char, char).
+
+        Aceita `str` ou `JString`; equivalente a replace(char, char) para chars isolados.
         """
         tgt_str = _coerce_str(target)
         repl_str = _coerce_str(replacement)

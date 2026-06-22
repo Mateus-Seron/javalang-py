@@ -581,6 +581,8 @@ class TestIntern:
     def test_intern_value_equivalence(self):
         s = JString("java")
         assert s.intern().value == "java"
+
+
 class TestTransformations:
     def test_substring(self):
         js = JString("abcdef")
@@ -639,10 +641,6 @@ class TestTransformations:
         result = js.replace("x", "y")
         assert str(result) == "abc"
 
-    def test_replace_invalid_char_size(self):
+    def test_replace_sequence(self):
         js = JString("abc")
-        with pytest.raises(ValueError):
-            js.replace("ab", "c")
-
-        with pytest.raises(ValueError):
-            js.replace("a", "cd")
+        assert js.replace("ab", "x").value == "xc"
