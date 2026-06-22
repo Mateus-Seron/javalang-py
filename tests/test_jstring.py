@@ -3,9 +3,8 @@ import pytest
 from javalang.jstring import JString
 
 # ======================================================
-# Testes de ACESSO E TAMANHO
+# TESTES DE ACESSO E TAMANHO
 # ======================================================
-
 
 class TestLength:
     def test_length_empty(self):
