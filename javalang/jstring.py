@@ -82,12 +82,20 @@ class JString:
         return "".join(value[offset : offset + count])
 
     # String(byte[] bytes, String charset)
+    @classmethod
+    def string(cls, data: bytes, charset: str = "utf-8"):
+        return cls(data.decode(charset))
+
     # String(int[] codePoints, int offset, int count)
 
     # String()
     # String(char[] value)
     # String(byte[] bytes)
     # String(byte[], int offset, int length)
+    def string(cls, data: bytes, start: int, length: int):
+        subset = data[start:start + length]
+        return cls(subset.decode("utf-8"))
+    
     # String(StringBuilder builder)
     # String(String original)
     # String(char[] value, int offset, int count)
