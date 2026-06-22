@@ -16,37 +16,42 @@ explicar oralmente qualquer trecho gerado com auxílio de IA.
 
 ## Registro de uso
 
-| Sprint        | Artefato                         | Membro      | Ferramenta | Descrição do uso                                                                                                       | PR                      |
-| ------------- | -------------------------------- | ----------- | ---------- | ---------------------------------------------------------------------------------------------------------------------- | ----------------------- |
-| Setup         | Estrutura inicial do repositório | Mateus Seron |     | Geração da estrutura inicial do projeto, documentação de processo, templates e configuração de CI                      | —                       |
-| v0.2-jinteger | Classe JInteger                  | Enzo Euvine | Claude    | Apoio na implementação dos métodos da API Java Integer em Python, elaboração de testes e revisão de código             | #32, #37, #40           |
-| v0.2-jinteger | Documentação                     | Enzo Euvine | ChatGPT    | Revisão e atualização de README, templates de issue e documentação do projeto                                          | #36                     |
-| v0.3-jfloat   | Classe JFloat                    | Enzo Euvine | ChatGPT    | Apoio na implementação dos métodos da API Java Float, constantes, parsing, formatação e verificações IEEE-754          | #44, #45, #46           |
-| v0.4-jstring  | Classe JString                   | Enzo Euvine | ChatGPT    | Apoio na modelagem da classe, organização dos métodos, implementação e revisão de operações de acesso, tamanho e busca | #52, #55, #57, #60, #63 |
+| Sprint        | Artefato                         | Membro                                                                | Ferramenta      | Descrição do uso                                                                                                                              |
+|---------------|----------------------------------|------------------------------------------------------------------------|-----------------|------------------------------------------------------------------------------------------------------------------------------------------------|
+| Setup         | Estrutura inicial do repositório | Mateus Seron | Composer | Apoio na geração da estrutura inicial, documentação, configuração de ambiente, automações, planejamento e organização dos artefatos do projeto. |
+| v0.2-jinteger | Implementação e documentação     | Enzo Euvine, João Braga, Lucas Gabriel, Mateus Seron, Mariana Paulino | ChatGPT, Claude | Apoio à implementação, revisão, documentação, testes, correções e organização dos artefatos produzidos durante a sprint.                       |
+| v0.3-jfloat   | Implementação e documentação     | Enzo Euvine, João Braga, Lucas Gabriel, Mateus Seron, Mariana Paulino | ChatGPT, Claude | Apoio à implementação, revisão, documentação, testes, correções e organização dos artefatos produzidos durante a sprint.                       |
+| v0.4-jstring  | Implementação e documentação     | Enzo Euvine, João Braga, Lucas Gabriel, Mateus Seron, Mariana Paulino | ChatGPT, Claude | Apoio à implementação, revisão, documentação, testes, correções e organização dos artefatos produzidos durante a sprint.                       |
 
 ---
 
 ## Prompts representativos
 
-### Setup — Estrutura inicial
+### Planejamento e estruturação
 
+```text
+Auxilie na organização do projeto, estrutura do repositório,
+documentação, configuração de ferramentas e definição dos artefatos
+necessários para atender aos requisitos da disciplina.
 ```
-Crie a estrutura mínima de um repositório Python para o projeto javalang-py,
-conforme o enunciado GCS 2026.1, incluindo pyproject.toml, ci.yml, templates
-de issue e PR, ADRs e documentação de itens de configuração.
+
+### Implementação
+
+```text
+Auxilie na implementação dos métodos da API Java SE 8 em Python,
+preservando o contrato público da especificação e os nomes originais
+dos métodos sempre que possível.
 ```
 
 ---
 
 ## Métodos implementados com auxílio de IA
 
-> _Esta seção será preenchida conforme o desenvolvimento avançar._
-
-| Classe   | Método                                                           | Membro      | Observação                      |
-| -------- | ---------------------------------------------------------------- | ----------- | ------------------------------- |
-| JInteger | Métodos de operação Aritmetica Estatica e operações de parsing          | Enzo Euvine | Implementação com auxílio de IA |
-| JFloat   | Métodos de operações de verificações e pacote de operações de parsing e formatação        | Enzo Euvine | Implementação com auxílio de IA |
-| JString  | Métodos de pacote de operações de acesso e tamanho e de operações de busca | Enzo Euvine | Implementação com auxílio de IA |
+| Classe   | Método                                        | Membro                                                                | Observação                                              |
+| -------- | --------------------------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------- |
+| JInteger | Métodos implementados na sprint v0.2-jinteger | Enzo Euvine, João Braga, Lucas Gabriel, Mateus Seron, Mariana Paulino | Implementação, revisão e documentação com auxílio de IA |
+| JFloat   | Métodos implementados na sprint v0.3-jfloat   | Enzo Euvine, João Braga, Lucas Gabriel, Mateus Seron, Mariana Paulino | Implementação, revisão e documentação com auxílio de IA |
+| JString  | Métodos implementados na sprint v0.4-jstring  | Enzo Euvine, João Braga, Lucas Gabriel, Mateus Seron, Mariana Paulino | Implementação, revisão e documentação com auxílio de IA |
 
 ---
 
