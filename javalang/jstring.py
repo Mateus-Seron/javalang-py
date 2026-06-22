@@ -35,7 +35,6 @@ class JString:
     # String(byte[] bytes, String charset)
     # String(int[] codePoints, int offset, int count)
 
-
     # ==========================================================
     # ACESSO E TAMANHO
     # ==========================================================
@@ -105,11 +104,11 @@ class JString:
 
         return count
 
-# offsetByCodePoints(int index, int codePointOffset)
-# getChars(int srcBegin, int srcEnd, char[] dst, int dstBegin)
-# toCharArray()
-# getBytes()
-# getBytes(String charset)
+    # offsetByCodePoints(int index, int codePointOffset)
+    # getChars(int srcBegin, int srcEnd, char[] dst, int dstBegin)
+    # toCharArray()
+    # getBytes()
+    # getBytes(String charset)
 
     # ==========================================================
     # COMPARAÇÃO
