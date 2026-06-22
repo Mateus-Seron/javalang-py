@@ -3,8 +3,8 @@ from __future__ import annotations
 
 ## class JString:
 class JString:
-    def init(self, value: str = ""):
-        self._value = value
+    def __init__(self, value: str = ""):
+        self.value = str(value)
 
     # ==========================================================
     # CONSTRUTORES
