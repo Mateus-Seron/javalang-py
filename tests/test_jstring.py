@@ -62,6 +62,16 @@ class TestConstrutores:
     def test_String_bytes(self):
         assert JString.stringBytes(b"Hello") == "Hello"
 
+    def test_from_bytes_ascii(self):
+        data = b"hello"
+        js = JString.from_bytes(data, "ascii")
+        assert js.value == "hello"
+
+    def test_from_bytes_range(self):
+        data = b"hello world"
+        js = JString.from_bytes_range(data, 6, 5)
+        assert js.value == "world"
+
     def test_contentEquals_same_str(self):
         assert JString("abc").contentEquals("abc") is True
 
