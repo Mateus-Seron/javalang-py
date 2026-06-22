@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import re
+
 
 def _coerce_str(value) -> str:
     if isinstance(value, JString):
@@ -262,9 +264,26 @@ class JString:
     # EXPRESSÕES REGULARES
     # ==========================================================
 
-    # matches(String regex)
-    # replaceAll(String regex, String replacement)
-    # replaceFirst(String regex, String replacement)
+    def matches(self, regex: str) -> bool:
+        """String.matches(String regex) — a regex deve casar a string inteira."""
+        try:
+            return re.fullmatch(regex, self.value) is not None
+        except re.error as err:
+            raise ValueError("PatternSyntaxException") from err
+
+    def replaceFirst(self, regex: str, replacement: str) -> JString:
+        """String.replaceFirst(String regex, String replacement)."""
+        try:
+            return JString(re.sub(regex, replacement, self.value, count=1))
+        except re.error as err:
+            raise ValueError("PatternSyntaxException") from err
+
+    def replaceAll(self, regex: str, replacement: str) -> JString:
+        """String.replaceAll(String regex, String replacement)."""
+        try:
+            return JString(re.sub(regex, replacement, self.value))
+        except re.error as err:
+            raise ValueError("PatternSyntaxException") from err
 
     # split(String regex)
     # split(String regex, int limit)
