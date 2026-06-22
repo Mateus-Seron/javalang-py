@@ -1,7 +1,19 @@
 from __future__ import annotations
 
-
 ## class JString:
+"""Wrapper imutável equivalente a java.lang.String (Java SE 8)."""
+
+
+def _coerce_str(value) -> str:
+    if value is None:
+        return None
+    if isinstance(value, JString):
+        return value.value
+    if isinstance(value, str):
+        return value
+    raise TypeError(f"Tipo inválido: {type(value).__name__}")
+
+
 class JString:
     def __init__(self, value: str = ""):
         self.value = str(value)
@@ -37,104 +49,152 @@ class JString:
     def stringCharArrayOffsetCount(value: list[str], offset: int, count: int) -> str:
         return "".join(value[offset : offset + count])
 
+    # String(byte[] bytes, String charset)
+    # String(int[] codePoints, int offset, int count)
 
-# String(byte[] bytes, String charset)
-# String(int[] codePoints, int offset, int count)
+    # String()
+    # String(char[] value)
+    # String(byte[] bytes)
+    # String(byte[], int offset, int length)
+    # String(StringBuilder builder)
+    # String(String original)
+    # String(char[] value, int offset, int count)
+    # String(byte[] bytes, String charset)
+    # String(int[] codePoints, int offset, int count)
 
-# ==========================================================
-# ACESSO E TAMANHO
-# ==========================================================
+    # ==========================================================
+    # ACESSO E TAMANHO
+    # ==========================================================
 
-# length()
-# isEmpty()
-# charAt(int index)
-# codePointAt(int index)
-# codePointBefore(int index)
-# codePointCount(int beginIndex, int endIndex)
-# offsetByCodePoints(int index, int codePointOffset)
-# getChars(int srcBegin, int srcEnd, char[] dst, int dstBegin)
-# toCharArray()
-# getBytes()
-# getBytes(String charset)
+    # length()
+    # isEmpty()
+    # charAt(int index)
+    # codePointAt(int index)
+    # codePointBefore(int index)
+    # codePointCount(int beginIndex, int endIndex)
+    # offsetByCodePoints(int index, int codePointOffset)
+    # getChars(int srcBegin, int srcEnd, char[] dst, int dstBegin)
+    # toCharArray()
+    # getBytes()
+    # getBytes(String charset)
 
-# ==========================================================
-# COMPARAÇÃO
-# ==========================================================
+    # ==========================================================
+    # COMPARAÇÃO
+    # ==========================================================
 
-# equals(Object obj)
-# equalsIgnoreCase(String anotherString)
-# compareTo(String anotherString)
-# compareToIgnoreCase(String str)
-# contentEquals(CharSequence cs)
-# regionMatches(int toffset, String other, int ooffset, int len)
-# regionMatches(boolean ignoreCase, int toffset,
-#               String other, int ooffset, int len)
-# hashCode()
+    def equals(self, other) -> bool:
+        """String.equals(Object obj)."""
+        if self is other:
+            return True
+        if not isinstance(other, JString):
+            return False
+        return self.value == other.value
 
-# ==========================================================
-# BUSCA
-# ==========================================================
+    def equalsIgnoreCase(self, other) -> bool:
+        """String.equalsIgnoreCase(String anotherString)."""
+        if other is None:
+            return False
+        return self.value.casefold() == _coerce_str(other).casefold()
 
-# indexOf(int ch)
-# indexOf(int ch, int fromIndex)
-# indexOf(String str)
-# indexOf(String str, int fromIndex)
+    def compareTo(self, other) -> int:
+        """String.compareTo(String anotherString)."""
+        other_str = _coerce_str(other)
+        limit = min(len(self.value), len(other_str))
+        for i in range(limit):
+            c1 = self.value[i]
+            c2 = other_str[i]
+            if c1 != c2:
+                return ord(c1) - ord(c2)
+        return len(self.value) - len(other_str)
 
-# lastIndexOf(int ch)
-# lastIndexOf(int ch, int fromIndex)
-# lastIndexOf(String str)
-# lastIndexOf(String str, int fromIndex)
+    def compareToIgnoreCase(self, other) -> int:
+        """String.compareToIgnoreCase(String str)."""
+        other_str = _coerce_str(other)
+        limit = min(len(self.value), len(other_str))
+        for i in range(limit):
+            c1 = self.value[i]
+            c2 = other_str[i]
+            if c1 != c2:
+                u1 = c1.upper()
+                u2 = c2.upper()
+                if u1 != u2:
+                    return ord(u1) - ord(u2)
+                l1 = c1.lower()
+                l2 = c2.lower()
+                if l1 != l2:
+                    return ord(l1) - ord(l2)
+        return len(self.value) - len(other_str)
 
-# contains(CharSequence s)
-# startsWith(String prefix)
-# startsWith(String prefix, int toffset)
-# endsWith(String suffix)
+    # contentEquals(CharSequence cs)
+    # regionMatches(int toffset, String other, int ooffset, int len)
+    # regionMatches(boolean ignoreCase, int toffset,
+    #               String other, int ooffset, int len)
+    # hashCode()
 
-# ==========================================================
-# TRANSFORMAÇÃO
-# ==========================================================
+    # ==========================================================
+    # BUSCA
+    # ==========================================================
 
-# substring(int beginIndex)
-# substring(int beginIndex, int endIndex)
-# subSequence(int beginIndex, int endIndex)
+    # indexOf(int ch)
+    # indexOf(int ch, int fromIndex)
+    # indexOf(String str)
+    # indexOf(String str, int fromIndex)
 
-# concat(String str)
+    # lastIndexOf(int ch)
+    # lastIndexOf(int ch, int fromIndex)
+    # lastIndexOf(String str)
+    # lastIndexOf(String str, int fromIndex)
 
-# replace(char oldChar, char newChar)
-# replace(CharSequence target, CharSequence replacement)
+    # contains(CharSequence s)
+    # startsWith(String prefix)
+    # startsWith(String prefix, int toffset)
+    # endsWith(String suffix)
 
-# toLowerCase()
-# toUpperCase()
-# trim()
+    # ==========================================================
+    # TRANSFORMAÇÃO
+    # ==========================================================
 
-# intern()
+    # substring(int beginIndex)
+    # substring(int beginIndex, int endIndex)
+    # subSequence(int beginIndex, int endIndex)
 
-# ==========================================================
-# EXPRESSÕES REGULARES
-# ==========================================================
+    # concat(String str)
 
-# matches(String regex)
-# replaceAll(String regex, String replacement)
-# replaceFirst(String regex, String replacement)
+    # replace(char oldChar, char newChar)
+    # replace(CharSequence target, CharSequence replacement)
 
-# split(String regex)
-# split(String regex, int limit)
+    # toLowerCase()
+    # toUpperCase()
+    # trim()
 
-# ==========================================================
-# MÉTODOS ESTÁTICOS
-# ==========================================================
+    # intern()
 
-# String.valueOf(int value)
-# String.valueOf(long value)
-# String.valueOf(float value)
-# String.valueOf(double value)
-# String.valueOf(boolean value)
-# String.valueOf(char value)
-# String.valueOf(char[] value)
-# String.valueOf(Object obj)
+    # ==========================================================
+    # EXPRESSÕES REGULARES
+    # ==========================================================
 
-# String.copyValueOf(char[] value)
+    # matches(String regex)
+    # replaceAll(String regex, String replacement)
+    # replaceFirst(String regex, String replacement)
 
-# String.format(String format, Object... args)
+    # split(String regex)
+    # split(String regex, int limit)
 
-# String.join(...)
+    # ==========================================================
+    # MÉTODOS ESTÁTICOS
+    # ==========================================================
+
+    # String.valueOf(int value)
+    # String.valueOf(long value)
+    # String.valueOf(float value)
+    # String.valueOf(double value)
+    # String.valueOf(boolean value)
+    # String.valueOf(char value)
+    # String.valueOf(char[] value)
+    # String.valueOf(Object obj)
+
+    # String.copyValueOf(char[] value)
+
+    # String.format(String format, Object... args)
+
+    # String.join(...)
