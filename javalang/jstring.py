@@ -131,11 +131,7 @@ class JString:
         while i < endIndex:
             cu1 = units[i]
 
-            if (
-                0xD800 <= cu1 <= 0xDBFF
-                and i + 1 < endIndex
-                and 0xDC00 <= units[i + 1] <= 0xDFFF
-            ):
+            if 0xD800 <= cu1 <= 0xDBFF and i + 1 < endIndex and 0xDC00 <= units[i + 1] <= 0xDFFF:
                 i += 2
             else:
                 i += 1
@@ -329,7 +325,7 @@ class JString:
             return False
 
         return self.value.startswith(prefix, toffset)
-    
+
     def endsWith(self, suffix: str) -> bool:
         """
         Tests if this string ends with the specified suffix.
