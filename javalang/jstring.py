@@ -7,6 +7,28 @@ def _coerce_str(value) -> str:
     return str(value)
 
 
+def _chars_region_match(c1: str, c2: str, ignore_case: bool) -> bool:
+    if c1 == c2:
+        return True
+    if not ignore_case:
+        return False
+    u1 = c1.upper()
+    u2 = c2.upper()
+    if u1 != u2:
+        return False
+    return c1.lower() == c2.lower()
+
+
+def _java_string_hash(value: str) -> int:
+    """Equivalente a String.hashCode() — polinômio 31 sobre code units."""
+    h = 0
+    for char in value:
+        h = (31 * h + ord(char)) & 0xFFFFFFFF
+    if h >= 2**31:
+        h -= 2**32
+    return h
+
+
 class JString:
     def __init__(self, value: str = ""):
         self.value = str(value)
@@ -200,11 +222,46 @@ class JString:
                     return ord(l1) - ord(l2)
         return len(self.value) - len(other_str)
 
-    # contentEquals(CharSequence cs)
-    # regionMatches(int toffset, String other, int ooffset, int len)
-    # regionMatches(boolean ignoreCase, int toffset,
-    #               String other, int ooffset, int len)
-    # hashCode()
+    def contentEquals(self, cs) -> bool:
+        """String.contentEquals(CharSequence cs)."""
+        if cs is None:
+            return False
+        return self.value == _coerce_str(cs)
+
+    def regionMatches(
+        self,
+        toffset_or_ignore,
+        other=None,
+        ooffset=None,
+        length=None,
+        maybe_length=None,
+    ) -> bool:
+        """String.regionMatches(...) — sobrecargas com e sem ignoreCase."""
+        if isinstance(toffset_or_ignore, bool):
+            ignore_case = toffset_or_ignore
+            toffset, other, ooffset, length = other, ooffset, length, maybe_length
+        else:
+            ignore_case = False
+            toffset, other, ooffset, length = toffset_or_ignore, other, ooffset, length
+
+        other_str = _coerce_str(other)
+        if ooffset < 0 or toffset < 0 or length < 0:
+            return False
+        if toffset > len(self.value) - length or ooffset > len(other_str) - length:
+            return False
+
+        for i in range(length):
+            if not _chars_region_match(
+                self.value[toffset + i],
+                other_str[ooffset + i],
+                ignore_case,
+            ):
+                return False
+        return True
+
+    def hashCode(self) -> int:
+        """String.hashCode()."""
+        return _java_string_hash(self.value)
 
     # ==========================================================
     # BUSCA
