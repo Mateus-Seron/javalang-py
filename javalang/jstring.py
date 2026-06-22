@@ -148,8 +148,16 @@ class JString:
     def toCharArray(self) -> list:
         return list(self.value)
 
-    # getBytes()
-    # getBytes(String charset)
+    def getBytes(self, charsetName: str = None) -> bytes: # type: ignore
+        if charsetName is None:
+            return self.value.encode()
+
+        try:
+            return self.value.encode(charsetName)
+        except LookupError:
+            raise ValueError(
+                f"Unsupported encoding: {charsetName}"
+            )
 
     # ==========================================================
     # COMPARAÇÃO
