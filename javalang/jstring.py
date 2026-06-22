@@ -131,7 +131,11 @@ class JString:
         while i < endIndex:
             cu1 = units[i]
 
-            if 0xD800 <= cu1 <= 0xDBFF and i + 1 < endIndex and 0xDC00 <= units[i + 1] <= 0xDFFF:
+            if (
+                0xD800 <= cu1 <= 0xDBFF
+                and i + 1 < endIndex
+                and 0xDC00 <= units[i + 1] <= 0xDFFF
+            ):
                 i += 2
             else:
                 i += 1
@@ -285,13 +289,37 @@ class JString:
     # indexOf(int ch, int fromIndex)
     # indexOf(String str)
     # indexOf(String str, int fromIndex)
-
     # lastIndexOf(int ch)
     # lastIndexOf(int ch, int fromIndex)
-    # lastIndexOf(String str)
-    # lastIndexOf(String str, int fromIndex)
 
-    # contains(CharSequence s)
+    def lastIndexOf(self, str_: str, fromIndex: int = None) -> int:  # type: ignore
+        """
+        Returns the index of the last occurrence of the specified substring.
+        """
+
+        if fromIndex is None:
+            return self.value.rfind(str_)
+
+        if fromIndex < 0:
+            return -1
+
+        if str_ == "":
+            return min(fromIndex, len(self.value))
+
+        max_start = min(fromIndex, len(self.value) - len(str_))
+
+        for i in range(max_start, -1, -1):
+            if self.value.startswith(str_, i):
+                return i
+
+        return -1
+
+    def contains(self, s) -> bool:
+        """
+        Returns true if this string contains the specified sequence.
+        """
+        return str(s) in self.value
+
     # startsWith(String prefix)
     # startsWith(String prefix, int toffset)
     # endsWith(String suffix)
