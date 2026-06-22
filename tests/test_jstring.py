@@ -45,9 +45,7 @@ import pytest
 
 from javalang.jstring import JString
 
-# ======================================================
-# TESTES DE ACESSO E TAMANHO
-# ======================================================
+# ── Pacote de Operações de Acesso e Tamanho ──────────────────────────────
 
 class TestLength:
     def test_length_empty(self):
@@ -58,14 +56,12 @@ class TestLength:
         s = JString("abc")
         assert s.length() == 3
 
-
 class TestIsEmpty:
     def test_true(self):
         assert JString("").isEmpty() is True
 
     def test_false(self):
         assert JString("a").isEmpty() is False
-
 
 class TestCharAt:
     def test_char_at_basic(self):
@@ -78,18 +74,15 @@ class TestCharAt:
         with pytest.raises(IndexError):
             s.charAt(5)
 
-
 class TestCodePointAt:
     def test_ascii(self):
         s = JString("abc")
         assert s.codePointAt(1) == ord("b")
 
-
 class TestCodePointBefore:
     def test_ascii(self):
         s = JString("abc")
         assert s.codePointBefore(2) == ord("b")
-
 
 class TestCodePointCount:
     def test_basic(self):

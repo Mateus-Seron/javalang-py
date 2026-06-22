@@ -25,9 +25,6 @@ class JString:
     # CONSTRUTORES
     # ==========================================================
 
-    def __init__(self, value: str = ""):
-        self.value = str(value)
-
     # String()
     # String(char[] value)
     # String(byte[] bytes)
@@ -107,7 +104,6 @@ class JString:
             count += 1
 
         return count
-
 
 # offsetByCodePoints(int index, int codePointOffset)
 # getChars(int srcBegin, int srcEnd, char[] dst, int dstBegin)
