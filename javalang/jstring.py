@@ -387,10 +387,23 @@ class JString:
     # concat(String str)
 
     # replace(char oldChar, char newChar)
-    # replace(CharSequence target, CharSequence replacement)
+    
+    def replace(self, target, replacement) -> JString:
+        """String.replace(CharSequence target, CharSequence replacement).
+        Também suporta a sobrecarga antiga (char, char).
+        """
+        tgt_str = _coerce_str(target)
+        repl_str = _coerce_str(replacement)
+        return JString(self.value.replace(tgt_str, repl_str))
 
-    # toLowerCase()
-    # toUpperCase()
+    def toLowerCase(self) -> JString:
+        """String.toLowerCase()."""
+        return JString(self.value.lower())
+
+    def toUpperCase(self) -> JString:
+        """String.toUpperCase()."""
+        return JString(self.value.upper())
+    
     # trim()
 
     # intern()
