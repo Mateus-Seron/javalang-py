@@ -19,6 +19,16 @@ def _chars_region_match(c1: str, c2: str, ignore_case: bool) -> bool:
     return c1.lower() == c2.lower()
 
 
+def _java_string_hash(value: str) -> int:
+    """Equivalente a String.hashCode() — polinômio 31 sobre code units."""
+    h = 0
+    for char in value:
+        h = (31 * h + ord(char)) & 0xFFFFFFFF
+    if h >= 2**31:
+        h -= 2**32
+    return h
+
+
 class JString:
     """Wrapper imutável equivalente a java.lang.String (Java SE 8)."""
 
@@ -139,7 +149,9 @@ class JString:
                 return False
         return True
 
-    # hashCode()
+    def hashCode(self) -> int:
+        """String.hashCode()."""
+        return _java_string_hash(self.value)
 
     # ==========================================================
     # BUSCA
