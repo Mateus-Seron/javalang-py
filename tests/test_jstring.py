@@ -152,3 +152,126 @@ class TestCodePointCount:
     def test_partial_range(self):
         s = JString("abcdef")
         assert s.codePointCount(1, 5) == 4
+
+
+class TestOffsetByCodePoints:
+    def test_forward_offset(self):
+        s = JString("abcdef")
+        assert s.offsetByCodePoints(2, 3) == 5
+
+    def test_backward_offset(self):
+        s = JString("abcdef")
+        assert s.offsetByCodePoints(5, -2) == 3
+
+    def test_zero_offset(self):
+        s = JString("abcdef")
+        assert s.offsetByCodePoints(3, 0) == 3
+
+    def test_invalid_index_negative(self):
+        s = JString("abcdef")
+
+        with pytest.raises(IndexError):
+            s.offsetByCodePoints(-1, 1)
+
+    def test_invalid_index_too_large(self):
+        s = JString("abcdef")
+
+        with pytest.raises(IndexError):
+            s.offsetByCodePoints(7, 1)
+
+    def test_offset_beyond_end(self):
+        s = JString("abcdef")
+
+        with pytest.raises(IndexError):
+            s.offsetByCodePoints(5, 2)
+
+    def test_offset_before_start(self):
+        s = JString("abcdef")
+
+        with pytest.raises(IndexError):
+            s.offsetByCodePoints(1, -2)
+
+
+class TestGetChars:
+    def test_copy_middle(self):
+        s = JString("abcdef")
+
+        dst = [""] * 10
+
+        s.getChars(1, 4, dst, 2)
+
+        assert dst[2:5] == ["b", "c", "d"]
+
+    def test_copy_full_string(self):
+        s = JString("abc")
+
+        dst = [""] * 3
+
+        s.getChars(0, 3, dst, 0)
+
+        assert dst == ["a", "b", "c"]
+
+    def test_invalid_src_begin(self):
+        s = JString("abc")
+
+        with pytest.raises(IndexError):
+            s.getChars(-1, 2, [""] * 5, 0)
+
+    def test_src_begin_greater_than_src_end(self):
+        s = JString("abc")
+
+        with pytest.raises(IndexError):
+            s.getChars(2, 1, [""] * 5, 0)
+
+    def test_src_end_too_large(self):
+        s = JString("abc")
+
+        with pytest.raises(IndexError):
+            s.getChars(0, 4, [""] * 5, 0)
+
+    def test_negative_dst_begin(self):
+        s = JString("abc")
+
+        with pytest.raises(IndexError):
+            s.getChars(0, 2, [""] * 5, -1)
+
+    def test_destination_too_small(self):
+        s = JString("abcdef")
+
+        with pytest.raises(IndexError):
+            s.getChars(0, 6, [""] * 3, 0)
+
+
+class TestToCharArray:
+    def test_to_char_array(self):
+        s = JString("abc")
+
+        assert s.toCharArray() == ["a", "b", "c"]
+
+    def test_empty_string(self):
+        s = JString("")
+
+        assert s.toCharArray() == []
+
+
+class TestGetBytes:
+    def test_default_encoding(self):
+        s = JString("abc")
+
+        assert isinstance(s.getBytes(), bytes)
+
+    def test_utf8(self):
+        s = JString("Olá")
+
+        assert s.getBytes("utf-8") == "Olá".encode()
+
+    def test_ascii(self):
+        s = JString("abc")
+
+        assert s.getBytes("ascii") == b"abc"
+
+    def test_invalid_charset(self):
+        s = JString("abc")
+
+        with pytest.raises(ValueError):
+            s.getBytes("charset-inexistente")
