@@ -1,10 +1,17 @@
 from __future__ import annotations
 
+## class JString:
+"""Wrapper imutável equivalente a java.lang.String (Java SE 8)."""
+
 
 def _coerce_str(value) -> str:
+    if value is None:
+        return None
     if isinstance(value, JString):
         return value.value
-    return str(value)
+    if isinstance(value, str):
+        return value
+    raise TypeError(f"Tipo inválido: {type(value).__name__}")
 
 
 def _chars_region_match(c1: str, c2: str, ignore_case: bool) -> bool:
@@ -46,6 +53,36 @@ class JString:
     # ==========================================================
     # CONSTRUTORES
     # ==========================================================
+
+    # String()
+    @staticmethod
+    def string(self) -> str:
+        return ""
+
+    # String(char[] value)
+    @staticmethod
+    def stringCharArray(value: list[str]) -> str:
+        return "".join(value)
+
+    # String(byte[] bytes)
+    @staticmethod
+    def stringBytes(byte: bytes) -> str:
+        return byte.decode()
+
+    # String(byte[], int offset, int length)
+    # String(StringBuilder builder)
+    # String(String original)
+    @staticmethod
+    def stringOriginal(original: str) -> str:
+        return str(original)
+
+    # String(char[] value, int offset, int count)
+    @staticmethod
+    def stringCharArrayOffsetCount(value: list[str], offset: int, count: int) -> str:
+        return "".join(value[offset : offset + count])
+
+    # String(byte[] bytes, String charset)
+    # String(int[] codePoints, int offset, int count)
 
     # String()
     # String(char[] value)
