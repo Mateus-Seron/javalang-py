@@ -61,6 +61,7 @@ class TestConstrutores:
 
     def test_String_bytes(self):
         assert JString.stringBytes(b"Hello") == "Hello"
+
     def test_contentEquals_same_str(self):
         assert JString("abc").contentEquals("abc") is True
 
