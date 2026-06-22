@@ -95,7 +95,11 @@ class JString:
         while i < endIndex:
             cu1 = units[i]
 
-            if 0xD800 <= cu1 <= 0xDBFF and i + 1 < endIndex and 0xDC00 <= units[i + 1] <= 0xDFFF:
+            if (
+                0xD800 <= cu1 <= 0xDBFF
+                and i + 1 < endIndex
+                and 0xDC00 <= units[i + 1] <= 0xDFFF
+            ):
                 i += 2
             else:
                 i += 1
@@ -104,9 +108,46 @@ class JString:
 
         return count
 
-    # offsetByCodePoints(int index, int codePointOffset)
-    # getChars(int srcBegin, int srcEnd, char[] dst, int dstBegin)
-    # toCharArray()
+    def offsetByCodePoints(self, index: int, codePointOffset: int) -> int:
+        length = len(self.value)
+
+        if index < 0 or index > length:
+            raise IndexError("index out of bounds")
+
+        result = index + codePointOffset
+
+        if result < 0 or result > length:
+            raise IndexError("codePointOffset out of bounds")
+
+        return result
+
+    def getChars(self, srcBegin: int, srcEnd: int, dst: list, dstBegin: int) -> None:
+
+        length = len(self.value)
+
+        if srcBegin < 0:
+            raise IndexError("srcBegin out of bounds")
+
+        if srcBegin > srcEnd:
+            raise IndexError("srcBegin greater than srcEnd")
+
+        if srcEnd > length:
+            raise IndexError("srcEnd out of bounds")
+
+        if dstBegin < 0:
+            raise IndexError("dstBegin out of bounds")
+
+        copy_len = srcEnd - srcBegin
+
+        if dstBegin + copy_len > len(dst):
+            raise IndexError("destination array too small")
+
+        for i in range(copy_len):
+            dst[dstBegin + i] = self.value[srcBegin + i]
+
+    def toCharArray(self) -> list:
+        return list(self.value)
+
     # getBytes()
     # getBytes(String charset)
 
