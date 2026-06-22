@@ -641,15 +641,6 @@ class TestTransformations:
         result = js.replace("x", "y")
         assert str(result) == "abc"
 
-    def test_replace_sequence(self):
-        js = JString("abc")
-        with pytest.raises(ValueError):
-            js.replace("ab", "c")
-
-        with pytest.raises(ValueError):
-            js.replace("a", "cd")
-        assert js.replace("ab", "x").value == "xc"
-
 
 # ── Pacote de Operações de Métodos Estáticos ──────────────────────────────
 

@@ -440,8 +440,6 @@ class JString:
         """
         tgt_str = _coerce_str(target)
         repl_str = _coerce_str(replacement)
-        if len(tgt_str) != len(repl_str):
-            raise ValueError(f"Target and replacement must have the same length")
         return JString(self.value.replace(tgt_str, repl_str))
 
     def toLowerCase(self) -> JString:
@@ -528,7 +526,7 @@ class JString:
 
     @staticmethod
     def valueOfBool(value: bool) -> JString:
-        return JString("true" if value else "false")
+        return JString("True" if value else "False")
 
     @staticmethod
     def valueOfChar(value: str) -> JString:
