@@ -42,6 +42,42 @@ class TestPacoteDeOperacoesDeComparacaoDeString:
     def test_compareToIgnoreCase_equal(self):
         assert JString("Java").compareToIgnoreCase("JAVA") == 0
 
+    def test_contentEquals_same_str(self):
+        assert JString("abc").contentEquals("abc") is True
+
+    def test_contentEquals_different(self):
+        assert JString("abc").contentEquals("abd") is False
+
+    def test_contentEquals_jstring(self):
+        assert JString("abc").contentEquals(JString("abc")) is True
+
+    def test_regionMatches_match(self):
+        assert JString("hello").regionMatches(1, "ell", 0, 3) is True
+
+    def test_regionMatches_no_match(self):
+        assert JString("hello").regionMatches(0, "abc", 0, 3) is False
+
+    def test_regionMatches_out_of_bounds(self):
+        assert JString("hello").regionMatches(4, "lo", 0, 3) is False
+
+    def test_regionMatches_ignore_case_match(self):
+        assert JString("Hello").regionMatches(True, 0, "hel", 0, 3) is True
+
+    def test_regionMatches_ignore_case_no_match(self):
+        assert JString("Hello").regionMatches(True, 0, "abc", 0, 3) is False
+
+    def test_regionMatches_ignore_case_out_of_bounds(self):
+        assert JString("Hello").regionMatches(True, 3, "lo", 0, 3) is False
+
+    def test_hashCode_same_string(self):
+        assert JString("abc").hashCode() == JString("abc").hashCode()
+
+    def test_hashCode_different_string(self):
+        assert JString("abc").hashCode() != JString("abd").hashCode()
+
+    def test_hashCode_empty(self):
+        assert JString("").hashCode() == 0
+
 
 # ── Pacote de Operações de Acesso e Tamanho ──────────────────────────────
 
