@@ -34,13 +34,17 @@ def _java_string_hash(value: str) -> int:
         h -= 2**32
     return h
 
+
 class JString:
     def __init__(self, value: str = ""):
         self.value = str(value)
+
     def __str__(self):
         return self.value
+
     def __repr__(self):
         return self.value
+
     # ----------------------------------------------------------
     # UTILITÁRIO: converte string Python para UTF-16 code units
     # ----------------------------------------------------------
@@ -435,6 +439,7 @@ class JString:
             raise ValueError("replace expects single characters")
 
         return JString(self.value.replace(old, new))
+
     # replace(CharSequence target, CharSequence replacement)
 
     # toLowerCase()
