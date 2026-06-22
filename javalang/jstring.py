@@ -285,8 +285,24 @@ class JString:
         except re.error as err:
             raise ValueError("PatternSyntaxException") from err
 
-    # split(String regex)
-    # split(String regex, int limit)
+    def split(self, regex: str, limit: int = 0) -> list[JString]:
+        """String.split(String regex) e String.split(String regex, int limit)."""
+        try:
+            if limit == 1:
+                return [JString(self.value)]
+
+            if limit > 1:
+                parts = re.split(regex, self.value, maxsplit=limit - 1)
+            else:
+                parts = re.split(regex, self.value)
+
+            if limit == 0:
+                while len(parts) > 1 and parts[-1] == "":
+                    parts.pop()
+
+            return [JString(part) for part in parts]
+        except re.error as err:
+            raise ValueError("PatternSyntaxException") from err
 
     # ==========================================================
     # MÉTODOS ESTÁTICOS
