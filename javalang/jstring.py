@@ -86,7 +86,6 @@ class JString:
             raise TypeError("data must be bytes")
         return cls(data.decode(charset))
 
-
     # String(int[] codePoints, int offset, int count)
     @classmethod
     def from_codepoints(cls, codepoints: list[int], offset: int = 0, count: int | None = None):
@@ -104,7 +103,7 @@ class JString:
     def from_bytes_range(cls, data: bytes, start: int, length: int, charset: str = "utf-8"):
         if not isinstance(data, (bytes, bytearray)):
             raise TypeError("data must be bytes")
-        subset = data[start:start + length]
+        subset = data[start : start + length]
         return cls(subset.decode(charset))
 
     # String(StringBuilder builder)
