@@ -419,9 +419,22 @@ class JString:
 
         return JString(self.value[start:end])
 
-    # concat(String str)
+    # concat(String)
+    def concat(self, other: str):
+        if other is None:
+            raise TypeError("cannot concat None")
 
-    # replace(char oldChar, char newChar)
+        return JString(self.value + str(other))
+
+    # replace(char, char)
+    def replace(self, old: str, new: str):
+        if not isinstance(old, str) or not isinstance(new, str):
+            raise TypeError("replace expects characters as strings")
+
+        if len(old) != 1 or len(new) != 1:
+            raise ValueError("replace expects single characters")
+
+        return JString(self.value.replace(old, new))
     # replace(CharSequence target, CharSequence replacement)
 
     # toLowerCase()
