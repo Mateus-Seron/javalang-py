@@ -4,6 +4,7 @@ from javalang.jstring import JString
 
 # ── Pacote de Operações de Comparação de String ──────────────────────────────
 
+
 class TestPacoteDeOperacoesDeComparacaoDeString:
     def test_equals_same_string(self):
         assert JString("abc").equals(JString("abc")) is True
@@ -132,8 +133,8 @@ class TestCodePointCount:
         s = JString("abcdef")
         assert s.codePointCount(1, 5) == 4
 
-class TestOffsetByCodePoints:
 
+class TestOffsetByCodePoints:
     def test_forward_offset(self):
         s = JString("abcdef")
         assert s.offsetByCodePoints(2, 3) == 5
@@ -170,8 +171,8 @@ class TestOffsetByCodePoints:
         with pytest.raises(IndexError):
             s.offsetByCodePoints(1, -2)
 
-class TestGetChars:
 
+class TestGetChars:
     def test_copy_middle(self):
         s = JString("abcdef")
 
@@ -220,8 +221,8 @@ class TestGetChars:
         with pytest.raises(IndexError):
             s.getChars(0, 6, [""] * 3, 0)
 
-class TestToCharArray:
 
+class TestToCharArray:
     def test_to_char_array(self):
         s = JString("abc")
 
@@ -232,8 +233,8 @@ class TestToCharArray:
 
         assert s.toCharArray() == []
 
-class TestGetBytes:
 
+class TestGetBytes:
     def test_default_encoding(self):
         s = JString("abc")
 
@@ -242,7 +243,7 @@ class TestGetBytes:
     def test_utf8(self):
         s = JString("Olá")
 
-        assert s.getBytes("utf-8") == "Olá".encode("utf-8")
+        assert s.getBytes("utf-8") == "Olá".encode()
 
     def test_ascii(self):
         s = JString("abc")
