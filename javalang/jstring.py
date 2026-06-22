@@ -305,7 +305,7 @@ class JString:
     # ==========================================================
 
     def index_of(self, value, inicio=None):
-        "Equivale ao métodos indexOf(int ch), "
+        "Equivale ao métodos indexOf(int ch),"
         "indexOf(int ch, int fromIndex) e "
         "indexOf(String str)"
         if isinstance(value, int):
@@ -318,7 +318,7 @@ class JString:
 
     def index_of_string_from(self, value, inicio):
         return self.value.find(value, inicio)
-    
+
     def last_index_of(self, value, inicio=None):
         "Equivale ao métodos lastIndexOf(int) e lastIndexOf(int, int)"
         if isinstance(value, int):
