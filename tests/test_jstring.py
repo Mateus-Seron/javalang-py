@@ -382,3 +382,122 @@ class TestPacoteDePesquisaEmString:
 
     def test_lastIndexOf_char_from_index_not_found(self):
         assert JString("banana").last_index_of(ord("a"), 0) == -1
+
+
+# ── Pacote de Operações de Busca ──────────────────────────────
+
+
+class TestLastIndexOf:
+    def test_last_occurrence(self):
+        s = JString("banana")
+        assert s.lastIndexOf("na") == 4
+
+    def test_not_found(self):
+        s = JString("banana")
+        assert s.lastIndexOf("xyz") == -1
+
+    def test_empty_string(self):
+        s = JString("banana")
+        assert s.lastIndexOf("") == 6
+
+    def test_entire_string(self):
+        s = JString("banana")
+        assert s.lastIndexOf("banana") == 0
+
+
+class TestLastIndexOfFromIndex:
+    def test_found_before_index(self):
+        s = JString("banana")
+        assert s.lastIndexOf("na", 3) == 2
+
+    def test_found_exact_index(self):
+        s = JString("banana")
+        assert s.lastIndexOf("na", 4) == 4
+
+    def test_negative_index(self):
+        s = JString("banana")
+        assert s.lastIndexOf("na", -1) == -1
+
+    def test_large_index(self):
+        s = JString("banana")
+        assert s.lastIndexOf("na", 100) == 4
+
+    def test_empty_string(self):
+        s = JString("banana")
+        assert s.lastIndexOf("", 3) == 3
+
+
+class TestContains:
+    def test_contains_true(self):
+        s = JString("banana")
+        assert s.contains("nan")
+
+    def test_contains_false(self):
+        s = JString("banana")
+        assert not s.contains("xyz")
+
+    def test_contains_empty(self):
+        s = JString("banana")
+        assert s.contains("")
+
+    def test_contains_entire_string(self):
+        s = JString("banana")
+        assert s.contains("banana")
+
+
+class TestStartsWith:
+    def test_prefix_exists(self):
+        s = JString("banana")
+        assert s.startsWith("ban")
+
+    def test_prefix_not_exists(self):
+        s = JString("banana")
+        assert not s.startsWith("nan")
+
+    def test_empty_prefix(self):
+        s = JString("banana")
+        assert s.startsWith("")
+
+    def test_entire_string(self):
+        s = JString("banana")
+        assert s.startsWith("banana")
+
+
+class TestStartsWithOffset:
+    def test_valid_offset(self):
+        s = JString("banana")
+        assert s.startsWith("nan", 2)
+
+    def test_invalid_offset_negative(self):
+        s = JString("banana")
+        assert not s.startsWith("ban", -1)
+
+    def test_invalid_offset_too_large(self):
+        s = JString("banana")
+        assert not s.startsWith("ban", 100)
+
+    def test_offset_no_match(self):
+        s = JString("banana")
+        assert not s.startsWith("ban", 1)
+
+    def test_empty_prefix(self):
+        s = JString("banana")
+        assert s.startsWith("", 3)
+
+
+class TestEndsWith:
+    def test_suffix_exists(self):
+        s = JString("banana")
+        assert s.endsWith("ana")
+
+    def test_suffix_not_exists(self):
+        s = JString("banana")
+        assert not s.endsWith("ban")
+
+    def test_empty_suffix(self):
+        s = JString("banana")
+        assert s.endsWith("")
+
+    def test_entire_string(self):
+        s = JString("banana")
+        assert s.endsWith("banana")

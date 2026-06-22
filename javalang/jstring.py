@@ -65,12 +65,9 @@ class JString:
     def stringBytes(byte: bytes) -> str:
         return byte.decode()
 
-    # String(byte[], int offset, int length)
-    # String(StringBuilder builder)
     def from_stringbuilder(self, builder):
         return self(str(builder))
 
-    # String(String original)
     @staticmethod
     def stringOriginal(original: str) -> str:
         return str(original)
@@ -79,14 +76,12 @@ class JString:
     def stringCharArrayOffsetCount(value: list[str], offset: int, count: int) -> str:
         return "".join(value[offset : offset + count])
 
-    # String(byte[] bytes, String charset)
     @classmethod
     def from_bytes(cls, data: bytes, charset: str = "utf-8"):
         if not isinstance(data, (bytes, bytearray)):
             raise TypeError("data must be bytes")
         return cls(data.decode(charset))
 
-    # String(int[] codePoints, int offset, int count)
     @classmethod
     def from_codepoints(cls, codepoints: list[int], offset: int = 0, count: int | None = None):
         if count is None:
@@ -95,22 +90,12 @@ class JString:
         chars = (chr(cp) for cp in codepoints[offset : offset + count])
         return cls("".join(chars))
 
-    # String()
-    # String(char[] value)
-    # String(byte[] bytes)
-    # String(byte[], int offset, int length)
     @classmethod
     def from_bytes_range(cls, data: bytes, start: int, length: int, charset: str = "utf-8"):
         if not isinstance(data, (bytes, bytearray)):
             raise TypeError("data must be bytes")
         subset = data[start : start + length]
         return cls(subset.decode(charset))
-
-    # String(StringBuilder builder)
-    # String(String original)
-    # String(char[] value, int offset, int count)
-    # String(byte[] bytes, String charset)
-    # String(int[] codePoints, int offset, int count)
 
     # ==========================================================
     # ACESSO E TAMANHO
@@ -347,17 +332,49 @@ class JString:
 
         return self.value.rfind(value, 0, inicio + 1)
 
-    # indexOf(String str, int fromIndex)
+    def lastIndexOf(self, str_: str, fromIndex: int = None) -> int:  # type: ignore
+        """
+        Returns the index of the last occurrence of the specified substring.
+        """
 
-    # lastIndexOf(int ch)
-    # lastIndexOf(int ch, int fromIndex)
-    # lastIndexOf(String str)
-    # lastIndexOf(String str, int fromIndex)
+        if fromIndex is None:
+            return self.value.rfind(str_)
 
-    # contains(CharSequence s)
-    # startsWith(String prefix)
-    # startsWith(String prefix, int toffset)
-    # endsWith(String suffix)
+        if fromIndex < 0:
+            return -1
+
+        if str_ == "":
+            return min(fromIndex, len(self.value))
+
+        max_start = min(fromIndex, len(self.value) - len(str_))
+
+        for i in range(max_start, -1, -1):
+            if self.value.startswith(str_, i):
+                return i
+
+        return -1
+
+    def contains(self, s) -> bool:
+        """
+        Returns true if this string contains the specified sequence.
+        """
+        return str(s) in self.value
+
+    def startsWith(self, prefix: str, toffset: int = 0) -> bool:
+        """
+        Tests if this string starts with the specified prefix.
+        """
+
+        if toffset < 0 or toffset > len(self.value):
+            return False
+
+        return self.value.startswith(prefix, toffset)
+
+    def endsWith(self, suffix: str) -> bool:
+        """
+        Tests if this string ends with the specified suffix.
+        """
+        return self.value.endswith(suffix)
 
     # ==========================================================
     # TRANSFORMAÇÃO
