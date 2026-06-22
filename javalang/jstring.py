@@ -112,6 +112,8 @@ class JString:
 
         return self.value.find(value, inicio)
 
+    def index_of_string_from(self, value, inicio):
+        return self.value.find(value, inicio)
 
     # indexOf(String str, int fromIndex)
 
