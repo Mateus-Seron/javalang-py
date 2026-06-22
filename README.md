@@ -62,6 +62,7 @@ Esta implementação diverge da especificação Java SE 8 nos seguintes pontos, 
 | [ADR-0005](docs/adr/0005-unificacao-tostring.md) | Sobrecargas com `radix` em `JInteger` | Python não tem sobrecarga; `toString` e `toUnsignedString` usam `radix=10` |
 | [ADR-0006](docs/adr/0006-representacao-float32.md) | Semântica IEEE 754 em `JFloat` | Normalização float32, bits brutos vs canônicos, `compare`/`hashCode`/`equals` |
 | [ADR-0007](docs/adr/0007-unificacao-tostring-jfloat.md) | `toString` instância/estático em `JFloat` | Descriptor `_ToString` unifica `toString()` e `toString(float)` |
+| [ADR-0008](docs/adr/0008-regex-python-re-jstring.md) | Regex em `JString` via `re` | `matches`/`replace*`/`split` usam stdlib Python, não `Pattern` Java |
 
 Veja o índice completo em [`docs/adaptacoes.md`](docs/adaptacoes.md).
 
@@ -100,6 +101,13 @@ Detalhes em [ADR-0006](docs/adr/0006-representacao-float32.md).
 Java define `toString()` no wrapper e `toString(float)` como estático. Em Python, o descriptor
 `_ToString` expõe ambas as formas sem conflito de nome. Detalhes em
 [ADR-0007](docs/adr/0007-unificacao-tostring-jfloat.md).
+
+### JString — expressões regulares
+
+`matches`, `replaceFirst`, `replaceAll` e `split` em Java usam `java.util.regex`. Em Python,
+`javalang/jstring.py` delega ao módulo **`re`** (`fullmatch`, `sub`, `split`). Regex inválida
+gera `ValueError("PatternSyntaxException")`. Casos avançados (ex.: `$1` na replacement) podem
+divergir do JDK. Detalhes em [ADR-0008](docs/adr/0008-regex-python-re-jstring.md).
 
 > **Nota sobre locale e concorrência:** quando `JAVALANG_LOCALE` está definida, operações sensíveis a locale **não são thread-safe** (limitação de `locale.setlocale`). Em cenários multi-thread, deixe a variável não definida.
 

@@ -164,6 +164,65 @@ class TestCodePointCount:
         assert s.codePointCount(1, 5) == 4
 
 
+# ── Pacote de Operações de Expressões Regulares ──────────────────────────────
+
+
+class TestPacoteDeOperacoesDeExpressoesRegulares:
+    def test_matches_true(self):
+        assert JString("abc").matches("a.c") is True
+
+    def test_matches_false(self):
+        assert JString("abc").matches("a") is False
+
+    def test_matches_invalid_regex(self):
+        with pytest.raises(ValueError, match="PatternSyntaxException"):
+            JString("abc").matches("[")
+
+    def test_replaceFirst_single(self):
+        assert JString("aaa").replaceFirst("a", "b").value == "baa"
+
+    def test_replaceFirst_no_match(self):
+        assert JString("abc").replaceFirst("x", "y").value == "abc"
+
+    def test_replaceFirst_invalid_regex(self):
+        with pytest.raises(ValueError, match="PatternSyntaxException"):
+            JString("abc").replaceFirst("[", "x")
+
+    def test_replaceAll_all(self):
+        assert JString("aaa").replaceAll("a", "b").value == "bbb"
+
+    def test_replaceAll_no_match(self):
+        assert JString("abc").replaceAll("x", "y").value == "abc"
+
+    def test_replaceAll_invalid_regex(self):
+        with pytest.raises(ValueError, match="PatternSyntaxException"):
+            JString("abc").replaceAll("[", "x")
+
+    def test_split_basic(self):
+        parts = JString("a,b,c").split(",")
+        assert [part.value for part in parts] == ["a", "b", "c"]
+
+    def test_split_discards_trailing_empty(self):
+        parts = JString("a,b,").split(",")
+        assert [part.value for part in parts] == ["a", "b"]
+
+    def test_split_invalid_regex(self):
+        with pytest.raises(ValueError, match="PatternSyntaxException"):
+            JString("a,b").split("[")
+
+    def test_split_with_limit(self):
+        parts = JString("a,b,c").split(",", 2)
+        assert [part.value for part in parts] == ["a", "b,c"]
+
+    def test_split_with_limit_keeps_trailing_empty(self):
+        parts = JString("a,b,").split(",", -1)
+        assert [part.value for part in parts] == ["a", "b", ""]
+
+    def test_split_with_limit_one(self):
+        parts = JString("a,b,c").split(",", 1)
+        assert [part.value for part in parts] == ["a,b,c"]
+
+
 class TestOffsetByCodePoints:
     def test_forward_offset(self):
         s = JString("abcdef")

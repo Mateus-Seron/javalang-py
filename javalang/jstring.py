@@ -1,7 +1,6 @@
 from __future__ import annotations
 
-## class JString:
-"""Wrapper imutável equivalente a java.lang.String (Java SE 8)."""
+import re
 
 
 def _coerce_str(value) -> str:
@@ -54,17 +53,14 @@ class JString:
     # CONSTRUTORES
     # ==========================================================
 
-    # String()
     @staticmethod
     def string(self) -> str:
         return ""
 
-    # String(char[] value)
     @staticmethod
     def stringCharArray(value: list[str]) -> str:
         return "".join(value)
 
-    # String(byte[] bytes)
     @staticmethod
     def stringBytes(byte: bytes) -> str:
         return byte.decode()
@@ -79,7 +75,6 @@ class JString:
     def stringOriginal(original: str) -> str:
         return str(original)
 
-    # String(char[] value, int offset, int count)
     @staticmethod
     def stringCharArrayOffsetCount(value: list[str], offset: int, count: int) -> str:
         return "".join(value[offset : offset + count])
@@ -358,12 +353,45 @@ class JString:
     # EXPRESSÕES REGULARES
     # ==========================================================
 
-    # matches(String regex)
-    # replaceAll(String regex, String replacement)
-    # replaceFirst(String regex, String replacement)
+    def matches(self, regex: str) -> bool:
+        """String.matches(String regex) — a regex deve casar a string inteira."""
+        try:
+            return re.fullmatch(regex, self.value) is not None
+        except re.error as err:
+            raise ValueError("PatternSyntaxException") from err
 
-    # split(String regex)
-    # split(String regex, int limit)
+    def replaceFirst(self, regex: str, replacement: str) -> JString:
+        """String.replaceFirst(String regex, String replacement)."""
+        try:
+            return JString(re.sub(regex, replacement, self.value, count=1))
+        except re.error as err:
+            raise ValueError("PatternSyntaxException") from err
+
+    def replaceAll(self, regex: str, replacement: str) -> JString:
+        """String.replaceAll(String regex, String replacement)."""
+        try:
+            return JString(re.sub(regex, replacement, self.value))
+        except re.error as err:
+            raise ValueError("PatternSyntaxException") from err
+
+    def split(self, regex: str, limit: int = 0) -> list[JString]:
+        """String.split(String regex) e String.split(String regex, int limit)."""
+        try:
+            if limit == 1:
+                return [JString(self.value)]
+
+            if limit > 1:
+                parts = re.split(regex, self.value, maxsplit=limit - 1)
+            else:
+                parts = re.split(regex, self.value)
+
+            if limit == 0:
+                while len(parts) > 1 and parts[-1] == "":
+                    parts.pop()
+
+            return [JString(part) for part in parts]
+        except re.error as err:
+            raise ValueError("PatternSyntaxException") from err
 
     # ==========================================================
     # MÉTODOS ESTÁTICOS
