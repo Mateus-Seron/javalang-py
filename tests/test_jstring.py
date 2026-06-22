@@ -535,3 +535,36 @@ class TestTransformations:
         js = JString("abc")
         with pytest.raises(IndexError):
             js.subSequence(2, 1)
+
+    def test_concat(self):
+        js = JString("abc")
+        result = js.concat("def")
+        assert str(result) == "abcdef"
+
+    def test_concat_with_empty(self):
+        js = JString("abc")
+        result = js.concat("")
+        assert str(result) == "abc"
+
+    def test_concat_none(self):
+        js = JString("abc")
+        with pytest.raises(TypeError):
+            js.concat(None)
+
+    def test_replace_basic(self):
+        js = JString("banana")
+        result = js.replace("a", "o")
+        assert str(result) == "bonono"
+
+    def test_replace_no_match(self):
+        js = JString("abc")
+        result = js.replace("x", "y")
+        assert str(result) == "abc"
+
+    def test_replace_invalid_char_size(self):
+        js = JString("abc")
+        with pytest.raises(ValueError):
+            js.replace("ab", "c")
+
+        with pytest.raises(ValueError):
+            js.replace("a", "cd")
