@@ -67,7 +67,7 @@ class TestConstrutores:
         js = JString.from_bytes(data, "ascii")
         assert js.value == "hello"
 
-    def test_from_bytes_range():
+    def test_from_bytes_range(self):
         data = b"hello world"
         js = JString.from_bytes_range(data, 6, 5)
         assert js.value == "world"

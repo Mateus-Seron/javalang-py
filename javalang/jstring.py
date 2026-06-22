@@ -69,7 +69,7 @@ class JString:
     # String(StringBuilder builder)
     def from_stringbuilder(self, builder):
         return self(str(builder))
-    
+
     # String(String original)
     @staticmethod
     def stringOriginal(original: str) -> str:
@@ -80,24 +80,32 @@ class JString:
         return "".join(value[offset : offset + count])
 
     # String(byte[] bytes, String charset)
-    def from_bytes(self, data: bytes, charset: str = "utf-8"):
-        return self(data.decode(charset))
+    @classmethod
+    def from_bytes(cls, data: bytes, charset: str = "utf-8"):
+        if not isinstance(data, (bytes, bytearray)):
+            raise TypeError("data must be bytes")
+        return cls(data.decode(charset))
+
 
     # String(int[] codePoints, int offset, int count)
-    def from_codepoints(self, codepoints: list[int], offset: int = 0, count: int | None = None):
+    @classmethod
+    def from_codepoints(cls, codepoints: list[int], offset: int = 0, count: int | None = None):
         if count is None:
             count = len(codepoints) - offset
 
-        chars = (chr(cp) for cp in codepoints[offset:offset + count])
-        return self("".join(chars))
+        chars = (chr(cp) for cp in codepoints[offset : offset + count])
+        return cls("".join(chars))
 
     # String()
     # String(char[] value)
     # String(byte[] bytes)
     # String(byte[], int offset, int length)
-    def from_bytes_range(self, data: bytes, start: int, length: int):
-        subset = data[start : start + length]
-        return self(subset.decode("utf-8"))
+    @classmethod
+    def from_bytes_range(cls, data: bytes, start: int, length: int, charset: str = "utf-8"):
+        if not isinstance(data, (bytes, bytearray)):
+            raise TypeError("data must be bytes")
+        subset = data[start:start + length]
+        return cls(subset.decode(charset))
 
     # String(StringBuilder builder)
     # String(String original)
