@@ -211,6 +211,8 @@ class TestPacoteDeOperacoesDeExpressoesRegulares:
     def test_split_with_limit_one(self):
         parts = JString("a,b,c").split(",", 1)
         assert [part.value for part in parts] == ["a,b,c"]
+
+
 class TestOffsetByCodePoints:
     def test_forward_offset(self):
         s = JString("abcdef")
