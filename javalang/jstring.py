@@ -32,11 +32,11 @@ class JString:
     def stringOriginal(original: str) -> str:
         return str(original)
 
-
     # String(char[] value, int offset, int count)
     @staticmethod
     def stringCharArrayOffsetCount(value: list[str], offset: int, count: int) -> str:
-        return "".join(value[offset:offset + count])
+        return "".join(value[offset : offset + count])
+
 
 # String(byte[] bytes, String charset)
 # String(int[] codePoints, int offset, int count)

@@ -14,3 +14,10 @@ class TestConstrutores:
 
     def test_String_char_array(self):
         assert JString.stringCharArray(["a", "b", "c"]) == "abc"
+
+    def test_string_char_array_offset_count(self):
+        assert JString.stringCharArrayOffsetCount(['a', 'b', 'c', 'd', 'e'], 1, 3) == "bcd"
+
+    def test_String_bytes(self):
+        assert JString.stringBytes([72, 101, 108]) == "Olá"
+
