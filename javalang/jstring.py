@@ -95,11 +95,7 @@ class JString:
         while i < endIndex:
             cu1 = units[i]
 
-            if (
-                0xD800 <= cu1 <= 0xDBFF
-                and i + 1 < endIndex
-                and 0xDC00 <= units[i + 1] <= 0xDFFF
-            ):
+            if 0xD800 <= cu1 <= 0xDBFF and i + 1 < endIndex and 0xDC00 <= units[i + 1] <= 0xDFFF:
                 i += 2
             else:
                 i += 1
@@ -148,16 +144,14 @@ class JString:
     def toCharArray(self) -> list:
         return list(self.value)
 
-    def getBytes(self, charsetName: str = None) -> bytes: # type: ignore
+    def getBytes(self, charsetName: str = None) -> bytes:  # type: ignore
         if charsetName is None:
             return self.value.encode()
 
         try:
             return self.value.encode(charsetName)
         except LookupError:
-            raise ValueError(
-                f"Unsupported encoding: {charsetName}"
-            )
+            raise ValueError(f"Unsupported encoding: {charsetName}")
 
     # ==========================================================
     # COMPARAÇÃO
