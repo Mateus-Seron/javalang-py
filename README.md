@@ -49,6 +49,21 @@ pytest --cov=javalang --cov-report=term-missing
 
 ---
 
+## Teste de mutação
+
+A ferramenta é o [pytest-gremlins](https://pytest-gremlins.readthedocs.io/). Com o ambiente ativado, na raiz do repositório:
+
+```bash
+pip install pytest-gremlins
+pytest --gremlins --gremlin-targets=javalang/Jinteger.py --gremlin-report=html --gremlin-report=json --gremlins-html-dir=coverage/gremlins/02-testes-novos tests/test_jinteger.py -q
+```
+
+Cada rodada grava o próprio `index.html` na pasta passada em `--gremlins-html-dir`. Uma pasta nova por rodada: a ferramenta substitui o `index.html` se a pasta for a mesma. A primeira rodada, antes dos testes novos, está em `coverage/gremlins/01-inicial/index.html`. A próxima, depois dos testes que matam mutantes vivos, usa `02-testes-novos`, e as seguintes seguem a sequência (`03-...`, `04-...`).
+
+O `gremlins.json` sai sempre em `coverage/gremlins/gremlins.json` e é substituído. Depois de cada rodada, copie-o para a pasta daquele passo. A rodada leva cerca de 6 minutos. O código-fonte original não é alterado.
+
+---
+
 ## Adaptações
 
 Esta implementação diverge da especificação Java SE 8 nos seguintes pontos, cada um formalizado como ADR:

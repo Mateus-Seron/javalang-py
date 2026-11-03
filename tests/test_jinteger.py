@@ -136,6 +136,17 @@ class TestDecode:
     def test_decode_decimal_plus_sign(self):
         assert JInteger.decode("+42") == 42
 
+    def test_decode_zero(self):
+        assert JInteger.decode("0") == 0
+
+    def test_decode_zero_com_sinal(self):
+        assert JInteger.decode("-0") == 0
+        assert JInteger.decode("+0") == 0
+
+    def test_decode_octal_digito_invalido_raises(self):
+        with pytest.raises(ValueError):
+            JInteger.decode("08")
+
     def test_decode_hex_0x_lower(self):
         assert JInteger.decode("0xff") == 255
 
@@ -200,6 +211,9 @@ class TestParseIntWithRadix:
 
     def test_parseInt_binary(self):
         assert JInteger.parseInt("1100110", 2) == 102
+
+    def test_parseInt_radix_36(self):
+        assert JInteger.parseInt("z", 36) == 35
 
     def test_parseInt_radix_27_kona(self):
         assert JInteger.parseInt("Kona", 27) == 411_787
@@ -377,6 +391,16 @@ class TestNumberOfLeadingZeros:
     def test_min_value(self):
         assert JInteger.numberOfLeadingZeros(JInteger.MIN_VALUE) == 0
 
+    def test_fronteiras_dos_deslocamentos(self):
+        assert JInteger.numberOfLeadingZeros(0x0000FFFF) == 16
+        assert JInteger.numberOfLeadingZeros(0x00010000) == 15
+        assert JInteger.numberOfLeadingZeros(0x00FFFFFF) == 8
+        assert JInteger.numberOfLeadingZeros(0x01000000) == 7
+        assert JInteger.numberOfLeadingZeros(0x0FFFFFFF) == 4
+        assert JInteger.numberOfLeadingZeros(0x10000000) == 3
+        assert JInteger.numberOfLeadingZeros(0x3FFFFFFF) == 2
+        assert JInteger.numberOfLeadingZeros(0x40000000) == 1
+
 
 # ── numberOfTrailingZeros ────────────────────────────────────────────────────
 
@@ -399,6 +423,39 @@ class TestNumberOfTrailingZeros:
 
     def test_min_value(self):
         assert JInteger.numberOfTrailingZeros(JInteger.MIN_VALUE) == 31  # 0x80000000
+
+
+# ── reverseBytes e rotação ───────────────────────────────────────────────────
+
+
+class TestReverseBytes:
+    def test_zero(self):
+        assert JInteger.reverseBytes(0) == 0
+
+    def test_inverte_bytes(self):
+        assert JInteger.reverseBytes(0x01020304) == 0x04030201
+
+
+class TestRotateLeft:
+    def test_distancia_zero(self):
+        assert JInteger.rotateLeft(0x12345678, 0) == 0x12345678
+
+    def test_um_bit(self):
+        assert JInteger.rotateLeft(1, 1) == 2
+
+    def test_bit_alto_volta(self):
+        assert JInteger.rotateLeft(0x80000001, 1) == 3
+
+
+class TestRotateRight:
+    def test_distancia_zero(self):
+        assert JInteger.rotateRight(0x12345678, 0) == 0x12345678
+
+    def test_um_bit(self):
+        assert JInteger.rotateRight(2, 1) == 1
+
+    def test_bit_baixo_volta(self):
+        assert JInteger.rotateRight(0x80000001, 1) == -1073741824
 
 
 # ── Operações de Formatação por Base ─────────────────────────────────────────
@@ -470,6 +527,36 @@ class TestOperacoesFormatacaoPorBase:
         with pytest.raises(ValueError, match="radix 37 out of range"):
             JInteger.toUnsignedString(10, 37)
 
+    def test_to_string_zero_hex(self):
+        assert JInteger.toString(0, 16) == "0"
+
+    def test_to_string_um_hex(self):
+        assert JInteger.toString(1, 16) == "1"
+
+    def test_to_string_menos_um_hex(self):
+        assert JInteger.toString(-1, 16) == "-1"
+
+    def test_to_string_min_value_hex(self):
+        assert JInteger.toString(JInteger.MIN_VALUE, 16) == "-80000000"
+
+    def test_to_string_radix_36(self):
+        assert JInteger.toString(35, 36) == "z"
+
+    def test_to_binary_string_um(self):
+        assert JInteger.toBinaryString(1) == "1"
+
+    def test_to_octal_string_um(self):
+        assert JInteger.toOctalString(1) == "1"
+
+    def test_to_hex_string_um(self):
+        assert JInteger.toHexString(1) == "1"
+
+    def test_to_unsigned_string_zero_hex(self):
+        assert JInteger.toUnsignedString(0, 16) == "0"
+
+    def test_to_unsigned_string_radix_36(self):
+        assert JInteger.toUnsignedString(35, 36) == "z"
+
 
 # ── signum ───────────────────────────────────────────────────────────────────
 
@@ -477,6 +564,9 @@ class TestOperacoesFormatacaoPorBase:
 class TestSignum:
     def test_zero(self):
         assert JInteger.signum(0) == 0
+
+    def test_um(self):
+        assert JInteger.signum(1) == 1
 
     def test_positivo(self, valores_bit):
         assert JInteger.signum(valores_bit["dez"]) == 1
