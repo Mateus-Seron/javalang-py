@@ -1,0 +1,31 @@
+[
+  {
+    "timestamp": "2026-11-03T18:08:00.490532+00:00",
+    "score": 76.17,
+    "by_file": {
+      "C:\\Users\\Mateus\\Documents\\Faculdade\\Sem_5\\GCS\\javalang-py\\javalang\\Jinteger.py": 76.17
+    },
+    "by_operator": {
+      "arithmetic": {
+        "total": 18,
+        "survived": 4
+      },
+      "comparison": {
+        "total": 98,
+        "survived": 15
+      },
+      "return": {
+        "total": 59,
+        "survived": 8
+      },
+      "boundary": {
+        "total": 66,
+        "survived": 34
+      },
+      "boolean": {
+        "total": 15,
+        "survived": 0
+      }
+    }
+  }
+]
